@@ -11,6 +11,10 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 GET     /api/github/users/:username     controllers.ApplicationController.getGitHubUser(username: String)
 
+GET     /api/github/search/:username     controllers.ApplicationController.addGitHubUser(username: String)
+
+
+
 GET     /api                        controllers.ApplicationController.index
 POST    /api/create                 controllers.ApplicationController.create()
 GET     /api/:login                   controllers.ApplicationController.read(login: String)

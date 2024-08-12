@@ -36,16 +36,24 @@ class ApplicationController @Inject()(
     }
   }
 
-  def getGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request =>
+  def getGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     githubService.getGithubUser(username).value.map {
-      case Right(user) =>
-        Ok(Json.toJson(user))
-      case Left(APIError.BadAPIResponse(404, _)) =>
-        NotFound(Json.obj("error" -> "User not found"))
-      case Left(APIError.BadAPIResponse(status, message)) =>
-        Status(status)(Json.obj("error" -> message))
+      case Right(user) => Ok(views.html.gitHubUser(user))
+      case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
     }
   }
+
+  def addGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request =>
+    githubService.getGithubUser(username).value.flatMap {
+      case Right(user) =>
+        dataRepository.create(user).map {
+          case Right(_) => Redirect(routes.ApplicationController.index) // Redirect to the index page after successful creation
+          case Left(error) => InternalServerError(Json.toJson(error.reason))
+        }
+      case Left(error) => Future.successful(BadRequest(Json.obj("error" -> s"GitHub user not found: $username")))
+    }
+  }
+
 
 
 
