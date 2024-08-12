@@ -1,0 +1,10 @@
+@import model.User
+
+@(user: User)
+
+@main("GitHub User Profile") {
+<h1>@user.login</h1>
+<p><strong>Location:</strong> @user.location.getOrElse("Unknown")</p>
+<p><strong>Followers:</strong> @user.followers</p>
+<p><strong>Following:</strong> @user.following</p>
+}
