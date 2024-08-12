@@ -8,7 +8,6 @@ import service.GitHubService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import views.html.gitHubUser  // Import the GitHub user template
 
 @Singleton
 class ApplicationController @Inject()(
@@ -17,6 +16,7 @@ class ApplicationController @Inject()(
                                        githubService: GitHubService
                                      )(implicit ec: ExecutionContext) extends BaseController with play.api.i18n.I18nSupport {
 
+  // Fetch all users from the database
   def index(): Action[AnyContent] = Action.async { implicit request =>
     dataRepository.index().map {
       case Right(items) => Ok(Json.toJson(items))
@@ -24,6 +24,7 @@ class ApplicationController @Inject()(
     }
   }
 
+  // Create a new user
   def create(): Action[JsValue] = Action.async(parse.json) { implicit request =>
     request.body.validate[User] match {
       case JsSuccess(user, _) =>
@@ -36,12 +37,22 @@ class ApplicationController @Inject()(
   }
 
   def getGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-    githubService.getGithubUser(username).value.map {
-      case Right(user) => Ok(gitHubUser(user))  // Use the imported GitHub user template to render the view
-      case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
+    println(s"Fetching user with username: $username")  // Debug log
+    dataRepository.read(username).map {
+      case Right(user) =>
+        println(s"User found: $user")  // Debug log
+        Ok(Json.toJson(user))  // Return user details as JSON
+      case Left(APIError.BadAPIResponse(404, _)) =>
+        println(s"User not found: $username")  // Debug log
+        NotFound(Json.obj("error" -> "User not found"))
+      case Left(APIError.BadAPIResponse(status, message)) =>
+        println(s"Error: $message")  // Debug log
+        Status(status)(Json.obj("error" -> message))
     }
   }
 
+
+  // Fetch a user by their login
   def read(login: String): Action[AnyContent] = Action.async { implicit request =>
     dataRepository.read(login).map {
       case Right(user) => Ok(Json.toJson(user))
@@ -49,12 +60,13 @@ class ApplicationController @Inject()(
     }
   }
 
+  // Update an existing user
   def update(login: String): Action[JsValue] = Action.async(parse.json) { implicit request =>
     request.body.validate[User] match {
       case JsSuccess(user, _) =>
         dataRepository.update(login, user).map {
           case Right(count) if count > 0 => Accepted
-          case Right(_) => NotFound  // No user updated, return 404
+          case Right(_) => NotFound(Json.obj("error" -> "User not found"))  // No user updated, return 404
           case Left(error) if error.upstreamStatus == 404 => NotFound(Json.toJson(error.reason))  // Explicit 404 from repository
           case Left(error) => Status(error.httpResponseStatus)(Json.toJson(error.reason))
         }
@@ -62,13 +74,14 @@ class ApplicationController @Inject()(
     }
   }
 
+  // Delete a user by their login
   def delete(login: String): Action[AnyContent] = Action.async { implicit request =>
     if (login.trim.isEmpty) {
       Future.successful(BadRequest(Json.obj("error" -> "Invalid ID")))
     } else {
       dataRepository.delete(login).map {
         case Right(count) if count > 0 => Accepted
-        case Right(_) => NotFound  // No user deleted, return 404
+        case Right(_) => NotFound(Json.obj("error" -> "User not found"))  // No user deleted, return 404
         case Left(error) => Status(error.httpResponseStatus)(Json.toJson(error.reason))
       }
     }
