@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ScalaCompilerConfiguration">
     <profile name="sbt 1" modules="githubexproject2_7315" />
-    <profile name="sbt 2" modules="githubTutorial">
+    <profile name="sbt 2" modules="GitHubScala,githubTutorial">
       <option name="deprecationWarnings" value="true" />
       <option name="uncheckedWarnings" value="true" />
       <parameters>
