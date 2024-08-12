@@ -36,20 +36,18 @@ class ApplicationController @Inject()(
     }
   }
 
-  def getGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-    println(s"Fetching user with username: $username")  // Debug log
-    dataRepository.read(username).map {
+  def getGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request =>
+    githubService.getGithubUser(username).value.map {
       case Right(user) =>
-        println(s"User found: $user")  // Debug log
-        Ok(Json.toJson(user))  // Return user details as JSON
+        Ok(Json.toJson(user))
       case Left(APIError.BadAPIResponse(404, _)) =>
-        println(s"User not found: $username")  // Debug log
         NotFound(Json.obj("error" -> "User not found"))
       case Left(APIError.BadAPIResponse(status, message)) =>
-        println(s"Error: $message")  // Debug log
         Status(status)(Json.obj("error" -> message))
     }
   }
+
+
 
 
   // Fetch a user by their login
