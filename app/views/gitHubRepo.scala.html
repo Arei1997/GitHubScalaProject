@@ -5,7 +5,7 @@
 <ul>
     @for(repo <- repositories) {
     <li>
-        <strong>@repo.name</strong> - <a href="@repo.html_url">@repo.html_url</a>
+        <strong>@repo.name</strong> - <a href="@repo.url">@repo.url</a>
         <p>@repo.description</p>
     </li>
     }

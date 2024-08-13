@@ -4,7 +4,7 @@ import play.api.libs.json.{Json, OFormat}
 
 case class Repository(
                        name: String,
-                       html_url: String,
+                       url: String,
                        description: Option[String]
                      )
 
