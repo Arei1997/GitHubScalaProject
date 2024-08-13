@@ -60,3 +60,5 @@ bin/
 /target/streams/runtime
 /target/streams/test
 /target/streams/_global
+/project/target/scala-2.12/sbt-1.0/update
+/target/scala-2.13/update
