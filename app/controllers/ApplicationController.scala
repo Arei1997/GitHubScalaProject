@@ -45,7 +45,7 @@ class ApplicationController @Inject()(
 
   def getGitHubRepo(username: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     githubService.getGithubRepo(username).value.map {
-      case Right(repository) => Ok(Json.toJson(repository))
+      case Right(repository) => Ok(views.html.gitHubRepo(repository))
       case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
     }
   }
