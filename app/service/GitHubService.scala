@@ -2,7 +2,10 @@ package service
 
 import cats.data.EitherT
 import connector.GitHubConnector
-import model.{APIError, User}
+import model.{APIError, Repository, User}
+import play.api.libs.json.Format.GenericFormat
+import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -22,10 +25,10 @@ class GitHubService @Inject()(connector: GitHubConnector)(implicit ec: Execution
     }
   }
 
-  def getGithubRepo(username: String, urlOverride: Option[String] = None): EitherT[Future, APIError, User] = {
+  def getGithubRepo(username: String, urlOverride: Option[String] = None): EitherT[Future, APIError, List[Repository]] = {
     val url = urlOverride.getOrElse(s"https://api.github.com/users/$username/repos")
 
-    connector.get[User](url).leftMap {
+    connector.get[List[Repository]](url).leftMap {
       case APIError.BadAPIResponse(status, message) =>
         println(s"Failed to fetch user from GitHub: $message")  // Debug log
         APIError.BadAPIResponse(status, s"Failed to fetch user from GitHub: $message")

@@ -1,6 +1,6 @@
 package controllers
 
-import model.{APIError, User}
+import model.{APIError, Repository, User}
 import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents, Request}
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import repository.DataRepository
@@ -47,7 +47,7 @@ class ApplicationController @Inject()(
 
   def getGitHubRepo(username: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     githubService.getGithubRepo(username).value.map {
-      case Right(user) => Ok(views.html.gitHubUser(user))
+      case Right(repository) => Ok(Json.toJson(repository))
       case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
     }
   }
