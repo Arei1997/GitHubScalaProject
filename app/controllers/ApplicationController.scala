@@ -102,4 +102,13 @@ class ApplicationController @Inject()(
       }
     }
   }
+
+  def searchGitHubUser(): Action[AnyContent] = Action { implicit request =>
+    val usernameOption = request.getQueryString("username")
+    usernameOption match {
+      case Some(username) => Redirect(routes.ApplicationController.getGitHubRepo(username))
+      case None => BadRequest("Username not provided")
+    }
+  }
+
 }

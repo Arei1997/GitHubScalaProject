@@ -1,12 +1,12 @@
 @(repositories: Seq[model.Repository])
 
 @main("Repository List") {
-<h1>Repositories for the User</h1>
+<h2>Repositories for the User</h2>
 <ul>
     @for(repo <- repositories) {
     <li>
         <strong>Repository:</strong>
-        <a href="@repo.html_url">@repo.name</a>
+        <a href="@repo.html_url" target="_blank">@repo.name</a>
     </li>
     }
 </ul>
