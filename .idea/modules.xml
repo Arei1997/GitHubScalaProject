@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../.idea/modules/academy.iml" filepath="$PROJECT_DIR$/../.idea/modules/academy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../.idea/modules/academy.academy-build.iml" filepath="$PROJECT_DIR$/../.idea/modules/academy.academy-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/githubTutorial.iml" filepath="$PROJECT_DIR$/.idea/modules/githubTutorial.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/githubTutorial.githubTutorial-build.iml" filepath="$PROJECT_DIR$/.idea/modules/githubTutorial.githubTutorial-build.iml" />
     </modules>

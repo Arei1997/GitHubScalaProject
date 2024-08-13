@@ -10,7 +10,7 @@ GET     /                           controllers.HomeController.index
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 GET     /api/github/users/:username     controllers.ApplicationController.getGitHubUser(username: String)
-
+GET     /api/github/users/:username/repos    controllers.ApplicationController.getGitHubRepo(username: String)
 GET     /api/github/search/:username     controllers.ApplicationController.addGitHubUser(username: String)
 
 
