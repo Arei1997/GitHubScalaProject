@@ -54,6 +54,7 @@ class ApplicationController @Inject()(
 
 
 
+
   def addGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request =>
     githubService.getGithubUser(username).value.flatMap {
       case Right(user) =>

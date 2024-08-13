@@ -2,14 +2,15 @@ package connector
 
 import cats.data.EitherT
 import model.APIError
-import play.api.libs.json.OFormat
-import play.api.libs.ws.{WSClient, WSResponse}
+import play.api.libs.json.Reads
+import play.api.libs.ws.WSClient
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class GitHubConnector @Inject()(ws: WSClient) {
+class GitHubConnector @Inject()(ws: WSClient)(implicit ec: ExecutionContext) {
 
-  def get[Response](url: String)(implicit rds: OFormat[Response], ec: ExecutionContext): EitherT[Future, APIError, Response] = {
+  // Change from OFormat to Reads
+  def get[Response](url: String)(implicit rds: Reads[Response], ec: ExecutionContext): EitherT[Future, APIError, Response] = {
     val request = ws.url(url)
     val response = request.get()
 
