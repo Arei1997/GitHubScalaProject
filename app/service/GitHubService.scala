@@ -15,7 +15,6 @@ class GitHubService @Inject()(connector: GitHubConnector)(implicit ec: Execution
 
   def getGithubUser(username: String, urlOverride: Option[String] = None): EitherT[Future, APIError, User] = {
     val url = urlOverride.getOrElse(s"https://api.github.com/users/$username")
-
     connector.get[User](url).leftMap {
       case APIError.BadAPIResponse(status, message) =>
         println(s"Failed to fetch user from GitHub: $message")  // Debug log
@@ -26,12 +25,19 @@ class GitHubService @Inject()(connector: GitHubConnector)(implicit ec: Execution
     }
   }
 
+
   def getGithubRepo(username: String): EitherT[Future, APIError, List[Repository]] = {
     val url = s"https://api.github.com/users/$username/repos"
 
     // Now returning the full list of repositories
     connector.get[List[Repository]](url)
   }
+
+  def getRepoContents(username: String, repoName: String): EitherT[Future, APIError, JsValue] = {
+    val url = s"https://api.github.com/repos/$username/$repoName/contents"
+    connector.get[JsValue](url)
+  }
+
 
 }
 

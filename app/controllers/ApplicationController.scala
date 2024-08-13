@@ -38,12 +38,10 @@ class ApplicationController @Inject()(
 
   def getGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     githubService.getGithubUser(username).value.map {
-      case Right(user) => Ok(views.html.gitHubUser(user))
+      case Right(user) => Ok(Json.toJson(user))
       case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
     }
   }
-
-
 
   def getGitHubRepo(username: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     githubService.getGithubRepo(username).value.map {
@@ -51,9 +49,6 @@ class ApplicationController @Inject()(
       case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
     }
   }
-
-
-
 
   def addGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request =>
     githubService.getGithubUser(username).value.flatMap {
@@ -66,6 +61,12 @@ class ApplicationController @Inject()(
     }
   }
 
+  def getGitHubRepoContents(username: String, repoName: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
+    githubService.getRepoContents(username, repoName).value.map {
+      case Right(contents) => Ok(Json.toJson(contents))
+      case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
+    }
+  }
 
   // Fetch a user by their login
   def read(login: String): Action[AnyContent] = Action.async { implicit request =>
