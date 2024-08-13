@@ -43,6 +43,8 @@ class ApplicationController @Inject()(
     }
   }
 
+
+
   def addGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request =>
     githubService.getGithubUser(username).value.flatMap {
       case Right(user) =>
@@ -54,7 +56,7 @@ class ApplicationController @Inject()(
     }
   }
 
-  //jiughjukij
+
   // Fetch a user by their login
   def read(login: String): Action[AnyContent] = Action.async { implicit request =>
     dataRepository.read(login).map {
