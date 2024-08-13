@@ -53,3 +53,7 @@ bin/
 *.iws
 .scala_dependencies
 .cache-main
+target/scala-2.13
+target/streams
+project/target/streams
+project/target/scala-2.12
