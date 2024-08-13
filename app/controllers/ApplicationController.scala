@@ -36,19 +36,22 @@ class ApplicationController @Inject()(
     }
   }
 
-  def getGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
+  def getGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request =>
     githubService.getGithubUser(username).value.map {
-      case Right(user) => Ok(Json.toJson(user))
-      case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
+      case Right(user) =>
+        Ok(views.html.gitHubUser(user))  // Renders the githubuser.scala.html template
+      case Left(error) =>
+        Redirect(routes.ApplicationController.index()).flashing("error" -> "User not found")
     }
   }
 
   def getGitHubRepo(username: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     githubService.getGithubRepo(username).value.map {
-      case Right(repository) => Ok(views.html.gitHubRepo(repository))
+      case Right(repositories) => Ok(views.html.gitHubRepo(repositories, username)) // Pass both repositories and username
       case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
     }
   }
+
 
   def addGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request =>
     githubService.getGithubUser(username).value.flatMap {

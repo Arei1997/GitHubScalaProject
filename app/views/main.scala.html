@@ -9,17 +9,21 @@
 </head>
 <body>
 <div class="header">
-    <h1>GitHub Example</h1>
-    <div class="search-container">
-        <!-- Corrected form action without parameters -->
-        <form action='@routes.ApplicationController.searchGitHubUser' method="GET">
-            <input type="text" name="username" placeholder="Enter GitHub username" required>
-            <button type="submit">Search</button>
-        </form>
+    <div class="header-left">
+        <a href='@routes.ApplicationController.index()' class="home-button">Home</a>
+    </div>
+    <div class="header-right">
+        <h1>GitHub Example</h1>
+        <div class="search-container">
+            <form action='@routes.ApplicationController.searchGitHubUser' method="GET">
+                <input type="text" name="username" placeholder="Enter GitHub username" required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
     </div>
 </div>
 
-<div class="content">
+<div class="container">
     @content
 </div>
 

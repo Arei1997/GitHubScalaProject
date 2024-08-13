@@ -4,17 +4,15 @@ import play.api.libs.json.{Json, OFormat}
 
 case class User(
                  login: String,
-                 created_at: String,
-                 location: Option[String],
-                 followers: Int,
-                 following: Int
+                 name: Option[String],          // User's name (optional)
+                 avatar_url: String,            // URL to the user's avatar image
+                 location: Option[String],      // User's location (optional)
+                 bio: Option[String],           // User's bio (optional)
+                 followers: Int,                // Number of followers
+                 following: Int,                // Number of users the user is following
+                 created_at: String             // Account creation date
                )
 
 object User {
   implicit val format: OFormat[User] = Json.format[User]
 }
-
-
-//curl command  CREATED-- {"login":"testName","created_at":"today","location":"London","followers":780033,"following":2}%
-//UPDATE curl -X PUT -H "Content-Type: application/json" -d '{"login":"testName","created_at":"today","location":"London","followers":780033,"following":10}' http://localhost:9000/api/testName
-//DELETE curl -X DELETE http://localhost:9000/api/testName

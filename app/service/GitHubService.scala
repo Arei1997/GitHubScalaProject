@@ -3,9 +3,7 @@ package service
 import cats.data.EitherT
 import connector.GitHubConnector
 import model.{APIError, Repository, User}
-import play.api.libs.json.Format.GenericFormat
-import play.api.libs.json.{JsArray, JsValue}
-import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
+import play.api.libs.json.JsValue
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -25,11 +23,8 @@ class GitHubService @Inject()(connector: GitHubConnector)(implicit ec: Execution
     }
   }
 
-
   def getGithubRepo(username: String): EitherT[Future, APIError, List[Repository]] = {
     val url = s"https://api.github.com/users/$username/repos"
-
-    // Now returning the full list of repositories
     connector.get[List[Repository]](url)
   }
 
@@ -37,7 +32,4 @@ class GitHubService @Inject()(connector: GitHubConnector)(implicit ec: Execution
     val url = s"https://api.github.com/repos/$username/$repoName/contents"
     connector.get[JsValue](url)
   }
-
-
 }
-

@@ -3,12 +3,31 @@
 @(user: User)
 
 @main("GitHub User Profile") {
-<h1>@user.login</h1>
-<p><strong>Location:</strong> @user.location.getOrElse("Unknown")</p>
-<p><strong>Followers:</strong> @user.followers</p>
-<p><strong>Following:</strong> @user.following</p>
+<div class="user-profile">
+    <div class="profile-header">
+        <img src="@user.avatar_url" alt="@user.login's avatar" class="profile-avatar">
+        <h1>@user.login</h1>
+    </div>
 
+    <div class="profile-info">
+        <p><strong>Name:</strong> @user.name.getOrElse("No Name Provided")</p>
+        <p><strong>Location:</strong> @user.location.getOrElse("Unknown")</p>
+        <p><strong>Bio:</strong> @user.bio.getOrElse("No Bio Available")</p>
+    </div>
 
-<p><a href="@routes.ApplicationController.getGitHubRepo(user.login)">Repositories</a></p>
-
+    <div class="profile-stats">
+        <div class="stat">
+            <strong>Followers</strong>
+            <p>@user.followers</p>
+        </div>
+        <div class="stat">
+            <strong>Following</strong>
+            <p>@user.following</p>
+        </div>
+        <div class="stat">
+            <strong>Repositories</strong>
+            <p><a href="@routes.ApplicationController.getGitHubRepo(user.login)">View Repositories</a></p>
+        </div>
+    </div>
+</div>
 }
