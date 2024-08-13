@@ -1,0 +1,13 @@
+@(repositories: List[model.Repository])
+
+@main("GitHub Repositories") {
+<h1>Repositories for User</h1>
+<ul>
+    @for(repo <- repositories) {
+    <li>
+        <strong>@repo.name</strong> - <a href="@repo.html_url">@repo.html_url</a>
+        <p>@repo.description</p>
+    </li>
+    }
+</ul>
+}

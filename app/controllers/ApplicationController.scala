@@ -4,7 +4,7 @@ import model.{APIError, Repository, User}
 import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents, Request}
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import repository.DataRepository
-import service.GitHubService
+import service.{GitHubService, RepositoryService}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -13,7 +13,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class ApplicationController @Inject()(
                                        val controllerComponents: ControllerComponents,
                                        dataRepository: DataRepository,
-                                       githubService: GitHubService
+                                       githubService: GitHubService,
+                                       repositoryService: RepositoryService
                                      )(implicit ec: ExecutionContext) extends BaseController with play.api.i18n.I18nSupport {
 
   // Fetch all users from the database
@@ -46,11 +47,12 @@ class ApplicationController @Inject()(
 
 
   def getGitHubRepo(username: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-    githubService.getGithubRepo(username).value.map {
-      case Right(repository) => Ok(Json.toJson(repository))
+    repositoryService.getGithubRepo(username).value.map {
+      case Right(repositories) => Ok(views.html.gitHubRepo(repositories))
       case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
     }
   }
+
 
 
 

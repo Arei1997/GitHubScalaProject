@@ -7,4 +7,5 @@
 <p><strong>Location:</strong> @user.location.getOrElse("Unknown")</p>
 <p><strong>Followers:</strong> @user.followers</p>
 <p><strong>Following:</strong> @user.following</p>
+<button href=s"http://localhost:9000/api/github/users/${user}/repos">View Repos</button>
 }
