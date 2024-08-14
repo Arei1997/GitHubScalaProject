@@ -10,11 +10,11 @@
     @for(content <- contents) {
     <li>
         @if(content.`type` == "dir") {
-        <strong>Folder:</strong>
+        <img src="@routes.Assets.versioned("images/folder.png")" alt="Folder icon" class="icon" />
         } else {
-        <strong>File:</strong>
+        <img src="@routes.Assets.versioned("images/document.png")" alt="File icon" class="icon" />
         }
-        <a href="@content.html_url">@content.name</a>
+        <a href="@content.url">@content.name</a>
     </li>
     }
 </ul>

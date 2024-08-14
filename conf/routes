@@ -21,6 +21,7 @@ GET     /api/github/users/:username/repos    controllers.ApplicationController.g
 # get REPOSITORY CONTENTS
 GET     /api/github/users/:username/repos/:repoName/contents      controllers.ApplicationController.getGitHubRepoContents(username: String, repoName: String)
 GET     /github/users/:username/repos/:repoName                   controllers.ApplicationController.getGitHubRepoContents(username: String, repoName: String)
+GET     /github/users/:username/repos/:repoName/*path     controllers.ApplicationController.getGitHubFileOrFolder(username: String, repoName: String, path: String)
 
 
 #frontEnd routes

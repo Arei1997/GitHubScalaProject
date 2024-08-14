@@ -19,5 +19,9 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
     val url = s"https://api.github.com/repos/$username/$repoName/contents"
     connector.get[List[Contents]](url)
   }
+  def getRepoFiles(username: String, repoName: String, path: String): EitherT[Future, APIError, List[Contents]] = {
+    val url = s"https://api.github.com/repos/$username/$repoName/contents/$path"
+    connector.get[List[Contents]](url)
+  }
 
 }
