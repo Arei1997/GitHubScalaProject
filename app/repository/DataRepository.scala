@@ -4,6 +4,7 @@ import model.{APIError, User}
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model._
+import org.mongodb.scala.result
 import play.api.libs.json.JsValue
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
@@ -63,13 +64,11 @@ class DataRepository @Inject() (
       case e: Throwable => Left(APIError.BadAPIResponse(500, e.getMessage))
     }
 
-  def delete(login: String): Future[Either[APIError.BadAPIResponse, Long]] =
-    collection.deleteOne(byID(login)).toFuture().map { deleteResult =>
-      if (deleteResult.getDeletedCount > 0) Right(deleteResult.getDeletedCount)
-      else Left(APIError.BadAPIResponse(404, "User not found"))
-    }.recover {
+  def delete(login: String): Future[Either[APIError, result.DeleteResult]] = {
+    collection.deleteOne(byID(login)).toFuture().map(Right(_)).recover {
       case e: Throwable => Left(APIError.BadAPIResponse(500, e.getMessage))
     }
+  }
 
   def deleteAll(): Future[Unit] =
     collection.deleteMany(empty()).toFuture().map(_ => ()) // Needed for tests

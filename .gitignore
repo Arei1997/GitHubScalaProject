@@ -62,3 +62,8 @@ bin/
 /target/streams/_global
 /project/target/scala-2.12/sbt-1.0/update
 /target/scala-2.13/update
+/target/scala-2.13/update/update_cache_2.13
+project/target/scala-2.12/sbt-1.0/update/
+project/target/streams/_global/
+ project/target/streams/runtime/
+ project/target/streams/compile/
