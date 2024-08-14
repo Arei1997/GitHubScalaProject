@@ -22,23 +22,27 @@ class ApplicationControllerSpec extends BaseSpecWithApplication {
 
     component,
     repository,
-    service
+    service,
+    repoService
   )(executionContext)
 
-  private val user: User = User(
-    "JamesDev",
-    "today",
-    Some("London"),
-    100,
-    789767
+  private val testUser: User = User(
+    login = "johndoe",
+    name = Some("John Doe"),
+    avatar_url = "http://example.com/avatar.jpg",
+    location = Some("New York, USA"),
+    bio = Some("Software developer and open source enthusiast."),
+    followers = 150,
+    following = 100,
+    created_at = "2023-01-01T12:00:00Z"
   )
 
   "ApplicationController .create" should {
 
-    "create a book in the database" in {
+    "create a user in the database" in {
       beforeEach()
 
-      val request: FakeRequest[JsValue] = buildPost("/api").withBody(Json.toJson(user))
+      val request: FakeRequest[JsValue] = buildPost("/api").withBody(Json.toJson(testUser))
       val createdResult: Future[Result] = TestApplicationController.create()(request)
 
       status(createdResult) shouldBe Status.CREATED
@@ -60,15 +64,15 @@ class ApplicationControllerSpec extends BaseSpecWithApplication {
     "find a book in the database by id" in {
       beforeEach()
 
-      val request: FakeRequest[JsValue] = buildGet(s"/api/${user.login}").withBody(Json.toJson(user))
+      val request: FakeRequest[JsValue] = buildGet(s"/api/${testUser.login}").withBody(Json.toJson(testUser))
       val createdResult: Future[Result] = TestApplicationController.create()(request)
 
       status(createdResult) shouldBe Status.CREATED
 
-      val readResult: Future[Result] = TestApplicationController.read(user.login)(FakeRequest())
+      val readResult: Future[Result] = TestApplicationController.read(testUser.login)(FakeRequest())
 
       status(readResult) shouldBe OK
-      contentAsJson(readResult) shouldBe Json.toJson(user)
+      contentAsJson(readResult) shouldBe Json.toJson(testUser)
 
       afterEach()
     }
@@ -80,27 +84,28 @@ class ApplicationControllerSpec extends BaseSpecWithApplication {
   }
 
   "ApplicationController .update" should {
-    "update a user in the database" in {
+    "update a user’s number of followers in the database" in {
       beforeEach()
 
-      val request: FakeRequest[JsValue] = buildPost("/api").withBody(Json.toJson(user))
+      val request: FakeRequest[JsValue] = FakeRequest(POST, "/api").withBody(Json.toJson(testUser))
       val createdResult: Future[Result] = TestApplicationController.create()(request)
       status(createdResult) shouldBe Status.CREATED
 
-      val updatedUser: User = user.copy(login = "Updated login")
-      val updatedRequest: FakeRequest[JsValue] = buildPut(s"/api/${user.login}").withBody(Json.toJson(updatedUser))
-      val updatedResult: Future[Result] = TestApplicationController.update(user.login)(updatedRequest)
+      val updatedUser: User = testUser.copy(followers = 200) // Updated number of followers
+      val updatedRequest: FakeRequest[JsValue] = FakeRequest(PUT, s"/api/${testUser.login}").withBody(Json.toJson(updatedUser))
+      val updatedResult: Future[Result] = TestApplicationController.update(testUser.login)(updatedRequest)
 
       status(updatedResult) shouldBe ACCEPTED
 
-      val readResult: Future[Result] = TestApplicationController.read(user.login)(FakeRequest())
+      val readResult: Future[Result] = TestApplicationController.read(testUser.login)(FakeRequest(GET, s"/api/${testUser.login}"))
       status(readResult) shouldBe OK
       contentAsJson(readResult) shouldBe Json.toJson(updatedUser)
 
       afterEach()
     }
+
     "return NotFound if the user to update is not found" in {
-      val updatedUser: User = user.copy(login = "Updated Name")
+      val updatedUser: User = testUser.copy(login = "UpdatedLogin")
       val updatedRequest: FakeRequest[JsValue] = buildPut(s"/api/nonexistent_id").withBody(Json.toJson(updatedUser))
       val updatedResult: Future[Result] = TestApplicationController.update("nonexistent_id")(updatedRequest)
 
@@ -108,8 +113,8 @@ class ApplicationControllerSpec extends BaseSpecWithApplication {
     }
 
     "return BadRequest for invalid JSON" in {
-      val invalidRequest: FakeRequest[JsValue] = buildPut(s"/api/${user.login}").withBody(Json.obj("invalid" -> "data"))
-      val result: Future[Result] = TestApplicationController.update(user.login)(invalidRequest)
+      val invalidRequest: FakeRequest[JsValue] = buildPut(s"/api/${testUser.login}").withBody(Json.obj("invalid" -> "data"))
+      val result: Future[Result] = TestApplicationController.update(testUser.login)(invalidRequest)
 
       status(result) shouldBe Status.BAD_REQUEST
     }
@@ -117,21 +122,21 @@ class ApplicationControllerSpec extends BaseSpecWithApplication {
 
 
   "ApplicationController .delete" should {
-    "delete a book in the database" in {
+    "delete a user in the database" in {
       beforeEach()
-      val request: FakeRequest[JsValue] = buildPost("/api").withBody(Json.toJson(user))
+      val request: FakeRequest[JsValue] = buildPost("/api").withBody(Json.toJson(testUser))
       val createdResult: Future[Result] = TestApplicationController.create()(request)
 
       status(createdResult) shouldBe CREATED
 
-      val deleteRequest: FakeRequest[AnyContent] = buildDelete(s"/api/${user.login}")
-      val deletedResult: Future[Result] = TestApplicationController.delete(user.login)(deleteRequest)
+      val deleteRequest: FakeRequest[AnyContent] = buildDelete(s"/api/${testUser.login}")
+      val deletedResult: Future[Result] = TestApplicationController.delete(testUser.login)(deleteRequest)
 
       status(deletedResult) shouldBe ACCEPTED
 
       afterEach()
     }
-    "return NotFound if the book to delete is not found" in {
+    "return NotFound if the user to delete is not found" in {
       val deleteRequest: FakeRequest[AnyContent] = buildDelete("/api/nonexistent_id")
       val deletedResult: Future[Result] = TestApplicationController.delete("nonexistent_id")(deleteRequest)
 

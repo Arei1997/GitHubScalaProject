@@ -97,14 +97,15 @@ class ApplicationController @Inject()(
 
   // Delete a user by their login
   def delete(login: String): Action[AnyContent] = Action.async { implicit request =>
-    if (login.trim.isEmpty) {
-      Future.successful(BadRequest(Json.obj("error" -> "Invalid ID")))
-    } else {
-      dataRepository.delete(login).map {
-        case Right(count) if count > 0 => Accepted
-        case Right(_) => NotFound(Json.obj("error" -> "User not found"))  // No user deleted, return 404
-        case Left(error) => Status(error.httpResponseStatus)(Json.toJson(error.reason))
-      }
+    dataRepository.delete(login).map {
+      case Right(deleteResult) =>
+        if (deleteResult.getDeletedCount > 0) {
+          Accepted(Json.toJson("Item successfully deleted"))
+        } else {
+          NotFound(Json.toJson("Item not found"))
+        }
+      case Left(apiError) =>
+        Status(apiError.httpResponseStatus)(Json.toJson(apiError.reason))
     }
   }
 
