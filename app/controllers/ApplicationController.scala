@@ -116,4 +116,21 @@ class ApplicationController @Inject()(
     }
   }
 
+  def getGitHubFileOrFolder(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
+    repositoryService.getRepoFiles(username, repoName, path).value.map {
+      case Right(contents) =>
+        contents.headOption match {
+          case Some(content) if content.`type` == "file" && content.content.isDefined =>
+            val fileContent = new String(java.util.Base64.getDecoder.decode(content.content.get))
+            Ok(views.html.gitHubFileContents(username, repoName, path, fileContent))
+          case Some(content) if content.`type` == "dir" =>
+            Ok(views.html.gitHubRepoContents(username, repoName, contents))
+          case _ =>
+            BadRequest("Invalid path or unsupported content type")
+        }
+      case Left(APIError.BadAPIResponse(status, message)) =>
+        Status(status)(Json.obj("error" -> message))
+    }
+  }
+
 }
