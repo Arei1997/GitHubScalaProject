@@ -1,0 +1,22 @@
+@(username: String, repoName: String, contents: List[model.Contents])
+
+@main(s"Contents of $repoName by $username") {
+
+<h1>@repoName</h1>
+<h3>Owner: @username</h3>
+
+<h2>Repository Contents</h2>
+<ul>
+    @for(content <- contents) {
+    <li>
+        @if(content.`type` == "dir") {
+        <strong>Folder:</strong>
+        } else {
+        <strong>File:</strong>
+        }
+        <a href="@content.html_url">@content.name</a>
+    </li>
+    }
+</ul>
+
+}

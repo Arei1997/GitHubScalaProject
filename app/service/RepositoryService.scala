@@ -2,10 +2,8 @@ package service
 
 import cats.data.EitherT
 import connector.GitHubConnector
-import model.{APIError, Repository, User}
+import model.{APIError, Contents, Repository, User}
 import play.api.libs.json.JsValue
-
-
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -17,8 +15,9 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
     connector.get[List[Repository]](url)
   }
 
-  def getRepoContents(username: String, repoName: String): EitherT[Future, APIError, JsValue] = {
+  def getRepoContents(username: String, repoName: String): EitherT[Future, APIError, List[Contents]] = {
     val url = s"https://api.github.com/repos/$username/$repoName/contents"
-    connector.get[JsValue](url)
+    connector.get[List[Contents]](url)
   }
+
 }

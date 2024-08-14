@@ -15,9 +15,12 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 GET     /api/github/users/:username     controllers.ApplicationController.getGitHubUser(username: String)
 
 # Get REPOSITORY
+
 GET     /api/github/users/:username/repos    controllers.ApplicationController.getGitHubRepo(username: String)
+
 # get REPOSITORY CONTENTS
 GET     /api/github/users/:username/repos/:repoName/contents      controllers.ApplicationController.getGitHubRepoContents(username: String, repoName: String)
+GET     /github/users/:username/repos/:repoName                   controllers.ApplicationController.getGitHubRepoContents(username: String, repoName: String)
 
 
 #frontEnd routes

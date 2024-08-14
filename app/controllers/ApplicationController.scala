@@ -67,10 +67,11 @@ class ApplicationController @Inject()(
 
   def getGitHubRepoContents(username: String, repoName: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     repositoryService.getRepoContents(username, repoName).value.map {
-      case Right(contents) => Ok(Json.toJson(contents))
+      case Right(contents) => Ok(views.html.gitHubRepoContents(username,repoName, contents))
       case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
     }
   }
+
 
   // Fetch a user by their login
   def read(login: String): Action[AnyContent] = Action.async { implicit request =>
