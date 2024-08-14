@@ -23,13 +23,4 @@ class GitHubService @Inject()(connector: GitHubConnector)(implicit ec: Execution
     }
   }
 
-  def getGithubRepo(username: String): EitherT[Future, APIError, List[Repository]] = {
-    val url = s"https://api.github.com/users/$username/repos"
-    connector.get[List[Repository]](url)
-  }
-
-  def getRepoContents(username: String, repoName: String): EitherT[Future, APIError, JsValue] = {
-    val url = s"https://api.github.com/repos/$username/$repoName/contents"
-    connector.get[JsValue](url)
-  }
 }
