@@ -9,7 +9,7 @@
 <ul>
     @for(content <- contents) {
     <li>
-        @content.name - @content.`type` - @content.path
+<!--        @content.name - @content.`type` - @content.path-->
         @if(content.`type` == "dir") {
         <img src="@routes.Assets.versioned("images/folder.png")" alt="Folder icon" class="icon" />
         <a href="@routes.ApplicationController.getGitHubFolder(username, repoName, content.path)">@content.name</a>
