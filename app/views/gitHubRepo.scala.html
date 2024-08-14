@@ -1,13 +1,21 @@
-@(repositories: Seq[model.Repository])
+@(repositories: Seq[model.Repository], username: String)
 
 @main("Repository List") {
-<h1>Repositories for the User</h1>
+
+<!-- Button to view user profile -->
+<form action="@routes.ApplicationController.getGitHubUser(username)" method="GET">
+    <button type="submit">View User Profile</button>
+</form>
+
+<h2>Repositories for @username</h2>
 <ul>
     @for(repo <- repositories) {
     <li>
         <strong>Repository:</strong>
-        <a href="@repo.html_url">@repo.name</a>
+        <a href="@repo.html_url" target="_blank">@repo.name</a>
     </li>
     }
 </ul>
+
+
 }

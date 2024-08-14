@@ -4,7 +4,7 @@ import model.{APIError, Repository, User}
 import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents, Request}
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import repository.DataRepository
-import service.GitHubService
+import service.{GitHubService, RepositoryService}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -13,7 +13,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class ApplicationController @Inject()(
                                        val controllerComponents: ControllerComponents,
                                        dataRepository: DataRepository,
-                                       githubService: GitHubService
+                                       githubService: GitHubService,
+                                       repositoryService: RepositoryService
                                      )(implicit ec: ExecutionContext) extends BaseController with play.api.i18n.I18nSupport {
 
   // Fetch all users from the database
@@ -36,19 +37,22 @@ class ApplicationController @Inject()(
     }
   }
 
-  def getGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
+  def getGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request =>
     githubService.getGithubUser(username).value.map {
-      case Right(user) => Ok(Json.toJson(user))
-      case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
+      case Right(user) =>
+        Ok(views.html.gitHubUser(user))  // Renders the githubuser.scala.html template
+      case Left(error) =>
+        Redirect(routes.ApplicationController.index()).flashing("error" -> "User not found")
     }
   }
 
   def getGitHubRepo(username: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-    githubService.getGithubRepo(username).value.map {
-      case Right(repository) => Ok(views.html.gitHubRepo(repository))
+    repositoryService.getGithubRepo(username).value.map {
+      case Right(repositories) => Ok(views.html.gitHubRepo(repositories, username)) // Pass both repositories and username
       case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
     }
   }
+
 
   def addGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request =>
     githubService.getGithubUser(username).value.flatMap {
@@ -62,7 +66,7 @@ class ApplicationController @Inject()(
   }
 
   def getGitHubRepoContents(username: String, repoName: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-    githubService.getRepoContents(username, repoName).value.map {
+    repositoryService.getRepoContents(username, repoName).value.map {
       case Right(contents) => Ok(Json.toJson(contents))
       case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
     }
@@ -102,4 +106,13 @@ class ApplicationController @Inject()(
       }
     }
   }
+
+  def searchGitHubUser(): Action[AnyContent] = Action { implicit request =>
+    val usernameOption = request.getQueryString("username")
+    usernameOption match {
+      case Some(username) => Redirect(routes.ApplicationController.getGitHubRepo(username))
+      case None => BadRequest("Username not provided")
+    }
+  }
+
 }

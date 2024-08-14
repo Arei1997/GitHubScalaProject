@@ -6,21 +6,30 @@
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
 
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
+
+# get USERNAME
 GET     /api/github/users/:username     controllers.ApplicationController.getGitHubUser(username: String)
-GET     /api/github/search/:username     controllers.ApplicationController.addGitHubUser(username: String)
 
-# Get Repo
+# Get REPOSITORY
 GET     /api/github/users/:username/repos    controllers.ApplicationController.getGitHubRepo(username: String)
-
-
+# get REPOSITORY CONTENTS
 GET     /api/github/users/:username/repos/:repoName/contents      controllers.ApplicationController.getGitHubRepoContents(username: String, repoName: String)
 
 
+#frontEnd routes
+GET     /                        controllers.ApplicationController.index()
+GET     /searchGitHubUser        controllers.ApplicationController.searchGitHubUser
+GET     /github/users/:username/repos          controllers.ApplicationController.getGitHubRepo(username: String)
+GET     /github/users/:username/profile        controllers.ApplicationController.getGitHubUser(username: String)
 
 
+
+
+#CRUD
 GET     /api                        controllers.ApplicationController.index
 POST    /api/create                 controllers.ApplicationController.create()
 GET     /api/:login                   controllers.ApplicationController.read(login: String)
