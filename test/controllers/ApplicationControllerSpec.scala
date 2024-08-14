@@ -2,6 +2,7 @@ package controllers
 // bilal's comment
 import baseSpec.BaseSpecWithApplication
 import model.User
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.test.FakeRequest
 import play.api.http.Status
 import play.api.test.Helpers._
@@ -144,6 +145,48 @@ class ApplicationControllerSpec extends BaseSpecWithApplication {
     }
   }
 
+  "ApplicationController .getGitHubUser" should {
+    "redirect to the gitHubUser views html page" in {
+      val testUsername = testUser.login
+
+      val request = FakeRequest(GET, s"/api/github/users/${testUser.login}")
+      val result = TestApplicationController.getGitHubUser(testUsername).apply(request)
+
+      // Assert
+      status(result) mustBe OK
+      contentAsString(result) must include("johndoe")
+    }
+
+//    "redirect to the index page with an error message if the user is not found" in {
+//      val testUsername = "unknownuser"
+//      val request = FakeRequest(GET, s"/api/github/users/$testUsername")
+//
+//      val result = TestApplicationController.getGitHubUser(testUsername).apply(request)
+//
+//      status(result) mustBe OK
+//      redirectLocation(result) mustBe Some(routes.ApplicationController.index().url)
+//      flash(result).get("error") mustBe Some("User not found")
+//    }
+  }
+
+
+  "ApplicationController .getGitHubRepo" should {
+    "redirect to the gitHubRepo views html page" in {
+
+    }
+    "redirect to the index page with an error message if the repo is not found" in {
+
+    }
+  }
+
+  "ApplicationController .getGitHubRepoContents" should {
+    "redirect to the gitHubRepoContents views html page" in {
+
+    }
+    "redirect to the index page with an error message if the repo contents are not found" in {
+
+    }
+  }
 
   override def beforeEach(): Unit = await(repository.deleteAll())
 
