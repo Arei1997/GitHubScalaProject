@@ -7,6 +7,7 @@ case class Contents(
                      `type`: String,
                      html_url: String,
                      url: String,
+                     path: String,
                      content: Option[String] // `content` field is optional, only present for files
                    )
 

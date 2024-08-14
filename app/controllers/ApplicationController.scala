@@ -118,20 +118,75 @@ class ApplicationController @Inject()(
   }
 
   def getGitHubFileOrFolder(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
-    repositoryService.getRepoFiles(username, repoName, path).value.map {
-      case Right(contents) =>
-        contents.headOption match {
-          case Some(content) if content.`type` == "file" && content.content.isDefined =>
-            val fileContent = new String(java.util.Base64.getDecoder.decode(content.content.get))
-            Ok(views.html.gitHubFileContents(username, repoName, path, fileContent))
-          case Some(content) if content.`type` == "dir" =>
-            Ok(views.html.gitHubRepoContents(username, repoName, contents))
-          case _ =>
-            BadRequest("Invalid path or unsupported content type")
+    repositoryService.getFileContent(username, repoName, path).value.flatMap {
+      case Right(file) if file.content.isDefined =>
+        // This is a file; decode the base64 content and render it as plaintext
+        val decodedContent = java.util.Base64.getDecoder.decode(file.content.get.replaceAll("\n", ""))
+        val fileContent = new String(decodedContent, "UTF-8")
+        Future.successful(Ok(views.html.gitHubFileContents(username, repoName, path, fileContent)))
+
+      case Right(_) =>
+        // This is a directory; fetch its contents
+        repositoryService.getRepoFiles(username, repoName, path).value.map {
+          case Right(contents) => Ok(views.html.gitHubRepoContents(username, repoName, contents))
+          case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
         }
+
       case Left(APIError.BadAPIResponse(status, message)) =>
-        Status(status)(Json.obj("error" -> message))
+        Future.successful(Status(status)(Json.obj("error" -> message)))
     }
   }
+
+
+
+//  def getGitHubFileOrFolder(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
+//    repositoryService.getFileContent(username, repoName, path).value.flatMap {
+//      case Right(file) if file.content.isDefined =>
+//        // This is a file; decode the base64 content and render it as plaintext
+//        val decodedContent = java.util.Base64.getDecoder.decode(file.content.get.replaceAll("\n", ""))
+//        val fileContent = new String(decodedContent, "UTF-8")
+//        Future.successful(Ok(views.html.gitHubFileContents(username, repoName, path, fileContent)))
+//
+//      case Right(_) =>
+//        // This is likely a directory, fetch its contents
+//        repositoryService.getRepoContents(username, repoName, path).value.map {
+//          case Right(contents) => Ok(views.html.gitHubRepoContents(username, repoName, contents))
+//          case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
+//        }
+//
+//      case Left(APIError.BadAPIResponse(status, message)) =>
+//        Future.successful(Status(status)(Json.obj("error" -> message)))
+//    }
+//  }
+
+//  def getRepoContents(username: String, repoName: String): EitherT[Future, APIError, List[Contents]] = {
+//    val url = s"https://api.github.com/repos/$username/$repoName/contents"
+//    connector.get[List[Contents]](url)
+//  }
+//  def getRepoFiles(username: String, repoName: String, path: String): EitherT[Future, APIError, List[Contents]] = {
+//    val url = s"https://api.github.com/repos/$username/$repoName/contents/$path"
+//    connector.get[List[Contents]](url)
+//  }
+//
+//  def getFileContent(username: String, repoName: String, path: String): EitherT[Future, APIError, Contents] = {
+//    val url = s"https://api.github.com/repos/$username/$repoName/contents/$path"
+//    connector.get[Contents](url)
+//  }
+
+//  def getFileOrDirectory(username: String, repoName: String, path: String): Action[AnyContent] = Action.async {
+//    val decodedPath = new String(Base64.getDecoder.decode(path))
+//    val isFileRequest = decodedPath.contains(".")
+//
+//    val result: Future[Result] = if (isFileRequest) {
+//      [service].[getMethod](username, repoName, decodedPath).map { content =>
+//        Ok(content).as("text/plain")
+//      }
+//    } else {
+//      [service].[getMethod](username, repoName, decodedPath).map { json =>
+//        val files = (json \\ "name").map(_.as[String])
+//        Ok(views.html.directoryContents(files))
+//      }
+
+
 
 }
