@@ -17,7 +17,7 @@ class GitHubConnector @Inject()(ws: WSClient, config: Configuration)(implicit ec
   def get[Response](url: String)(implicit rds: Reads[Response], ec: ExecutionContext): EitherT[Future, APIError, Response] = {
     val request = ws.url(url)
 
-    // Add Authorization header if the GitHub token is available
+
     val requestWithAuth = githubToken match {
       case Some(token) => request.addHttpHeaders("Authorization" -> s"token $token")
       case None => request
