@@ -69,9 +69,9 @@ class GitHubConnector @Inject()(ws: WSClient, config: Configuration)(implicit ec
 
   private def handleResponse[T](response: WSResponse)(implicit rds: Reads[T]): Either[APIError, T] = {
     response.status match {
-      case 200 => Right(response.json.as[T])
-      case 201 => Right(response.json.as[T])
-      case 204 => Right(Json.obj().as[T])
+      case 200 | 201 => Right(response.json.as[T])  // Handle successful JSON responses
+      case 204 => Right(Json.obj().as[T])           // Handle 204 No Content by returning an empty JSON object
+      case 409 => Left(APIError.BadAPIResponse(409, "Conflict: Possible SHA mismatch or file has been modified"))
       case _ => Left(APIError.BadAPIResponse(response.status, response.statusText))
     }
   }
