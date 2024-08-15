@@ -29,5 +29,14 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
     connector.get[Contents](url)
   }
 
+  // New methods for creating, updating, and deleting files
+  def createOrUpdateFile(username: String, repoName: String, path: String, message: String, content: String, sha: Option[String] = None): EitherT[Future, APIError, Contents] = {
+    connector.createOrUpdateFile(username, repoName, path, message, content, sha)
+  }
+
+  def deleteFile(username: String, repoName: String, path: String, message: String, sha: String): EitherT[Future, APIError, Contents] = {
+    connector.deleteFile(username, repoName, path, message, sha)
+  }
+
 
 }

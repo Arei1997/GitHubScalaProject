@@ -47,3 +47,9 @@ GET  /github/users/:username/repos/:repoName/folder/*path   controllers.Applicat
 GET     /api/github/users/:username/repos/:repoName/contents/:path   controllers.GitHubReposController.readFile(username: String, repoName: String, path: String)
 #PUT     /api/github/users/:username/repos/:repoName/contents/:path   controllers.GitHubReposController.createOrUpdateFile(username: String, repoName: String, path: String)
 #DELETE  /api/github/users/:username/repos/:repoName/contents/:path   controllers.GitHubReposController.deleteFile(username: String, repoName: String, path: String)
+
+# Create or update a file in a repository
+PUT     /api/github/users/:username/repos/:repoName/contents/*path   controllers.GitHubReposController.createOrUpdateFile(username: String, repoName: String, path: String)
+
+# Delete a file from a repository
+DELETE  /api/github/users/:username/repos/:repoName/contents/*path   controllers.GitHubReposController.deleteFile(username: String, repoName: String, path: String)
