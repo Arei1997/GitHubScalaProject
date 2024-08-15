@@ -45,5 +45,5 @@ GET  /github/users/:username/repos/:repoName/folder/*path   controllers.Applicat
 
 #CRUD GH API
 GET     /api/github/users/:username/repos/:repoName/contents/:path   controllers.GitHubReposController.readFile(username: String, repoName: String, path: String)
-PUT     /api/github/users/:username/repos/:repoName/contents/:path   controllers.GitHubReposController.createOrUpdateFile(username: String, repoName: String, path: String)
-DELETE  /api/github/users/:username/repos/:repoName/contents/:path   controllers.GitHubReposController.deleteFile(username: String, repoName: String, path: String)
+#PUT     /api/github/users/:username/repos/:repoName/contents/:path   controllers.GitHubReposController.createOrUpdateFile(username: String, repoName: String, path: String)
+#DELETE  /api/github/users/:username/repos/:repoName/contents/:path   controllers.GitHubReposController.deleteFile(username: String, repoName: String, path: String)
