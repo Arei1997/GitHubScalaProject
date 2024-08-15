@@ -42,3 +42,8 @@ DELETE  /api/:login                    controllers.ApplicationController.delete(
 
 GET  /github/users/:username/repos/:repoName/file/*path   controllers.ApplicationController.getGitHubFile(username: String, repoName: String, path: String)
 GET  /github/users/:username/repos/:repoName/folder/*path   controllers.ApplicationController.getGitHubFolder(username: String, repoName: String, path: String)
+
+#CRUD GH API
+GET     /api/github/users/:username/repos/:repoName/contents/:path   controllers.GitHubReposController.readFile(username: String, repoName: String, path: String)
+PUT     /api/github/users/:username/repos/:repoName/contents/:path   controllers.GitHubReposController.createOrUpdateFile(username: String, repoName: String, path: String)
+DELETE  /api/github/users/:username/repos/:repoName/contents/:path   controllers.GitHubReposController.deleteFile(username: String, repoName: String, path: String)
