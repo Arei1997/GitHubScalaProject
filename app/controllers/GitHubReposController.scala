@@ -5,7 +5,7 @@ import connector.GitHubConnector
 import model.APIError
 import play.api.mvc.{AbstractController, Action, AnyContent, BaseController, ControllerComponents, Request}
 import play.api.libs.json.JsValue
-import model.Contents
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -15,8 +15,16 @@ class GitHubReposController @Inject()(gitHubConnector: GitHubConnector, cc: Cont
   def readFile(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     val url = s"https://api.github.com/repos/$username/$repoName/contents/$path"
 
-    val response: EitherT[Future, APIError, JsValue] = gitHubConnector.get[Contents](url)
+    val response: EitherT[Future, APIError, JsValue] = gitHubConnector.get[JsValue](url)
 
-
-
+    response.value.map {
+      case Right(content) =>
+        Ok(content).as("application/json")
+      case Left(error) =>
+        error match {
+          case APIError.BadAPIResponse(status, message) =>
+            Status(status)(message)
+        }
+    }
   }
+}
