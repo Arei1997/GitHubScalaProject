@@ -117,21 +117,37 @@ class ApplicationController @Inject()(
     }
   }
 
-  def getGitHubFileOrFolder(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
-    repositoryService.getRepoFiles(username, repoName, path).value.map {
-      case Right(contents) =>
-        contents.headOption match {
-          case Some(content) if content.`type` == "file" && content.content.isDefined =>
-            val fileContent = new String(java.util.Base64.getDecoder.decode(content.content.get))
-            Ok(views.html.gitHubFileContents(username, repoName, path, fileContent))
-          case Some(content) if content.`type` == "dir" =>
-            Ok(views.html.gitHubRepoContents(username, repoName, contents))
-          case _ =>
-            BadRequest("Invalid path or unsupported content type")
-        }
+  def getGitHubFile(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
+    repositoryService.getFileContent(username, repoName, path).value.flatMap {
+      case Right(file) if file.content.isDefined =>
+        // Decode the base64 content and render it as plaintext
+        val decodedContent = java.util.Base64.getDecoder.decode(file.content.get.replaceAll("\n", ""))
+        val fileContent = new String(decodedContent, "UTF-8")
+        Future.successful(Ok(views.html.gitHubFileContents(username, repoName, path, fileContent)))
+
+      case Right(_) =>
+        Future.successful(NotFound(Json.obj("error" -> s"No file content found at $path")))
+
       case Left(APIError.BadAPIResponse(status, message)) =>
-        Status(status)(Json.obj("error" -> message))
+        Future.successful(Status(status)(Json.obj("error" -> message)))
     }
   }
+
+  def getGitHubFolder(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
+    repositoryService.getRepoFiles(username, repoName, path).value.map {
+      case Right(contents) => Ok(views.html.gitHubRepoContents(username, repoName, contents))
+      case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
+    }.recover {
+      case ex: Exception => InternalServerError(Json.obj("error" -> ex.getMessage))
+    }
+  }
+
+
+
+
+
+
+
+
 
 }

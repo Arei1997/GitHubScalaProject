@@ -9,14 +9,18 @@
 <ul>
     @for(content <- contents) {
     <li>
+<!--        @content.name - @content.`type` - @content.path-->
         @if(content.`type` == "dir") {
         <img src="@routes.Assets.versioned("images/folder.png")" alt="Folder icon" class="icon" />
+        <a href="@routes.ApplicationController.getGitHubFolder(username, repoName, content.path)">@content.name</a>
         } else {
         <img src="@routes.Assets.versioned("images/document.png")" alt="File icon" class="icon" />
+        <a href="@routes.ApplicationController.getGitHubFile(username, repoName, content.path)">@content.name</a>
         }
-        <a href="@content.url">@content.name</a>
     </li>
     }
 </ul>
-
 }
+
+
+

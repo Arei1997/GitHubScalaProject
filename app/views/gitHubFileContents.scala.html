@@ -1,11 +1,9 @@
 @(username: String, repoName: String, path: String, fileContent: String)
 
 @main(s"Contents of $path in $repoName by $username") {
-
 <h1>File: @path</h1>
 <h3>Repository: @repoName</h3>
 <h3>Owner: @username</h3>
 
-<pre>@fileContent</pre>
-
+<pre>@fileContent</pre>  <!-- Display the file content as preformatted text -->
 }
