@@ -114,3 +114,9 @@ ul {
     padding: 0; /* Removes default padding */
     margin: 0; /* Removes default margin */
 }
+
+.profile-avatar {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 50%;
+}
