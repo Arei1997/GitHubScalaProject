@@ -90,7 +90,7 @@ head::after {
     justify-content: space-between;
 }
 
- button {
+button {
     background-color: #ff6347;
     color: #ffffff;
     padding: 8px 16px;
@@ -101,7 +101,7 @@ head::after {
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
- button:hover {
+button:hover {
     background-color: #ff4500;
     transform: scale(1.05);
 }
@@ -181,7 +181,7 @@ head::after {
     font-size: 0.875rem; /* Consistent font size with container text */
 }
 
-.header, .nav-heading, .header-left, .header-right {
+.header, .nav-heading, .header-left, .header-right, button {
   position: relative; /* Ensure they are positioned for z-index */
   z-index: 10; /* Or a higher value to be above pseudo-elements */
 }
