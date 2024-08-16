@@ -44,22 +44,37 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
   import model.FileFormData
 
   def createFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.fileForm(model.FileFormData.form, username, repoName, path))
+    Ok(views.html.fileForm(FileFormData.form, username, repoName, path))
   }
 
   def submitFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
-    model.FileFormData.form.bindFromRequest().fold(
+    FileFormData.form.bindFromRequest().fold(
       formWithErrors => {
         Future.successful(BadRequest(views.html.fileForm(formWithErrors, username, repoName, path)))
       },
       data => {
-        repositoryService.createOrUpdateFile(username, repoName, path, data.message, data.content, data.sha).value.map {
-          case Right(_) => Redirect(routes.GitHubReposController.createFileForm(username, repoName, path)).flashing("success" -> "File created successfully")
-          case Left(error) => BadRequest(views.html.fileForm(model.FileFormData.form.withError("error", error.reason), username, repoName, path))
+        // Use the path from the request, and make sure it's the correct one
+        val filePath = path // Ensure this comes from the correct source
+
+        repositoryService.getFileContent(username, repoName, filePath).value.flatMap {
+          case Right(existingFile) =>
+            // File exists, update it
+            repositoryService.createOrUpdateFile(username, repoName, filePath, data.message, data.content, Some(existingFile.sha)).value.map {
+              case Right(_) => Redirect(routes.GitHubReposController.createFileForm(username, repoName, filePath)).flashing("success" -> "File updated successfully")
+              case Left(error) => BadRequest(views.html.fileForm(FileFormData.form.withError("error", error.reason), username, repoName, filePath))
+            }
+          case Left(_) =>
+            // File does not exist, create it
+            repositoryService.createOrUpdateFile(username, repoName, filePath, data.message, data.content, None).value.map {
+              case Right(_) => Redirect(routes.GitHubReposController.createFileForm(username, repoName, filePath)).flashing("success" -> "File created successfully")
+              case Left(error) => BadRequest(views.html.fileForm(FileFormData.form.withError("error", error.reason), username, repoName, filePath))
+            }
         }
       }
     )
   }
+
+
 
 
   private def accessToken(implicit request: Request[_]) = {
