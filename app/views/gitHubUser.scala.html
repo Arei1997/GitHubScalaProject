@@ -4,12 +4,9 @@
 
 @main("GitHub User Profile") {
 <div class="user-profile">
-    <div class="profile-header">
+    <div class="profile-info">
         <img src="@user.avatar_url" alt="@user.login's avatar" class="profile-avatar">
         <h1>@user.login</h1>
-    </div>
-
-    <div class="profile-info">
         <p><strong>Name:</strong> @user.name.getOrElse("No Name Provided")</p>
         <p><strong>Location:</strong> @user.location.getOrElse("Unknown")</p>
         <p><strong>Bio:</strong> @user.bio.getOrElse("No Bio Available")</p>
@@ -25,8 +22,9 @@
             <p>@user.following</p>
         </div>
         <div class="stat">
-            <strong>Repositories</strong>
-            <p><a href="@routes.ApplicationController.getGitHubRepo(user.login)">View Repositories</a></p>
+            <form action="@routes.ApplicationController.getGitHubRepo(user.login)" method="GET">
+                <button class="repo-button" type="submit">View Repositories</button>
+            </form>
         </div>
     </div>
 </div>
