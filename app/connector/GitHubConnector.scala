@@ -1,78 +1,79 @@
 package connector
 
 import cats.data.EitherT
-import model.{APIError, Contents}
-import play.api.libs.json.{JsObject, Json, Reads}
-import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
-import play.api.Configuration
+import com.google.inject.Inject
+import com.typesafe.config.ConfigFactory
+import model.{APIError, Contents, CreateOrUpdate, Delete}
+import play.api.libs.json.{Json, Reads}
+import play.api.libs.ws.{WSClient, WSResponse}
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import java.util.Base64
 
-class GitHubConnector @Inject()(ws: WSClient, config: Configuration)(implicit ec: ExecutionContext) {
+class GitHubConnector @Inject()(ws: WSClient)(implicit ec: ExecutionContext) {
 
-  private val githubToken: Option[String] = config.getOptional[String]("github.token")
+  // Load the personal access token from the configuration
+  private val personalAccessToken = ConfigFactory.load().getString("github.token")
 
-  private def addAuthorizationHeader(request: WSRequest): WSRequest = {
-    githubToken match {
-      case Some(token) => request.addHttpHeaders("Authorization" -> s"token $token")
-      case None => request
-    }
-  }
+  def get[Response](url: String)(implicit rds: Reads[Response], ec: ExecutionContext): EitherT[Future, APIError, Response] = {
+    val request = ws.url(url).addHttpHeaders(
+      "Accept" -> "application/vnd.github+json",
+      "Authorization" -> s"Bearer $personalAccessToken"
+    )
 
-  def get[T](url: String)(implicit rds: Reads[T], ec: ExecutionContext): EitherT[Future, APIError, T] = {
-    val request = ws.url(url)
-    val requestWithAuth = addAuthorizationHeader(request)
+    val response = request.get()
+
     EitherT {
-      requestWithAuth.get().map { response =>
-        response.status match {
-          case 200 => Right(response.json.as[T])
-          case _ => Left(APIError.BadAPIResponse(response.status, response.statusText))
+      response.map { result =>
+        if (result.status == 200) {
+          Right(result.json.as[Response])
+        } else {
+          Left(APIError.BadAPIResponse(result.status, result.statusText))
         }
-      }.recover {
-        case ex: Exception => Left(APIError.BadAPIResponse(500, ex.getMessage))
+      }.recover { case _: Throwable =>
+        Left(APIError.BadAPIResponse(500, "Could not connect to API."))
       }
     }
   }
 
-  def createOrUpdateFile(username: String, repoName: String, path: String, message: String, content: String, sha: Option[String]): EitherT[Future, APIError, Contents] = {
-    val url = s"https://api.github.com/repos/$username/$repoName/contents/$path"
-    val requestBody = Json.obj(
-      "message" -> message,
-      "content" -> Base64.getEncoder.encodeToString(content.getBytes("UTF-8")),
-      "sha" -> sha
+  def createOrUpdate[Response](url: String, data: CreateOrUpdate)(implicit rds: Reads[Response], ec: ExecutionContext): EitherT[Future, APIError, Response] = {
+    val request = ws.url(url).addHttpHeaders(
+      "Accept" -> "application/vnd.github+json",
+      "Authorization" -> s"Bearer $personalAccessToken"
     )
-    put[Contents](url, requestBody)
-  }
 
-  def deleteFile(username: String, repoName: String, path: String, message: String, sha: String): EitherT[Future, APIError, Contents] = {
-    val url = s"https://api.github.com/repos/$username/$repoName/contents/$path"
-    val requestWithAuth = addAuthorizationHeader(ws.url(url))
-      .withQueryStringParameters(
-        "message" -> message,
-        "sha" -> sha
-      )
+    val response = request.put(Json.toJson(data))
 
     EitherT {
-      requestWithAuth.delete().map(handleResponse[Contents])
+      response.map { result =>
+        if (result.status == 200 || result.status == 201) {
+          Right(result.json.as[Response])
+        } else {
+          Left(APIError.BadAPIResponse(result.status, result.statusText))
+        }
+      }.recover { case _: Throwable =>
+        Left(APIError.BadAPIResponse(500, "Could not connect to API."))
+      }
     }
   }
 
-  private def put[T](url: String, body: JsObject)(implicit rds: Reads[T], ec: ExecutionContext): EitherT[Future, APIError, T] = {
-    val request = ws.url(url).withHttpHeaders("Content-Type" -> "application/json")
-    val requestWithAuth = addAuthorizationHeader(request)
-    EitherT {
-      requestWithAuth.put(body).map(handleResponse[T])
-    }
-  }
+  def delete[Response](url: String, data: Delete)(implicit rds: Reads[Response], ec: ExecutionContext): EitherT[Future, APIError, Response] = {
+    val request = ws.url(url).addHttpHeaders(
+      "Accept" -> "application/vnd.github+json",
+      "Authorization" -> s"Bearer $personalAccessToken"
+    )
 
-  private def handleResponse[T](response: WSResponse)(implicit rds: Reads[T]): Either[APIError, T] = {
-    response.status match {
-      case 200 | 201 => Right(response.json.as[T])  // Handle successful JSON responses
-      case 204 => Right(Json.obj().as[T])           // Handle 204 No Content by returning an empty JSON object
-      case 409 => Left(APIError.BadAPIResponse(409, "Conflict: Possible SHA mismatch or file has been modified"))
-      case _ => Left(APIError.BadAPIResponse(response.status, response.statusText))
+    val response = request.withMethod("DELETE").withBody(Json.toJson(data)).execute()
+
+    EitherT {
+      response.map { result =>
+        if (result.status == 200) {
+          Right(result.json.as[Response])
+        } else {
+          Left(APIError.BadAPIResponse(result.status, result.statusText))
+        }
+      }.recover { case _: Throwable =>
+        Left(APIError.BadAPIResponse(500, "Could not connect to API."))
+      }
     }
   }
 }

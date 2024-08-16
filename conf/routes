@@ -53,3 +53,7 @@ PUT     /api/github/users/:username/repos/:repoName/contents/*path   controllers
 
 # Delete a file from a repository
 DELETE  /api/github/users/:username/repos/:repoName/contents/*path   controllers.GitHubReposController.deleteFile(username: String, repoName: String, path: String)
+
+
+GET     /github/users/:username/repos/:repoName/contents/*path/form   controllers.GitHubReposController.createFileForm(username: String, repoName: String, path: String)
+POST    /github/users/:username/repos/:repoName/contents/*path        controllers.GitHubReposController.submitFileForm(username: String, repoName: String, path: String)

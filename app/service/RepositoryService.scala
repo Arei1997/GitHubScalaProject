@@ -2,9 +2,10 @@ package service
 
 import cats.data.EitherT
 import connector.GitHubConnector
-import model.{APIError, Contents, Repository, User}
+import model.{APIError, Contents, CreateOrUpdate, Delete, Repository, User}
 import play.api.libs.json.JsValue
 
+import java.util.Base64
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 @Singleton
@@ -31,12 +32,24 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
 
   // New methods for creating, updating, and deleting files
   def createOrUpdateFile(username: String, repoName: String, path: String, message: String, content: String, sha: Option[String] = None): EitherT[Future, APIError, Contents] = {
-    connector.createOrUpdateFile(username, repoName, path, message, content, sha)
+    val url = s"https://api.github.com/repos/$username/$repoName/contents/$path"
+    val createOrUpdateData = CreateOrUpdate(
+      message = message,
+      content = Base64.getEncoder.encodeToString(content.getBytes("UTF-8")),
+      sha = sha
+    )
+    connector.createOrUpdate[Contents](url, createOrUpdateData)
   }
 
   def deleteFile(username: String, repoName: String, path: String, message: String, sha: String): EitherT[Future, APIError, Contents] = {
-    connector.deleteFile(username, repoName, path, message, sha)
+    val url = s"https://api.github.com/repos/$username/$repoName/contents/$path"
+    val deleteData = Delete(
+      message = message,
+      sha = sha
+    )
+    connector.delete[Contents](url, deleteData)
   }
+
 
 
 }
