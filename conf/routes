@@ -55,5 +55,10 @@ PUT     /api/github/users/:username/repos/:repoName/contents/*path   controllers
 DELETE  /api/github/users/:username/repos/:repoName/contents/*path   controllers.GitHubReposController.deleteFile(username: String, repoName: String, path: String)
 
 
-GET     /github/:username/:repoName/contents/*path/form   controllers.GitHubReposController.createFileForm(username: String, repoName: String, path: String)
-POST    /github/:username/:repoName/contents/*path        controllers.GitHubReposController.submitFileForm(username: String, repoName: String, path: String)
+GET    /api/github/users/:username/repos/:repoName/contents/*path/createForm   controllers.GitHubReposController.createFileForm(username: String, repoName: String, path: String)
+POST   /api/github/users/:username/repos/:repoName/contents/*path/createForm   controllers.GitHubReposController.submitFileForm(username: String, repoName: String, path: String)
+
+GET    /api/github/users/:username/repos/:repoName/contents/*path   controllers.GitHubReposController.readFile(username: String, repoName: String, path: String)
+
+GET    /github/:username/:repoName/contents/*path/form/delete   controllers.GitHubReposController.deleteFileForm(username: String, repoName: String, path: String)
+POST   /github/:username/:repoName/contents/*path/form/delete   controllers.GitHubReposController.submitDeleteFileForm(username: String, repoName: String, path: String)

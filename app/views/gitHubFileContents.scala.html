@@ -2,9 +2,16 @@
 
 @main(s"Contents of $path in $repoName by $username") {
 <h1>@repoName</h1>
-<p>File:@path</p>
+<p>File: @path</p>
 <p>Owner: @username</p>
 <p>SHA: @sha</p> <!-- Display the sha -->
 
 <pre class="file-content">@fileContent</pre> <!-- Display the file content as preformatted text -->
+
+<!-- Buttons for updating, deleting the file, and going back to the repository contents -->
+<div>
+    <a href="@routes.GitHubReposController.createFileForm(username, repoName, path)" class="btn btn-primary">Update File</a>
+    <a href="@routes.GitHubReposController.deleteFileForm(username, repoName, path)" class="btn btn-danger">Delete File</a>
+    <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary">Back to Repository Contents</a>
+</div>
 }

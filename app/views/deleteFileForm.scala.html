@@ -1,0 +1,19 @@
+@import model.Delete
+@import helper._
+
+@(deleteForm: Form[Delete], username: String, repoName: String, path: String)(implicit request: Request[AnyContent], messages: Messages)
+
+@main("Delete File") {
+<h1>Delete File</h1>
+@helper.form(action = routes.GitHubReposController.submitDeleteFileForm(username, repoName, path)) {
+@helper.CSRF.formField
+
+@helper.inputText(deleteForm("message"), '_label -> "Commit Message")
+@helper.inputText(deleteForm("sha"), '_label -> "SHA")
+
+<button type="submit" class="btn btn-danger">Delete</button>
+}
+
+<!-- Back to Repo button -->
+<a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary mt-3">Back to Repo</a>
+}

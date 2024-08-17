@@ -14,4 +14,3 @@ object FileFormData {
     )(FileFormData.apply)(FileFormData.unapply)
   )
 }
-

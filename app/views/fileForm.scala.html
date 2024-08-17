@@ -1,21 +1,20 @@
-@(fileForm: Form[model.FileFormData], username: String, repoName: String, path: String)(implicit request: Request[AnyContent], messages: Messages)
-
+@import model.FileFormData
 @import helper._
 
+@(fileForm: Form[FileFormData], username: String, repoName: String, path: String)(implicit request: Request[AnyContent], messages: Messages)
+
 @main("Create or Update File") {
-<div>
-    @helper.form(action = routes.GitHubReposController.submitFileForm(username, repoName, path)) {
-    @helper.CSRF.formField
-    <div class="form-group">
-        @helper.inputText(fileForm("message"), Symbol("_label") -> "Commit Message", Symbol("placeholder") -> "Enter commit message")
-    </div>
-    <div class="form-group">
-        @helper.textarea(fileForm("content"), Symbol("_label") -> "File Content", Symbol("placeholder") -> "Enter file content")
-    </div>
-    <div class="form-group">
-        @helper.inputText(fileForm("sha"), Symbol("_label") -> "SHA (optional)", Symbol("placeholder") -> "SHA")
-    </div>
-    <input type="submit" class="btn btn-primary" value="Submit">
-    }
-</div>
+<h1>Create or Update File</h1>
+@helper.form(action = routes.GitHubReposController.submitFileForm(username, repoName, path)) {
+@helper.CSRF.formField
+
+@helper.inputText(fileForm("message"), '_label -> "Commit Message")
+@helper.textarea(fileForm("content"), '_label -> "File Content")
+@helper.inputText(fileForm("sha"), '_label -> "SHA (optional)")
+
+<button type="submit" class="btn btn-primary">Submit</button>
+}
+
+<!-- Back to Repo button -->
+<a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary mt-3">Back to Repo</a>
 }

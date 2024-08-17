@@ -1,6 +1,7 @@
 package controllers
 
-import model.{APIError, Contents, FileFormData}
+import model.{APIError, Contents, Delete, FileFormData}
+
 import play.api.i18n.Messages
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request}
@@ -47,32 +48,64 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
     Ok(views.html.fileForm(FileFormData.form, username, repoName, path))
   }
 
+
+
+
   def submitFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
     FileFormData.form.bindFromRequest().fold(
       formWithErrors => {
         Future.successful(BadRequest(views.html.fileForm(formWithErrors, username, repoName, path)))
       },
       data => {
-        // Use the path from the request, and make sure it's the correct one
-        val filePath = path // Ensure this comes from the correct source
-
-        repositoryService.getFileContent(username, repoName, filePath).value.flatMap {
+        repositoryService.getFileContent(username, repoName, path).value.flatMap {
           case Right(existingFile) =>
-            // File exists, update it
-            repositoryService.createOrUpdateFile(username, repoName, filePath, data.message, data.content, Some(existingFile.sha)).value.map {
-              case Right(_) => Redirect(routes.GitHubReposController.createFileForm(username, repoName, filePath)).flashing("success" -> "File updated successfully")
-              case Left(error) => BadRequest(views.html.fileForm(FileFormData.form.withError("error", error.reason), username, repoName, filePath))
+            // Update the file if it exists
+            repositoryService.createOrUpdateFile(username, repoName, path, data.message, data.content, Some(existingFile.sha)).value.map {
+              case Right(_) => Ok(views.html.fileForm(FileFormData.form.fill(data), username, repoName, path)).flashing("success" -> "File updated successfully")
+              case Left(error) => BadRequest(views.html.fileForm(FileFormData.form.withError("error", error.reason), username, repoName, path))
             }
           case Left(_) =>
-            // File does not exist, create it
-            repositoryService.createOrUpdateFile(username, repoName, filePath, data.message, data.content, None).value.map {
-              case Right(_) => Redirect(routes.GitHubReposController.createFileForm(username, repoName, filePath)).flashing("success" -> "File created successfully")
-              case Left(error) => BadRequest(views.html.fileForm(FileFormData.form.withError("error", error.reason), username, repoName, filePath))
+            // Create a new file if it doesn't exist
+            repositoryService.createOrUpdateFile(username, repoName, path, data.message, data.content, None).value.map {
+              case Right(_) => Ok(views.html.fileForm(FileFormData.form.fill(data), username, repoName, path)).flashing("success" -> "File created successfully")
+              case Left(error) => BadRequest(views.html.fileForm(FileFormData.form.withError("error", error.reason), username, repoName, path))
             }
         }
       }
     )
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+  def deleteFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    Ok(views.html.deleteFileForm(Delete.form, username, repoName, path))
+  }
+
+  def submitDeleteFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
+    Delete.form.bindFromRequest().fold(
+      formWithErrors => {
+        Future.successful(BadRequest(views.html.deleteFileForm(formWithErrors, username, repoName, path)))
+      },
+      data => {
+        repositoryService.deleteFile(username, repoName, path, data.message, data.sha).value.map {
+          case Right(_) => Redirect(routes.GitHubReposController.deleteFileForm(username, repoName, path)).flashing("success" -> "File deleted successfully")
+          case Left(error) => BadRequest(views.html.deleteFileForm(Delete.form.withError("error", error.reason), username, repoName, path))
+        }
+      }
+    )
+  }
+
+
 
 
 
