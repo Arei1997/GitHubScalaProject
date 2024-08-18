@@ -1,15 +1,27 @@
 @import model.FileFormData
 @import helper._
-
 @(fileForm: Form[FileFormData], username: String, repoName: String, path: String)(implicit request: Request[AnyContent], messages: Messages)
 
 @main("Create or Update File") {
-<h1>Create or Update File</h1>
+<h1>Create or Update File in @repoName</h1>
+
 @helper.form(action = routes.GitHubReposController.submitFileForm(username, repoName, path)) {
 @helper.CSRF.formField
 
+@if(path == "root" || path.isEmpty) {
+<p>File Name (including extension):</p>
+@helper.inputText(fileForm("fileName"), '_label -> "File Name", 'placeholder -> "Enter the file name")
+} else {
+<p><strong>Editing File:</strong> @path</p>
+}
+
+<p>Commit Message:</p>
 @helper.inputText(fileForm("message"), '_label -> "Commit Message")
+
+<p>File Content:</p>
 @helper.textarea(fileForm("content"), '_label -> "File Content")
+
+<p>SHA (optional):</p>
 @helper.inputText(fileForm("sha"), '_label -> "SHA (optional)")
 
 <button type="submit" class="btn btn-primary">Submit</button>
