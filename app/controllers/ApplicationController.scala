@@ -65,10 +65,16 @@ class ApplicationController @Inject()(
     }
   }
 
-  def getGitHubRepoContents(username: String, repoName: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
+  def getGitHubRepoContents(username: String, repoName: String): Action[AnyContent] = Action.async { implicit request =>
     repositoryService.getRepoContents(username, repoName).value.map {
-      case Right(contents) => Ok(views.html.gitHubRepoContents(username,repoName, contents))
-      case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
+      case Right(contents) =>
+        if (request.headers.get("Accept").contains("application/json")) {
+          Ok(Json.toJson(contents)) // Return JSON if the request is expecting JSON
+        } else {
+          Ok(views.html.gitHubRepoContents(username, repoName, contents)) // Render HTML otherwise
+        }
+      case Left(APIError.BadAPIResponse(status, message)) =>
+        Status(status)(Json.obj("error" -> message))
     }
   }
 
@@ -120,18 +126,23 @@ class ApplicationController @Inject()(
   def getGitHubFile(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
     repositoryService.getFileContent(username, repoName, path).value.flatMap {
       case Right(file) if file.content.isDefined =>
-        // Decode the base64 content and render it as plaintext
-        val decodedContent = java.util.Base64.getDecoder.decode(file.content.get.replaceAll("\n", ""))
-        val fileContent = new String(decodedContent, "UTF-8")
-        Future.successful(Ok(views.html.gitHubFileContents(username, repoName, path, fileContent)))
+        try {
+          val contentWithoutNewlines = file.content.get.replaceAll("\\s", "")
+          val decodedContent = new String(java.util.Base64.getDecoder.decode(contentWithoutNewlines), "UTF-8")
+          Future.successful(Ok(views.html.gitHubFileContents(username, repoName, path, decodedContent, file.sha)))
+        } catch {
+          case _: IllegalArgumentException =>
+            Future.successful(BadRequest("Invalid base64 content"))
+        }
 
       case Right(_) =>
-        Future.successful(NotFound(Json.obj("error" -> s"No file content found at $path")))
+        Future.successful(NotFound(s"No file content found at $path"))
 
       case Left(APIError.BadAPIResponse(status, message)) =>
-        Future.successful(Status(status)(Json.obj("error" -> message)))
+        Future.successful(Status(status)(s"Error fetching file content: $message"))
     }
   }
+
 
   def getGitHubFolder(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
     repositoryService.getRepoFiles(username, repoName, path).value.map {
@@ -141,6 +152,7 @@ class ApplicationController @Inject()(
       case ex: Exception => InternalServerError(Json.obj("error" -> ex.getMessage))
     }
   }
+
 
 
 

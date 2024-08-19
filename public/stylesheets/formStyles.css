@@ -1,0 +1,62 @@
+/* Container styling */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9; /* Light background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Form group styling */
+.form-group {
+    margin-bottom: 15px; /* Space between form groups */
+}
+
+/* Label styling */
+.form-group label {
+    font-weight: bold; /* Bold text for labels */
+    display: block; /* Ensure labels are block elements */
+    margin-bottom: 5px; /* Space between label and input */
+    color: #333; /* Dark text color for contrast */
+}
+
+/* Input and Textarea styling */
+.form-control {
+    width: 100%; /* Full width */
+    padding: 10px; /* Padding inside inputs */
+    font-size: 16px; /* Larger text for readability */
+    border-radius: 4px; /* Rounded corners */
+    border: 1px solid #ccc; /* Light border */
+    box-sizing: border-box; /* Ensure padding doesn’t affect width */
+}
+
+/* Button styling */
+.btn-primary {
+    background-color: #007bff; /* Primary blue color */
+    border-color: #007bff; /* Matching border */
+    color: white; /* White text color */
+    padding: 10px 20px; /* Padding inside button */
+    font-size: 16px; /* Larger text for readability */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+/* Button hover effect */
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Textarea styling */
+textarea.form-control {
+    resize: vertical; /* Allow vertical resize */
+    height: auto; /* Auto-adjust height */
+}
+
+/* Optional: Additional styling */
+body {
+    font-family: 'Arial', sans-serif; /* Base font family */
+    background-color: #f4f4f4; /* Light background for the page */
+    color: #333; /* Dark text color for body */
+}

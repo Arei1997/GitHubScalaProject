@@ -4,14 +4,13 @@
 
 <!-- Button to view user profile -->
 <form action="@routes.ApplicationController.getGitHubUser(username)" method="GET">
-    <button type="submit">View User Profile</button>
+    <button class="profileBtn" type="submit">View User Profile</button>
 </form>
 
-<h2>Repositories for @username</h2>
-<ul>
+<h2>Repositories for @username:</h2>
+<ul class="repo-list">
     @for(repo <- repositories) {
     <li>
-        <strong>Repository:</strong>
         <a href="@routes.ApplicationController.getGitHubRepoContents(username, repo.name)">@repo.name</a>
     </li>
     }

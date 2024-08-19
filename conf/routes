@@ -42,3 +42,23 @@ DELETE  /api/:login                    controllers.ApplicationController.delete(
 
 GET  /github/users/:username/repos/:repoName/file/*path   controllers.ApplicationController.getGitHubFile(username: String, repoName: String, path: String)
 GET  /github/users/:username/repos/:repoName/folder/*path   controllers.ApplicationController.getGitHubFolder(username: String, repoName: String, path: String)
+
+#CRUD GH API
+GET     /api/github/users/:username/repos/:repoName/contents/:path   controllers.GitHubReposController.readFile(username: String, repoName: String, path: String)
+#PUT     /api/github/users/:username/repos/:repoName/contents/:path   controllers.GitHubReposController.createOrUpdateFile(username: String, repoName: String, path: String)
+#DELETE  /api/github/users/:username/repos/:repoName/contents/:path   controllers.GitHubReposController.deleteFile(username: String, repoName: String, path: String)
+
+# Create or update a file in a repository
+PUT     /api/github/users/:username/repos/:repoName/contents/*path   controllers.GitHubReposController.createOrUpdateFile(username: String, repoName: String, path: String)
+
+# Delete a file from a repository
+DELETE  /api/github/users/:username/repos/:repoName/contents/*path   controllers.GitHubReposController.deleteFile(username: String, repoName: String, path: String)
+
+
+GET    /api/github/users/:username/repos/:repoName/contents/*path/createForm   controllers.GitHubReposController.createFileForm(username: String, repoName: String, path: String)
+POST   /api/github/users/:username/repos/:repoName/contents/*path/createForm   controllers.GitHubReposController.submitFileForm(username: String, repoName: String, path: String)
+
+GET    /api/github/users/:username/repos/:repoName/contents/*path   controllers.GitHubReposController.readFile(username: String, repoName: String, path: String)
+
+GET    /github/:username/:repoName/contents/*path/form/delete   controllers.GitHubReposController.deleteFileForm(username: String, repoName: String, path: String)
+POST   /github/:username/:repoName/contents/*path/form/delete   controllers.GitHubReposController.submitDeleteFileForm(username: String, repoName: String, path: String)

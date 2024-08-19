@@ -8,10 +8,10 @@ case class Contents(
                      html_url: String,
                      url: String,
                      path: String,
-                     content: Option[String] // `content` field is optional, only present for files
+                     sha: String,              // Add the sha field
+                     content: Option[String]   // `content` field is optional, only present for files
                    )
 
 object Contents {
   implicit val format: OFormat[Contents] = Json.format[Contents]
 }
-
