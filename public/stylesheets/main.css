@@ -171,3 +171,209 @@ strong {
     padding: 0 20px;
     overflow: none;
 }
+
+
+/* Specific container for user profile page to remove white background */
+.user-profile-page .container {
+    background-color: transparent !important; /* Remove the white background */
+    box-shadow: none !important; /* Remove the box-shadow */
+    padding: 0 !important; /* Adjust padding if necessary */
+}
+
+
+/* Profile Styling */
+.user-profile-container .user-profile {
+    text-align: center;
+    align-items: center;
+    padding: 30px;
+    max-width: 450px;
+    margin: 50px auto;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    background: linear-gradient(135deg, #4b0082, #2e004d); /* Dark purple gradient background */
+}
+
+
+.user-profile-container .user-profile:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Spinning Profile Avatar */
+.user-profile-container .profile-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.4s ease, transform 1s ease;
+}
+
+.user-profile-container .profile-avatar:hover {
+    transform: rotate(360deg); /* Spin effect on hover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.user-profile-container h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
+    color: #fff; /* White text to contrast with the gradient background */
+    margin: 20px 0 10px;
+}
+
+.user-profile-container p {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1rem;
+    color: #f3f3f3;
+}
+
+.user-profile-container strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+.user-profile-container .repo-button {
+    background: linear-gradient(135deg, #ff6347, #ff4500);
+    color: #fff;
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+    margin-top: 20px;
+    box-shadow: none; /* Remove the box-shadow */
+    border: none; /* Remove any border */
+}
+
+.user-profile-container .repo-button:hover {
+    background: linear-gradient(135deg, #ff4500, #ff6347);
+    transform: translateY(-3px) scale(1.03);
+}
+
+
+/* Profile Stats Styling */
+.user-profile-container .profile-stats {
+    display: flex;
+    justify-content: center; /* Center the stats within the profile */
+    gap: 30px; /* Space between the boxes */
+    margin-top: 20px;
+}
+
+.user-profile-container .stat {
+    background: rgba(42, 42, 114, 0.95);
+    border: 2px solid #6a11cb;
+    border-radius: 15px; /* Increased border radius for a smoother look */
+    padding: 20px; /* Increased padding for a more substantial feel */
+    text-align: center;
+    width: 130px; /* Adjusted width for a balanced look */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+}
+
+.user-profile-container .stat:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    background: rgba(42, 42, 114, 1);
+}
+
+.user-profile-container .stat strong {
+    display: block;
+    font-size: 1rem; /* Increased font size */
+    color: #ffffff;
+    margin-bottom: 10px; /* Increased margin for spacing */
+}
+
+.user-profile-container .stat p {
+    font-size: 1.5rem; /* Increased font size for a more prominent look */
+    font-weight: bold;
+    color: #00d2ff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+/* Profile Button Styling */
+.profileBtn {
+    background: linear-gradient(135deg, #ff6347, #ff4500);
+    color: #fff;
+    padding: 12px 25px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profileBtn:hover {
+    background: linear-gradient(135deg, #ff4500, #ff6347);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Repository List Styling */
+.repo-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 30px auto;
+    max-width: 800px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.repo-list li {
+    margin: 10px;
+    flex: 1 1 45%;
+    max-width: 45%;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.repo-list li:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.repo-list a {
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2rem;
+    color: #4b0082;
+    padding: 15px;
+    display: block;
+    text-align: center;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.repo-list a:hover {
+    color: #fff;
+    background-color: #4b0082;
+}
+
+/* Section Styling */
+h2 {
+    font-family: 'Poppins', sans-serif;
+    color: #4b0082;
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    width: 50px;
+    height: 4px;
+    background-color: #ff6347;
+    display: block;
+    margin: 10px auto 0;
+    border-radius: 2px;
+}

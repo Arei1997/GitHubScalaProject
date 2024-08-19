@@ -2,30 +2,34 @@
 
 @(user: User)
 
-@main("GitHub User Profile") {
-<div class="user-profile">
-    <div class="profile-info">
-        <img src="@user.avatar_url" alt="@user.login's avatar" class="profile-avatar">
-        <h1>@user.login</h1>
-        <p><strong>Name:</strong> @user.name.getOrElse("No Name Provided")</p>
-        <p><strong>Location:</strong> @user.location.getOrElse("Unknown")</p>
-        <p><strong>Bio:</strong> @user.bio.getOrElse("No Bio Available")</p>
-    </div>
+<div class="user-profile-page">
+    @main("GitHub User Profile") {
+    <div class="user-profile-container">
+        <div class="user-profile">
+            <div class="profile-info">
+                <img src="@user.avatar_url" alt="@user.login's avatar" class="profile-avatar">
+                <h1>@user.login</h1>
+                <p><strong>Name:</strong> @user.name.getOrElse("No Name Provided")</p>
+                <p><strong>Location:</strong> @user.location.getOrElse("Unknown")</p>
+                <p><strong>Bio:</strong> @user.bio.getOrElse("No Bio Available")</p>
+            </div>
 
-    <div class="profile-stats">
-        <div class="stat">
-            <strong>Followers: </strong>
-            <p>@user.followers</p>
-        </div>
-        <div class="stat">
-            <strong>Following: </strong>
-            <p>@user.following</p>
-        </div>
-        <div class="stat">
-            <form action="@routes.ApplicationController.getGitHubRepo(user.login)" method="GET">
-                <button class="repo-button" type="submit">View Repositories</button>
-            </form>
+            <div class="profile-stats">
+                <div class="stat">
+                    <strong>Followers: </strong>
+                    <p>@user.followers</p>
+                </div>
+                <div class="stat">
+                    <strong>Following: </strong>
+                    <p>@user.following</p>
+                </div>
+                <div class="stat">
+                    <form action="@routes.ApplicationController.getGitHubRepo(user.login)" method="GET">
+                        <button class="repo-button" type="submit">View Repositories</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+    }
 </div>
-}
