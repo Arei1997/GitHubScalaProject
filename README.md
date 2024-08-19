@@ -10,6 +10,7 @@ To run the project, follow these steps:
 ```bash
 git clone https://github.com/Arei1997/GitHubScalaProject.git
 cd GitHubScalaProject
+'''
 ## Technologies
 
 * `Enter a list of technologies used within the project`
