@@ -5,12 +5,24 @@ This project is a RESTful API built with the Play Framework in Scala. It interac
 ## Running the project
 
 To run the project, follow these steps:
+
 1. clone the repository and navigate into the project directory, use the following commands:
 
 ```bash
 git clone https://github.com/Arei1997/GitHubScalaProject.git
 cd GitHubScalaProject
-'''
+```
+
+2. Set up MongoDB:
+
+Make sure you have MongoDB installed and running on your local machine. Adjust the MongoDB connection settings in the application.conf file if necessary.
+
+3. Set up the GitHub API Token:
+
+You'll need to add your GitHub personal access token to the project's configuration. Update the application.conf file with your token:
+```bash
+github.token = "your-github-personal-access-token"
+```
 ## Technologies
 
 * `Enter a list of technologies used within the project`
