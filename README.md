@@ -23,18 +23,48 @@ You'll need to add your GitHub personal access token to the project's configurat
 ```bash
 github.token = "your-github-personal-access-token"
 ```
+
+4. Run the project:
+
+Use sbt to run the application:
+```bash
+sbt run
+```
+
+5. Access the application:
+
+Open your web browser and navigate to http://localhost:9000 to access the application.
+
 ## Technologies
 
-* `Enter a list of technologies used within the project`
+Technologies
+This project leverages the following technologies:
+
+- Scala: The main programming language used for developing the API.
+- Play Framework: A powerful web framework for building web applications in Scala.
+- MongoDB: A NoSQL database used for storing user data.
+- Play WS: A client-side library for making HTTP requests, used to interact with the GitHub API.
 
 ## Languages
 
-`Add information about languages used`
+The following languages are used within the project:
+
+Scala: The primary language for application logic.
+HTML: For rendering views.
+CSS: For styling the web pages.
 
 ## Features
 
-* `Details of main features`
-* `Details of any special features`
+GitHub API Integration: Fetches and displays the top 5 most popular Scala repositories.
+User Management: Basic CRUD operations for managing users in MongoDB.
+Error Handling: Graceful handling of errors with custom error pages.
+
+## Special Features
+
+Dynamic Repository Fetching: Real-time fetching of popular repositories from GitHub.
+User Profile Display: Displays user profiles fetched from GitHub.
+File Management: Create, update, and delete files within repositories via the GitHub API.
+
 
 ## Tests
 
