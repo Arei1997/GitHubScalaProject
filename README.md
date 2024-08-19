@@ -4,7 +4,10 @@ This project is a RESTful API built with the Play Framework in Scala. It interac
 
 ## Running the project
 
-`Enter instructions on how to run your application here`
+To run the project, follow these steps:
+1. Clone the repository:
+git clone https://github.com/your-repository.git
+cd your-repository
 
 ## Technologies
 
