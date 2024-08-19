@@ -1,9 +1,10 @@
 html {
-    font-size: 14px; /* Reduce the base font size from 16px */
+    font-size: 1rem; /* Reduce the base font size from 16px */
     font-family: 'Arial', sans-serif;
     overflow: hidden;
     background: #123;
 }
+
 
 body, head {
     display: block;
@@ -133,7 +134,7 @@ button:hover {
 
 .container h1, .container h2, .container h3 {
     color: rgba(0, 0, 128, 0.8); /* Soft navy color */
-    font-size: 1.15rem; /* Reduce font size */
+    font-size: 2rem; /* Reduce font size */
     padding: 5px; /* Reduce padding */
     text-align: center;
 }
@@ -217,6 +218,6 @@ button:hover {
 
 button[type="submit"],
 .btn-secondary {
-    width: 100%;
+    width: 70%;
     margin-top: 10px;
 }

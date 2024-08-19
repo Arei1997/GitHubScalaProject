@@ -9,15 +9,17 @@
 <p>You are about to delete the file within the  <strong>@path</strong> repository <strong>@repoName</strong>. Please provide the following details to confirm the deletion:</p>
 
 @helper.form(action = routes.GitHubReposController.submitDeleteFileForm(username, repoName, path)) {
-@helper.CSRF.formField
+@helper.CSRF.formField\
 
 <p><strong>Commit Message:</strong> Enter a brief message explaining the reason for this deletion:</p>
-@helper.inputText(deleteForm("message"), '_label -> "Commit Message")
+@helper.inputText(deleteForm("message"), '_label -> "")
 
 <p><strong>SHA:</strong> Enter the SHA of the file to confirm deletion. This ensures you are deleting the correct file:</p>
-@helper.inputText(deleteForm("sha"), '_label -> "SHA")
+@helper.inputText(deleteForm("sha"), '_label -> "")
 
-<button type="submit" class="btn btn-danger">Delete</button>
+<div style="text-align: center;">
+<button type="submit" class="btn btn-danger">Confirm</button>
+</div>
 }
 
 <!-- Back to Repo button -->

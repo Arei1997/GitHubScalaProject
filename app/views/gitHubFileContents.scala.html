@@ -14,7 +14,7 @@
 <!-- Buttons for updating, deleting the file, and going back to the repository contents -->
 <div class="button-container">
     <a href="@routes.GitHubReposController.createFileForm(username, repoName, path)" class="btn btn-primary">Update File</a>
-    <a href="@routes.GitHubReposController.deleteFileForm(username, repoName, path)" class="btn btn-danger">Delete File</a>
-    <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary">Back to Repository Contents</a>
+    <a href="@routes.GitHubReposController.deleteFileForm(username, repoName, path)" class="btn btn-primary">Delete File</a>
+    <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-primary">Back to Repository Contents</a>
 </div>
 }
