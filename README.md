@@ -6,7 +6,8 @@ This project is a RESTful API built with the Play Framework in Scala. It interac
 
 To run the project, follow these steps:
 1. Clone the repository:
-git clone git@github.com:Arei1997/GitHubScalaProject.git
+''' bash
+git clone https://github.com/Arei1997/GitHubScalaProject.git
 cd your-repository
 
 ## Technologies
