@@ -12,7 +12,7 @@
 </div>
 
 <h2>Repository Contents</h2>
-<ul>
+<ul class="repo-list">
     @for(content <- contents) {
     <li>
         @if(content.`type` == "dir") {
@@ -21,7 +21,6 @@
         } else {
         <img src="@routes.Assets.versioned("images/document.png")" alt="File icon" class="icon" />
         <a href="@routes.ApplicationController.getGitHubFile(username, repoName, content.path)">@content.name</a>
-
         }
     </li>
     }
