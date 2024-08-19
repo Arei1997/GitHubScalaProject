@@ -23,4 +23,11 @@ class GitHubService @Inject()(connector: GitHubConnector)(implicit ec: Execution
     }
   }
 
+  def getTopScalaRepositories(): EitherT[Future, APIError, Seq[Repository]] = {
+    val url = "https://api.github.com/search/repositories?q=language:scala&sort=stars&order=desc&per_page=5"
+    connector.get[JsValue](url).map { json =>
+      (json \ "items").as[Seq[Repository]]
+    }
+  }
+
 }

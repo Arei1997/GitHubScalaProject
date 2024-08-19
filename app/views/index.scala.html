@@ -1,6 +1,13 @@
-@()
+@(repositories: Seq[model.Repository])
 
-@main("GitHub Example") {
-<h2>Let's get started! We will be connecting to the GitHub API</h2>
-<p>Have a look at the documentation for the API <a href="https://docs.github.com/en/rest" target="_blank">here</a></p>
+@main("Top Scala Repositories") {
+<h2>Top 5 Scala Repositories on GitHub</h2>
+<ul>
+    @for(repo <- repositories) {
+    <li>
+        <a href="@repo.html_url" target="_blank">@repo.name</a>
+        <p>@repo.description.getOrElse("No description available")</p>
+    </li>
+    }
+</ul>
 }
