@@ -5,17 +5,10 @@
 <head>
     <title>@title</title>
     <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
-    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/header.css")'>
-    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/formStyles.css")'>
-    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/styles.css")'>
+    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/components.css")'>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
 </head>
 <body>
-
-<!-- Animated background container with a background image -->
-<div id="large-header" class="large-header">
-    <canvas id="demo-canvas"></canvas>
-</div>
 
 <!-- Full Header Content -->
 <nav class="header">
@@ -40,6 +33,12 @@
     @content
 </div>
 
+<!-- Animated background container with a background image -->
+<div id="large-header" class="large-header">
+    <canvas id="demo-canvas"></canvas>
+</div>
+
 <script src='@routes.Assets.versioned("javascripts/animated-background.js")'></script>
 </body>
 </html>
+
