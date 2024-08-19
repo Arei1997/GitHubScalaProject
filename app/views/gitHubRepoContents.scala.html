@@ -22,10 +22,6 @@
         <img src="@routes.Assets.versioned("images/document.png")" alt="File icon" class="icon" />
         <a href="@routes.ApplicationController.getGitHubFile(username, repoName, content.path)">@content.name</a>
 
-        <!-- Button to go to the file form for creating/updating a file -->
-        <form action="@routes.GitHubReposController.createFileForm(username, repoName, content.path)" method="GET" style="display:inline;">
-            <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Edit</button>
-        </form>
         }
     </li>
     }

@@ -61,13 +61,13 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
           case Right(existingFile) =>
             // Update the file if it exists
             repositoryService.createOrUpdateFile(username, repoName, fileName, data.message, data.content, Some(existingFile.sha)).value.map {
-              case Right(_) => Ok(views.html.fileForm(FileFormData.form.fill(data), username, repoName, fileName)).flashing("success" -> "File updated successfully")
+              case Right(_) => Redirect(routes.ApplicationController.getGitHubRepoContents(username, repoName)).flashing("success" -> "File updated successfully")
               case Left(error) => BadRequest(views.html.fileForm(FileFormData.form.withError("error", error.reason), username, repoName, fileName))
             }
           case Left(_) =>
             // Create a new file if it doesn't exist
             repositoryService.createOrUpdateFile(username, repoName, fileName, data.message, data.content, None).value.map {
-              case Right(_) => Ok(views.html.fileForm(FileFormData.form.fill(data), username, repoName, fileName)).flashing("success" -> "File created successfully")
+              case Right(_) => Redirect(routes.ApplicationController.getGitHubRepoContents(username, repoName)).flashing("success" -> "File created successfully")
               case Left(error) => BadRequest(views.html.fileForm(FileFormData.form.withError("error", error.reason), username, repoName, fileName))
             }
         }
