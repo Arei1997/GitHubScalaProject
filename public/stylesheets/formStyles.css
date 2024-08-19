@@ -1,62 +1,55 @@
-/* Container styling */
-.container {
+/* formStyles.css */
+
+/* Form Container */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #f9f9f9; /* Light background color */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Form group styling */
 .form-group {
-    margin-bottom: 15px; /* Space between form groups */
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 15px;
 }
 
-/* Label styling */
 .form-group label {
-    font-weight: bold; /* Bold text for labels */
-    display: block; /* Ensure labels are block elements */
-    margin-bottom: 5px; /* Space between label and input */
-    color: #333; /* Dark text color for contrast */
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
 }
 
-/* Input and Textarea styling */
-.form-control {
-    width: 100%; /* Full width */
-    padding: 10px; /* Padding inside inputs */
-    font-size: 16px; /* Larger text for readability */
-    border-radius: 4px; /* Rounded corners */
-    border: 1px solid #ccc; /* Light border */
-    box-sizing: border-box; /* Ensure padding doesn’t affect width */
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    font-size: 1rem;
 }
 
-/* Button styling */
-.btn-primary {
-    background-color: #007bff; /* Primary blue color */
-    border-color: #007bff; /* Matching border */
-    color: white; /* White text color */
-    padding: 10px 20px; /* Padding inside button */
-    font-size: 16px; /* Larger text for readability */
-    border-radius: 4px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s ease; /* Smooth transition on hover */
+.centered-label-input {
+    text-align: center;
 }
 
-/* Button hover effect */
-.btn-primary:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+.centered-label-input label {
+    display: block;
+    text-align: center;
+    margin-bottom: 5px;
+    font-weight: bold;
 }
 
-/* Textarea styling */
-textarea.form-control {
-    resize: vertical; /* Allow vertical resize */
-    height: auto; /* Auto-adjust height */
-}
-
-/* Optional: Additional styling */
-body {
-    font-family: 'Arial', sans-serif; /* Base font family */
-    background-color: #f4f4f4; /* Light background for the page */
-    color: #333; /* Dark text color for body */
+.centered-label-input input[type="text"],
+.centered-label-input textarea {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 500px;
 }

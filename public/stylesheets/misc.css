@@ -1,0 +1,50 @@
+/* misc.css */
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+strong {
+   color: black;
+   align-items: center;
+}
+
+.repo-list {
+    text-align: center;
+}
+
+.icon {
+    min-height: 50px;
+    max-height: 200px;
+    min-width: 50px;
+    max-width: 50px;
+}
+
+.file-content {
+    color: black;
+    text-wrap: wrap;
+    font-size: 0.7rem;
+    padding: 0 20px;
+    overflow: none;
+}
+
+.center-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.input-center {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 500px;
+}

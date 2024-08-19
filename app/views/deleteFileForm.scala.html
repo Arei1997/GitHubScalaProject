@@ -4,24 +4,30 @@
 @(deleteForm: Form[Delete], username: String, repoName: String, path: String)(implicit request: Request[AnyContent], messages: Messages)
 
 @main("Delete File") {
-<h1>Delete File from @repoName</h1>
+<h1 class="center-text">Delete File from @repoName</h1>
 
-<p>You are about to delete the file within the  <strong>@path</strong> repository <strong>@repoName</strong>. Please provide the following details to confirm the deletion:</p>
+<div class="center-container">
+    <p class="center-text">You are about to delete the file within the <strong>@path</strong> repository <strong>@repoName</strong>. Please provide the following details to confirm the deletion:</p>
 
-@helper.form(action = routes.GitHubReposController.submitDeleteFileForm(username, repoName, path)) {
-@helper.CSRF.formField\
+    @helper.form(action = routes.GitHubReposController.submitDeleteFileForm(username, repoName, path)) {
+    @helper.CSRF.formField
 
-<p><strong>Commit Message:</strong> Enter a brief message explaining the reason for this deletion:</p>
-@helper.inputText(deleteForm("message"), '_label -> "")
+    <div class="form-group">
+        <p class="center-text"><strong>Commit Message:</strong> Enter a brief message explaining the reason for this deletion:</p>
+        @helper.inputText(deleteForm("message"), '_label -> "", 'class -> "input-center")
+    </div>
 
-<p><strong>SHA:</strong> Enter the SHA of the file to confirm deletion. This ensures you are deleting the correct file:</p>
-@helper.inputText(deleteForm("sha"), '_label -> "")
+    <div class="form-group">
+        <p class="center-text"><strong>SHA:</strong> Enter the SHA of the file to confirm deletion. This ensures you are deleting the correct file:</p>
+        @helper.inputText(deleteForm("sha"), '_label -> "", 'class -> "input-center")
+    </div>
 
-<div style="text-align: center;">
-<button type="submit" class="btn btn-danger">Confirm</button>
+    <div class="center-container">
+        <button type="submit" class="btn btn-danger">Confirm</button>
+    </div>
+    }
+
+    <!-- Back to Repo button -->
+    <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary mt-3">Back to Repo</a>
 </div>
-}
-
-<!-- Back to Repo button -->
-<a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary mt-3">Back to Repo</a>
 }
