@@ -28,9 +28,6 @@ body {
     z-index: -1;        /* Send it behind the header */
 }
 
-#large-header {
-    background-image: url('/assets/images/nebula.jpg'); /* Use your image path */
-}
 
 /* The canvas for the animation */
 #demo-canvas {
