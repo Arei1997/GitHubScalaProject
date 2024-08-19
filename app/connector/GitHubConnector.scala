@@ -4,15 +4,14 @@ import cats.data.EitherT
 import com.google.inject.Inject
 import com.typesafe.config.ConfigFactory
 import model.{APIError, Contents, CreateOrUpdate, Delete}
+import play.api.Configuration
 import play.api.libs.json.{Json, Reads}
 import play.api.libs.ws.{WSClient, WSResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GitHubConnector @Inject()(ws: WSClient)(implicit ec: ExecutionContext) {
-
-  // Load the personal access token from the configuration
-  private val personalAccessToken = ConfigFactory.load().getString("github.token")
+class GitHubConnector @Inject()(ws: WSClient, config: Configuration)(implicit ec: ExecutionContext) {
+  private val personalAccessToken = config.get[String]("github.token")
 
   def get[Response](url: String)(implicit rds: Reads[Response], ec: ExecutionContext): EitherT[Future, APIError, Response] = {
     val request = ws.url(url).addHttpHeaders(
@@ -77,3 +76,5 @@ class GitHubConnector @Inject()(ws: WSClient)(implicit ec: ExecutionContext) {
     }
   }
 }
+
+
