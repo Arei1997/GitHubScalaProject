@@ -121,12 +121,14 @@ button:hover {
 .container {
     background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent white */
     border: 3px solid rgba(128, 0, 128, 0.3); /* Softer border */
-    padding: 10px; /* Reduce padding */
-    margin: 15px auto; /* Reduce margin */
+    padding: 10px;
+    margin: 15px auto;
     border-radius: 15px;
-    overflow: auto;
-    max-height: 70vh;
-    max-width: 85vw; /* Increase max-width */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal scrolling */
+    max-height: 80vh; /* Set a max height to control scrolling */
+    max-width: 95vw; /* Increase max-width to take more space */
+    width: 100%; /* Ensure it takes the full width of the parent */
 }
 
 .container h1, .container h2, .container h3 {
@@ -149,9 +151,10 @@ button:hover {
     text-decoration: none;
 }
 
-.content p {
-    color: #666666;
-    font-size: 0.75rem; /* Smaller font size */
+.content {
+    max-height: 80vh; /* Ensure the content also respects the container's max height */
+    overflow-y: auto; /* Enable scrolling within the content if necessary */
+    overflow-x: hidden; /* Hide horizontal scrolling */
 }
 
 .header, .nav-heading, .header-left, .header-right, button {
