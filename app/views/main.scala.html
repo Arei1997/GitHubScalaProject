@@ -28,7 +28,7 @@
         <h1 class="nav-heading">GitHub in Scala Project</h1>
         <div class="search-container">
             <form action='@routes.ApplicationController.searchGitHubUser' method="GET">
-                <input type="text" name="username" placeholder="Enter GitHub username" required>
+                <input type="text" name="username" placeholder="Enter Username" required>
                 <button type="submit">Search</button>
             </form>
         </div>
@@ -39,6 +39,7 @@
 <div class="container">
     @content
 </div>
-<script src='@routes.Assets.versioned("javascripts/animated-background.js")'></script>
+
+
 </body>
 </html>
