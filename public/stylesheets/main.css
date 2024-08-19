@@ -16,3 +16,113 @@ body, head {
     padding: 0;
     font-size: 0.875rem;
 }
+
+
+/* Ensure the animation background does not cover the content */
+.large-header {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Full screen height */
+    overflow: hidden;
+    z-index: 0; /* Behind content */
+}
+
+#demo-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Ensure canvas is behind all content */
+}
+
+/* Header styling */
+.header {
+    position: relative;
+    z-index: 10; /* Ensure the header is above the background */
+    background-color: rgba(0, 0, 0, 0.8); /* Make header slightly transparent */
+    padding: 20px;
+    color: #fff;
+}
+
+.container {
+    position: relative;
+    z-index: 10; /* Ensure container is above the background */
+    background-color: rgba(255, 255, 255, 0.9); /* Optional: semi-transparent background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+
+/* General styles for the header */
+.header {
+    position: relative;
+    z-index: 10; /* Ensure the header is above the background */
+    background-color: rgba(0, 0, 0, 0.8); /* Slightly transparent black */
+    padding: 20px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Styling for the header left (e.g., Home button) */
+.header-left {
+    flex: 1;
+}
+
+/* Styling for the header right (e.g., Title and Search Bar) */
+.header-right {
+    flex: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Title styling */
+.nav-heading {
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+/* Styling for the search container */
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
+.search-container input[type="text"] {
+    padding: 6px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    background-color: #fff;
+    color: #333;
+}
+
+.search-container button {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    background-color: #ff6347;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-container button:hover {
+    background-color: #ff4500;
+}
+
+/* Ensure the container doesn't cover the header */
+.container {
+    position: relative;
+    z-index: 5; /* Ensure the container is below the header */
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}

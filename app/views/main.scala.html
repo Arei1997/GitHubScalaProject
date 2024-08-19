@@ -4,17 +4,20 @@
 <html lang="en">
 <head>
     <title>@title</title>
-    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/base.css")'>
+    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
     <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/header.css")'>
-    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/buttons.css")'>
-    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/container.css")'>
-    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/misc.css")'>
     <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/formStyles.css")'>
-    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/profile.css")'>
-    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/animations.css")'>
-    <link rel="shortcut icon" type="image/png" href='@routes.Assets.versioned("images/favicon.png")'>
+    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/styles.css")'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
 </head>
 <body>
+
+<!-- Animated background container with a background image -->
+<div id="large-header" class="large-header">
+    <canvas id="demo-canvas"></canvas>
+</div>
+
+<!-- Full Header Content -->
 <nav class="header">
     <div class="header-left">
         <form action='@routes.ApplicationController.index()' method="GET">
@@ -32,9 +35,11 @@
     </div>
 </nav>
 
+<!-- Main Content Container -->
 <div class="container">
     @content
 </div>
 
+<script src='@routes.Assets.versioned("javascripts/animated-background.js")'></script>
 </body>
 </html>
