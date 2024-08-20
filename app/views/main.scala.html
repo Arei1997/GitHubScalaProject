@@ -19,21 +19,16 @@
 </div>
 
 <!-- Full Header Content -->
-<nav class="header">
-    <div class="header-left">
-        <form action='@routes.ApplicationController.index()' method="GET">
-            <button class="home-button">Home</button>
-        </form>
-    </div>
-    <div class="header-right">
-        <h1 class="nav-heading">GitHub in Scala Project</h1>
-        <div class="search-container">
-            <form action='@routes.ApplicationController.searchGitHubUser' method="GET">
-                <input type="text" name="username" placeholder="Enter Username" required>
-                <button type="submit">Search</button>
-            </form>
-        </div>
-    </div>
+<nav class="mask">
+    <a href="@routes.ApplicationController.index()">Home</a>
+    <ul class="list">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="#">News</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+    <button class="search">Search</button>
+    <button class="menu">Menu</button>
 </nav>
 
 <!-- Main Content Container -->
@@ -41,6 +36,6 @@
     @content
 </div>
 
-
 </body>
 </html>
+
