@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
     <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/components.css")'>
+    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/search.css")'>
     <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/shooting-stars.css")'>
 </head>
 <body>
@@ -27,7 +28,9 @@
         <li><a href="#">News</a></li>
         <li><a href="#">Contact</a></li>
     </ul>
-    <button class="search">Search</button>
+    <form action="@routes.ApplicationController.searchGitHubUser" method="GET" role="search" class="header-search-form">
+        <input id="search" name="username" type="search" placeholder="Search..." required />
+    </form>
     <button class="menu">Menu</button>
 </nav>
 
