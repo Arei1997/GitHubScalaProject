@@ -21,6 +21,12 @@ libraryDependencies ++= Seq(
   ws,
   "org.typelevel"                %% "cats-core"                 % "2.3.0",
   "com.github.tomakehurst" % "wiremock-jre8" % "2.33.2" % Test,
+  "com.typesafe.play" %% "play-test" % "2.8.19" % Test,
+  "org.scalamock" %% "scalamock" % "5.1.0" % Test,
+  "org.mockito" %% "mockito-scala-scalatest" % "1.16.42"
+
+
+
 
 )
 dependencyOverrides +="com.fasterxml.jackson.core" % "jackson-databind" % "2.11.0"

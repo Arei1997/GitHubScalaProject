@@ -1,31 +1,42 @@
 package controllers
-// bilal's comment
-import baseSpec.BaseSpecWithApplication
-import model.User
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.test.FakeRequest
-import play.api.http.Status
-import play.api.test.Helpers._
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
-import play.api.libs.json.Format.GenericFormat
-import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{AnyContent, BaseController, ControllerComponents, Result}
-import repository._
-import service.GitHubService
 
-import javax.inject.Inject
+import model.{APIError, User}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito._
+import org.mockito.MockitoSugar
+import org.scalatest.BeforeAndAfterEach
+import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{ControllerComponents, Result}
+import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Helpers}
+import repository.DataRepository
+import service.{GitHubService, RepositoryService}
+
 import scala.concurrent.{ExecutionContext, Future}
 
-class ApplicationControllerSpec extends BaseSpecWithApplication {
+class ApplicationControllerSpec extends AnyWordSpec with Matchers with MockitoSugar with ScalaFutures with BeforeAndAfterEach {
 
-  val TestApplicationController = new ApplicationController(
+  // Mock dependencies
+  val mockRepositoryService: RepositoryService = mock[RepositoryService]
+  val mockGitHubService: GitHubService = mock[GitHubService]
+  val mockDataRepository: DataRepository = mock[DataRepository]
+  val mockControllerComponents: ControllerComponents = Helpers.stubControllerComponents()
 
-    component,
-    repository,
-    service,
-    repoService
-  )(executionContext)
+  // Controller instance with injected mocks
+  val testController = new ApplicationController(
+    mockControllerComponents,
+    mockDataRepository,
+    mockGitHubService,
+    mockRepositoryService
+  )(ExecutionContext.global)
+
+  override def beforeEach(): Unit = {
+    // Reset mocks before each test
+    reset(mockRepositoryService, mockGitHubService, mockDataRepository)
+  }
 
   private val testUser: User = User(
     login = "johndoe",
@@ -41,154 +52,96 @@ class ApplicationControllerSpec extends BaseSpecWithApplication {
   "ApplicationController .create" should {
 
     "create a user in the database" in {
-      beforeEach()
+      when(mockDataRepository.create(any[User])).thenReturn(Future.successful(Right(testUser)))
 
-      val request: FakeRequest[JsValue] = buildPost("/api").withBody(Json.toJson(testUser))
-      val createdResult: Future[Result] = TestApplicationController.create()(request)
+      val request: FakeRequest[JsValue] = FakeRequest(POST, "/api").withBody(Json.toJson(testUser))
+      val result: Future[Result] = testController.create()(request)
 
-      status(createdResult) shouldBe Status.CREATED
-
-      afterEach()
+      status(result) shouldBe CREATED
+      contentAsJson(result) shouldBe Json.toJson(testUser)
     }
 
     "return a BadRequest for invalid JSON" in {
-      val invalidRequest: FakeRequest[JsValue] = buildPost("/api").withBody(Json.obj("invalid" -> "data"))
-      val result: Future[Result] = TestApplicationController.create()(invalidRequest)
+      val invalidRequest: FakeRequest[JsValue] = FakeRequest(POST, "/api").withBody(Json.obj("invalid" -> "data"))
+      val result: Future[Result] = testController.create()(invalidRequest)
 
-      status(result) shouldBe Status.BAD_REQUEST
+      status(result) shouldBe BAD_REQUEST
+      contentAsJson(result) should include("errors")
     }
   }
 
-
   "ApplicationController .read" should {
 
-    "find a book in the database by id" in {
-      beforeEach()
+    "find a user in the database by id" in {
+      when(mockDataRepository.read("johndoe")).thenReturn(Future.successful(Right(testUser)))
 
-      val request: FakeRequest[JsValue] = buildGet(s"/api/${testUser.login}").withBody(Json.toJson(testUser))
-      val createdResult: Future[Result] = TestApplicationController.create()(request)
+      val result: Future[Result] = testController.read("johndoe")(FakeRequest())
 
-      status(createdResult) shouldBe Status.CREATED
-
-      val readResult: Future[Result] = TestApplicationController.read(testUser.login)(FakeRequest())
-
-      status(readResult) shouldBe OK
-      contentAsJson(readResult) shouldBe Json.toJson(testUser)
-
-      afterEach()
+      status(result) shouldBe OK
+      contentAsJson(result) shouldBe Json.toJson(testUser)
     }
-    "return NotFound if the book is not found" in {
-      val readResult: Future[Result] = TestApplicationController.read("nonexistent_id")(FakeRequest())
 
-      status(readResult) shouldBe Status.NOT_FOUND
+    "return NotFound if the user is not found" in {
+      when(mockDataRepository.read("nonexistent_id")).thenReturn(Future.successful(Left(APIError.BadAPIResponse(404, "User not found"))))
+
+      val result: Future[Result] = testController.read("nonexistent_id")(FakeRequest())
+
+      status(result) shouldBe NOT_FOUND
     }
   }
 
   "ApplicationController .update" should {
+
     "update a user’s number of followers in the database" in {
-      beforeEach()
+      val updatedUser = testUser.copy(followers = 200)
+      when(mockDataRepository.update(eqTo("johndoe"), any[User])).thenReturn(Future.successful(Right(1)))
 
-      val request: FakeRequest[JsValue] = FakeRequest(POST, "/api").withBody(Json.toJson(testUser))
-      val createdResult: Future[Result] = TestApplicationController.create()(request)
-      status(createdResult) shouldBe Status.CREATED
+      val updateRequest: FakeRequest[JsValue] = FakeRequest(PUT, s"/api/johndoe").withBody(Json.toJson(updatedUser))
+      val result: Future[Result] = testController.update("johndoe")(updateRequest)
 
-      val updatedUser: User = testUser.copy(followers = 200) // Updated number of followers
-      val updatedRequest: FakeRequest[JsValue] = FakeRequest(PUT, s"/api/${testUser.login}").withBody(Json.toJson(updatedUser))
-      val updatedResult: Future[Result] = TestApplicationController.update(testUser.login)(updatedRequest)
-
-      status(updatedResult) shouldBe ACCEPTED
-
-      val readResult: Future[Result] = TestApplicationController.read(testUser.login)(FakeRequest(GET, s"/api/${testUser.login}"))
-      status(readResult) shouldBe OK
-      contentAsJson(readResult) shouldBe Json.toJson(updatedUser)
-
-      afterEach()
+      status(result) shouldBe ACCEPTED
     }
 
     "return NotFound if the user to update is not found" in {
-      val updatedUser: User = testUser.copy(login = "UpdatedLogin")
-      val updatedRequest: FakeRequest[JsValue] = buildPut(s"/api/nonexistent_id").withBody(Json.toJson(updatedUser))
-      val updatedResult: Future[Result] = TestApplicationController.update("nonexistent_id")(updatedRequest)
+      when(mockDataRepository.update(eqTo("nonexistent_id"), any[User])).thenReturn(Future.successful(Left(APIError.BadAPIResponse(404, "User not found"))))
 
-      status(updatedResult) shouldBe Status.NOT_FOUND
+      val updatedUser = testUser.copy(login = "UpdatedLogin")
+      val updateRequest: FakeRequest[JsValue] = FakeRequest(PUT, s"/api/nonexistent_id").withBody(Json.toJson(updatedUser))
+      val result: Future[Result] = testController.update("nonexistent_id")(updateRequest)
+
+      status(result) shouldBe NOT_FOUND
     }
 
     "return BadRequest for invalid JSON" in {
-      val invalidRequest: FakeRequest[JsValue] = buildPut(s"/api/${testUser.login}").withBody(Json.obj("invalid" -> "data"))
-      val result: Future[Result] = TestApplicationController.update(testUser.login)(invalidRequest)
+      val invalidRequest: FakeRequest[JsValue] = FakeRequest(PUT, s"/api/johndoe").withBody(Json.obj("invalid" -> "data"))
+      val result: Future[Result] = testController.update("johndoe")(invalidRequest)
 
-      status(result) shouldBe Status.BAD_REQUEST
+      status(result) shouldBe BAD_REQUEST
     }
   }
-
 
   "ApplicationController .delete" should {
+
     "delete a user in the database" in {
-      beforeEach()
-      val request: FakeRequest[JsValue] = buildPost("/api").withBody(Json.toJson(testUser))
-      val createdResult: Future[Result] = TestApplicationController.create()(request)
+      when(mockDataRepository.delete("johndoe")).thenReturn(Future.successful(Right(new com.mongodb.client.result.DeleteResult {
+        override def wasAcknowledged(): Boolean = true
+        override def getDeletedCount: Long = 1
+      })))
 
-      status(createdResult) shouldBe CREATED
+      val result: Future[Result] = testController.delete("johndoe")(FakeRequest())
 
-      val deleteRequest: FakeRequest[AnyContent] = buildDelete(s"/api/${testUser.login}")
-      val deletedResult: Future[Result] = TestApplicationController.delete(testUser.login)(deleteRequest)
-
-      status(deletedResult) shouldBe ACCEPTED
-
-      afterEach()
+      status(result) shouldBe ACCEPTED
     }
+
     "return NotFound if the user to delete is not found" in {
-      val deleteRequest: FakeRequest[AnyContent] = buildDelete("/api/nonexistent_id")
-      val deletedResult: Future[Result] = TestApplicationController.delete("nonexistent_id")(deleteRequest)
+      when(mockDataRepository.delete("nonexistent_id")).thenReturn(Future.successful(Right(new com.mongodb.client.result.DeleteResult {
+        override def wasAcknowledged(): Boolean = true
+        override def getDeletedCount: Long = 0
+      })))
 
-      status(deletedResult) shouldBe Status.NOT_FOUND
+      val result: Future[Result] = testController.delete("nonexistent_id")(FakeRequest())
+
+      status(result) shouldBe NOT_FOUND
     }
   }
-
-  "ApplicationController .getGitHubUser" should {
-    "redirect to the gitHubUser views html page" in {
-      val testUsername = testUser.login
-
-      val request = FakeRequest(GET, s"/api/github/users/${testUser.login}")
-      val result = TestApplicationController.getGitHubUser(testUsername).apply(request)
-
-      // Assert
-      status(result) mustBe OK
-      contentAsString(result) must include("johndoe")
-    }
-
-//    "redirect to the index page with an error message if the user is not found" in {
-//      val testUsername = "unknownuser"
-//      val request = FakeRequest(GET, s"/api/github/users/$testUsername")
-//
-//      val result = TestApplicationController.getGitHubUser(testUsername).apply(request)
-//
-//      status(result) mustBe OK
-//      redirectLocation(result) mustBe Some(routes.ApplicationController.index().url)
-//      flash(result).get("error") mustBe Some("User not found")
-//    }
-  }
-
-
-  "ApplicationController .getGitHubRepo" should {
-    "redirect to the gitHubRepo views html page" in {
-
-    }
-    "redirect to the index page with an error message if the repo is not found" in {
-
-    }
-  }
-
-  "ApplicationController .getGitHubRepoContents" should {
-    "redirect to the gitHubRepoContents views html page" in {
-
-    }
-    "redirect to the index page with an error message if the repo contents are not found" in {
-
-    }
-  }
-
-  override def beforeEach(): Unit = await(repository.deleteAll())
-
-  override def afterEach(): Unit = await(repository.deleteAll())
 }

@@ -5,24 +5,27 @@
 
 <p><strong>File:</strong> @path</p>
 <p><strong>Owner:</strong> @username</p>
-<p><strong>SHA:</strong> @sha</p> <!-- Display the SHA -->
+<p><strong>SHA:</strong> @sha</p>
 
 <h2>File Content:</h2>
-<p>Below is the content of the file <strong>@path</strong>. You can view or edit it:</p>
+<!-- Textarea for CodeMirror editor in read-only mode -->
+<textarea id="file-content" name="content">@fileContent</textarea>
 
-<!-- Textarea that will be replaced by CodeMirror editor -->
-<textarea id="file-content">@fileContent</textarea>
+<!-- Hidden input to hold the content that was edited in the IDE -->
+<input type="hidden" id="hidden-content" name="content" value="@fileContent">
 
 <!-- Form to redirect to the file form page -->
 <form id="redirect-form" action="@routes.GitHubReposController.createFileForm(username, repoName, path)" method="get">
-    <input type="hidden" id="hidden-content" name="content">
+    <input type="hidden" name="content" id="hidden-content-form">
     <input type="hidden" name="fileName" value="@path">
+    <input type="hidden" name="sha" value="@sha">
 </form>
 
-<!-- Buttons for saving the file and returning to the repository contents -->
+<!-- Buttons for editing and saving the file -->
 <div class="button-container">
-    <button id="save-btn" type="button" class="btn btn-primary">Save Changes</button>
-    <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-primary">Back to Repository Contents</a>
+    <button type="button" id="edit-btn" class="btn btn-primary">Edit File</button>
+    <button type="button" id="save-btn" class="btn btn-primary" style="display: none;">Save Changes</button>
+    <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary">Back to Repository Contents</a>
 </div>
 
 <!-- Include CodeMirror library -->
@@ -30,6 +33,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/mode/javascript/javascript.min.js"></script>
 
-<!-- Include the new JavaScript file -->
+<!-- Include the JavaScript file for handling the editor and buttons -->
 <script src="/assets/javascripts/fileEditor.js"></script>
 }
