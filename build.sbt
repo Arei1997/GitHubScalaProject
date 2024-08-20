@@ -32,3 +32,9 @@ libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.19"
 
 // Adds additional packages into conf/routes
 // play.sbt.routes.RoutesKeys.routesImport += "com.example.binders._"
+
+libraryDependencies ++= Seq(
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test,
+  "org.mockito" %% "mockito-scala-scalatest" % "1.16.42" % Test,
+  "com.github.tomakehurst" % "wiremock-jre8" % "2.33.2" % Test
+)

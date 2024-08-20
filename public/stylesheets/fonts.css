@@ -1,0 +1,25 @@
+/* Import the desired font */
+@import url('https://fonts.googleapis.com/css2?family=Saira:wght@400;600;700&display=swap');
+
+/* Apply the font to the entire site */
+body, html {
+    font-family: 'Saira', sans-serif;
+}
+
+/* Ensure the header uses the new font */
+.header,
+.header .nav-heading,
+.header a,
+.header h1,
+.header h2,
+.header h3,
+.header p,
+.header a {
+    font-family: 'Saira', sans-serif;
+}
+
+/* Ensure other important elements use the new font */
+h1, h2, h3, p, a, button {
+    font-family: 'Saira', sans-serif;
+    font-weight: 400;
+}
