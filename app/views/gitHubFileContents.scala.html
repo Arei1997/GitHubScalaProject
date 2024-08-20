@@ -1,31 +1,34 @@
 @(username: String, repoName: String, path: String, fileContent: String, sha: String)
 
 @main(s"Contents of $path in $repoName by $username") {
-<h1>@repoName</h1>
+<div class="content-container">
+    <h1>@repoName</h1>
 
-<p><strong>File:</strong> @path</p>
-<p><strong>Owner:</strong> @username</p>
-<p><strong>SHA:</strong> @sha</p>
+    <p><strong>File:</strong> @path</p>
+    <p><strong>Owner:</strong> @username</p>
+    <p><strong>SHA:</strong> @sha</p>
 
-<h2>File Content:</h2>
-<!-- Textarea for CodeMirror editor in read-only mode -->
-<textarea id="file-content" name="content">@fileContent</textarea>
+    <h2>File Content:</h2>
 
-<!-- Hidden input to hold the content that was edited in the IDE -->
-<input type="hidden" id="hidden-content" name="content" value="@fileContent">
+    <!-- Textarea for CodeMirror editor in read-only mode initially -->
+    <textarea id="file-content" name="content">@fileContent</textarea>
 
-<!-- Form to redirect to the file form page -->
-<form id="redirect-form" action="@routes.GitHubReposController.createFileForm(username, repoName, path)" method="get">
-    <input type="hidden" name="content" id="hidden-content-form">
-    <input type="hidden" name="fileName" value="@path">
-    <input type="hidden" name="sha" value="@sha">
-</form>
+    <!-- Hidden input to hold the content that was edited in the IDE -->
+    <input type="hidden" id="hidden-content" name="content" value="@fileContent">
 
-<!-- Buttons for editing and saving the file -->
-<div class="button-container">
-    <button type="button" id="edit-btn" class="btn btn-primary">Edit File</button>
-    <button type="button" id="save-btn" class="btn btn-primary" style="display: none;">Save Changes</button>
-    <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary">Back to Repository Contents</a>
+    <!-- Form to redirect to the file form page -->
+    <form id="redirect-form" action="@routes.GitHubReposController.createFileForm(username, repoName, path)" method="get">
+        <input type="hidden" name="content" id="hidden-content-form">
+        <input type="hidden" name="fileName" value="@path">
+        <input type="hidden" name="sha" value="@sha">
+    </form>
+
+    <!-- Buttons for editing and saving the file -->
+    <div class="button-container">
+        <button type="button" id="edit-btn" class="btn btn-primary">Edit File</button>
+        <button type="button" id="save-btn" class="btn btn-primary" style="display: none;">Save Changes</button>
+        <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary">Back to Repository Contents</a>
+    </div>
 </div>
 
 <!-- Include CodeMirror library -->
