@@ -1,44 +1,63 @@
 package controllers
 
-import baseSpec.BaseSpec
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.http.Status.OK
-import play.api.mvc.ControllerComponents
-import play.api.test.Helpers.{GET, contentType, defaultAwaitTimeout, route, status, writeableOf_AnyContentAsEmpty}
-import play.api.test.{FakeRequest, Helpers, Injecting}
+import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatestplus.play.guice.GuiceOneAppPerTest
+import org.scalatestplus.play.{BaseOneAppPerTest, PlaySpec}
+import org.mockito.MockitoSugar
+import play.api.mvc._
+import play.api.test.Helpers._
+import play.api.test._
+import service.GitHubService
+import cats.data.EitherT
+import model.{APIError, Repository}
 
-class HomeControllerSpec extends BaseSpec with Injecting with GuiceOneAppPerSuite {
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
-  val controllerComponents: ControllerComponents = Helpers.stubControllerComponents()
+class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest with MockitoSugar {
 
-  "HomeController GET" should {
+  "HomeController" should {
 
-    "render the index page from a new instance of controller" in {
-      val controller = new HomeController(controllerComponents)
-      val home = controller.index().apply(FakeRequest(GET, "/"))
+    "render the index page with the top Scala repositories" in {
+      val mockGitHubService = mock[GitHubService]
+      val fakeControllerComponents = stubControllerComponents()
 
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
+      val repositories = Seq(
+        Repository("repo1", "http://example.com/repo1", Some("Description 1")),
+        Repository("repo2", "http://example.com/repo2", Some("Description 2"))
+      )
 
+      when(mockGitHubService.getTopScalaRepositories()).thenReturn(
+        EitherT.rightT[Future, APIError](repositories)
+      )
+
+      val controller = new HomeController(fakeControllerComponents, mockGitHubService)
+      val result: Future[Result] = controller.index().apply(FakeRequest(GET, "/"))
+
+      status(result) mustBe OK
+      contentType(result) mustBe Some("text/html")
+      contentAsString(result) must include("Top Scala Repositories on GitHub")
+      contentAsString(result) must include("repo1")
+      contentAsString(result) must include("repo2")
     }
 
-    "render the index page from the application" in {
-      val controller = inject[HomeController]
-      val home = controller.index().apply(FakeRequest(GET, "/"))
+    "render an error page when the GitHub service fails" in {
+      val mockGitHubService = mock[GitHubService]
+      val fakeControllerComponents = stubControllerComponents()
 
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
+      when(mockGitHubService.getTopScalaRepositories()).thenReturn(
+        EitherT.leftT[Future, Seq[Repository]](APIError.BadAPIResponse(500, "Internal Server Error"))
+      )
 
-    }
+      val controller = new HomeController(fakeControllerComponents, mockGitHubService)
+      val result: Future[Result] = controller.index().apply(FakeRequest(GET, "/"))
 
-    "render the index page from the router" in {
-      val request = FakeRequest(GET, "/")
-      val home = route(app, request).get
-
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
-
+      status(result) mustBe INTERNAL_SERVER_ERROR
+      contentType(result) mustBe Some("text/html")
+      contentAsString(result) must include("Oops! Something went wrong.")
+      contentAsString(result) must include("Internal Server Error")
     }
   }
 }
