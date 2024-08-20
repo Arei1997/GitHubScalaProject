@@ -5,16 +5,34 @@
 
 <p><strong>File:</strong> @path</p>
 <p><strong>Owner:</strong> @username</p>
-<p><strong>SHA:</strong> @sha</p> <!-- Display the sha -->
+<p><strong>SHA:</strong> @sha</p>
 
 <h2>File Content:</h2>
-<p>Below is the content of the file <strong>@path</strong>. You can view or edit it:</p>
-<pre class="file-content">@fileContent</pre> <!-- Display the file content as preformatted text -->
+<!-- Textarea for CodeMirror editor in read-only mode -->
+<textarea id="file-content" name="content">@fileContent</textarea>
 
-<!-- Buttons for updating, deleting the file, and going back to the repository contents -->
+<!-- Hidden input to hold the content that was edited in the IDE -->
+<input type="hidden" id="hidden-content" name="content" value="@fileContent">
+
+<!-- Form to redirect to the file form page -->
+<form id="redirect-form" action="@routes.GitHubReposController.createFileForm(username, repoName, path)" method="get">
+    <input type="hidden" name="content" id="hidden-content-form">
+    <input type="hidden" name="fileName" value="@path">
+    <input type="hidden" name="sha" value="@sha">
+</form>
+
+<!-- Buttons for editing and saving the file -->
 <div class="button-container">
-    <a href="@routes.GitHubReposController.createFileForm(username, repoName, path)" class="btn btn-primary">Update File</a>
-    <a href="@routes.GitHubReposController.deleteFileForm(username, repoName, path)" class="btn btn-primary">Delete File</a>
-    <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-primary">Back to Repository Contents</a>
+    <button type="button" id="edit-btn" class="btn btn-primary">Edit File</button>
+    <button type="button" id="save-btn" class="btn btn-primary" style="display: none;">Save Changes</button>
+    <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary">Back to Repository Contents</a>
 </div>
+
+<!-- Include CodeMirror library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/mode/javascript/javascript.min.js"></script>
+
+<!-- Include the JavaScript file for handling the editor and buttons -->
+<script src="/assets/javascripts/fileEditor.js"></script>
 }

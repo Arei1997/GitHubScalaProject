@@ -42,38 +42,61 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
   }
 
   def createFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.fileForm(FileFormData.form, username, repoName, path))
+    val initialContent = request.getQueryString("content").getOrElse("")  // Retrieve content from query string
+    val sha: Option[String] = request.getQueryString("sha") // Default no SHA
+    Ok(views.html.fileForm(FileFormData.form, username, repoName, path, initialContent, sha))
   }
+
+
 
   def submitFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
     FileFormData.form.bindFromRequest().fold(
       formWithErrors => {
-        Future.successful(BadRequest(views.html.fileForm(formWithErrors, username, repoName, path)))
+        val initialContent = formWithErrors("content").value.getOrElse("")
+        val sha = formWithErrors("sha").value
+        Future.successful(BadRequest(views.html.fileForm(formWithErrors, username, repoName, path, initialContent, sha)))
       },
       data => {
-        val fileName = if (path.isEmpty || path == "root") {
-          data.fileName
-        } else {
-          path
-        }
+        val fileName = if (path.isEmpty || path == "root") data.fileName else path
 
         repositoryService.getFileContent(username, repoName, fileName).value.flatMap {
           case Right(existingFile) =>
-            // Update the file if it exists
             repositoryService.createOrUpdateFile(username, repoName, fileName, data.message, data.content, Some(existingFile.sha)).value.map {
               case Right(_) => Redirect(routes.ApplicationController.getGitHubRepoContents(username, repoName)).flashing("success" -> "File updated successfully")
-              case Left(error) => BadRequest(views.html.fileForm(FileFormData.form.withError("error", error.reason), username, repoName, fileName))
+              case Left(error) =>
+                val filledForm = FileFormData.form.fill(data.copy(content = data.content))
+                BadRequest(views.html.fileForm(filledForm.withError("error", error.reason), username, repoName, path, data.content, data.sha))
             }
+
           case Left(_) =>
-            // Create a new file if it doesn't exist
             repositoryService.createOrUpdateFile(username, repoName, fileName, data.message, data.content, None).value.map {
               case Right(_) => Redirect(routes.ApplicationController.getGitHubRepoContents(username, repoName)).flashing("success" -> "File created successfully")
-              case Left(error) => BadRequest(views.html.fileForm(FileFormData.form.withError("error", error.reason), username, repoName, fileName))
+              case Left(error) =>
+                val filledForm = FileFormData.form.fill(data.copy(content = data.content))
+                BadRequest(views.html.fileForm(filledForm.withError("error", error.reason), username, repoName, path, data.content, data.sha))
             }
         }
       }
     )
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   def deleteFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.deleteFileForm(Delete.form, username, repoName, path))
