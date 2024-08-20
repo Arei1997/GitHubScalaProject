@@ -5,16 +5,31 @@
 
 <p><strong>File:</strong> @path</p>
 <p><strong>Owner:</strong> @username</p>
-<p><strong>SHA:</strong> @sha</p> <!-- Display the sha -->
+<p><strong>SHA:</strong> @sha</p> <!-- Display the SHA -->
 
 <h2>File Content:</h2>
 <p>Below is the content of the file <strong>@path</strong>. You can view or edit it:</p>
-<pre class="file-content">@fileContent</pre> <!-- Display the file content as preformatted text -->
 
-<!-- Buttons for updating, deleting the file, and going back to the repository contents -->
+<!-- Textarea that will be replaced by CodeMirror editor -->
+<textarea id="file-content">@fileContent</textarea>
+
+<!-- Form to redirect to the file form page -->
+<form id="redirect-form" action="@routes.GitHubReposController.createFileForm(username, repoName, path)" method="get">
+    <input type="hidden" id="hidden-content" name="content">
+    <input type="hidden" name="fileName" value="@path">
+</form>
+
+<!-- Buttons for saving the file and returning to the repository contents -->
 <div class="button-container">
-    <a href="@routes.GitHubReposController.createFileForm(username, repoName, path)" class="btn btn-primary">Update File</a>
-    <a href="@routes.GitHubReposController.deleteFileForm(username, repoName, path)" class="btn btn-primary">Delete File</a>
+    <button id="save-btn" type="button" class="btn btn-primary">Save Changes</button>
     <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-primary">Back to Repository Contents</a>
 </div>
+
+<!-- Include CodeMirror library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/mode/javascript/javascript.min.js"></script>
+
+<!-- Include the new JavaScript file -->
+<script src="/assets/javascripts/fileEditor.js"></script>
 }

@@ -1,6 +1,7 @@
 @import model.FileFormData
 @import helper._
-@(fileForm: Form[FileFormData], username: String, repoName: String, path: String)(implicit request: Request[AnyContent], messages: Messages)
+
+@(fileForm: Form[model.FileFormData], username: String, repoName: String, path: String, initialContent: String, sha: Option[String])(implicit request: Request[AnyContent], messages: Messages)
 
 @main("Create or Update File") {
 <h1 class="text-center">Create or Update File in @repoName</h1>
@@ -9,24 +10,20 @@
     @helper.form(action = routes.GitHubReposController.submitFileForm(username, repoName, path)) {
     @helper.CSRF.formField
 
-    @if(path == "root" || path.isEmpty) {
-    <div class="form-group centered-label-input">
-        @helper.inputText(fileForm("fileName"), '_label -> "File Name", 'placeholder -> "Enter the file name")
-    </div>
-    } else {
     <p><strong>Editing File:</strong> @path</p>
-    }
+
+    <!-- Hidden field to store the file name -->
+    <input type="hidden" name="fileName" value="@path">
+
+    <!-- Hidden input to hold the content that was edited in the IDE -->
+    <input type="hidden" name="content" id="hidden-content" value="@initialContent">
 
     <div class="form-group centered-label-input">
-        @helper.inputText(fileForm("message"), '_label -> "Commit Message")
+        @helper.inputText(fileForm("message"), '_label -> "Commit Message", 'value -> fileForm("message").value.getOrElse(""))
     </div>
 
     <div class="form-group centered-label-input">
-        @helper.textarea(fileForm("content"), '_label -> "File Content")
-    </div>
-
-    <div class="form-group centered-label-input">
-        @helper.inputText(fileForm("sha"), '_label -> "SHA (optional)")
+        @helper.inputText(fileForm("sha"), '_label -> "SHA (optional)", 'value -> sha.getOrElse(""))
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>
