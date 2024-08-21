@@ -71,9 +71,8 @@ button:hover {
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
-    background-color: transparent; /* Remove white background */
     border-radius: 10px;
-    box-shadow: none; /* Remove box-shadow */
+    box-shadow: none;
 }
 
 .form-group {

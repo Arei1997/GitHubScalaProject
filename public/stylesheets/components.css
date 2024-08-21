@@ -22,29 +22,31 @@
 /* IDE Styling */
 /* CodeMirror IDE styling to match the container theme */
 .CodeMirror {
-    border: 1px solid #00aaff; /* Neon blue border for the editor */
-    border-radius: 5px; /* Rounded corners to match the container */
-    background-color: rgba(0, 0, 0, 0.6); /* Dark background with some transparency */
-    color: #ffffff; /* White text color */
-    font-family: 'Courier New', monospace; /* Monospace font for code */
-    box-shadow: 0 0 10px rgba(0, 170, 255, 0.5); /* Slight glow effect */
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #ffffff;
+    font-family: 'Courier New', monospace;
+    box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+    height: 50vh;
+    width: 75vw;
+    margin-left: 10%;/* THIS COULD BE CHANGED/MIGHT NOT WORK PROPERLY */
 }
 
 /* Editor gutters (line numbers) styling */
 .CodeMirror-gutters {
-    background-color: rgba(0, 0, 0, 0.4); /* Slightly transparent dark background */
-    border-right: 1px solid #00aaff; /* Neon blue border on the right */
-    color: #00aaff; /* Neon blue text color for line numbers */
+    background-color: rgba(0, 0, 0, 0.4);
+    border-right: 1px solid #00aaff;
+    color: #00aaff;
 }
 
 /* Editor cursor styling */
 .CodeMirror-cursor {
-    border-left: 1px solid #00aaff !important; /* Neon blue cursor */
+    border-left: 1px solid #00aaff !important;
 }
 
 /* Style for selected text */
 .CodeMirror-selected {
-    background: rgba(0, 170, 255, 0.3) !important; /* Highlight selected text with neon blue */
+    background: rgba(0, 170, 255, 0.3) !important;
 }
 
 /* Buttons for actions */
@@ -71,18 +73,18 @@
 /* Link styling */
 .repo-link {
     text-decoration: none;
-    font-family: 'Roboto', sans-serif; /* Space-like font */
-    font-size: 1.5rem; /* Increase font size for emphasis */
-    color: #00aaff; /* Bright blue color */
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5rem;
+    color: #00aaff;
     display: block;
-    margin-bottom: 10px; /* Space between link and description */
+    margin-bottom: 10px;
     transition: color 0.3s ease, transform 0.3s ease;
 }
 
 /* Link hover effect */
 .repo-link:hover {
-    color: #ffffff; /* Change color on hover */
-    transform: translateY(-3px); /* Slight upward movement */
+    color: #ffffff;
+    transform: translateY(-3px);
 }
 
 /* Description styling */
@@ -90,7 +92,7 @@
     text-align: center;
     font-family: 'Exo', sans-serif;
     font-size: 1rem;
-    color: #f0f0f0; /* Light gray text color */
+    color: #f0f0f0;
     margin-bottom: 10px;
 }
 
@@ -100,25 +102,25 @@
     padding: 0;
     margin: 30px auto;
     max-width: 800px;
-    display: grid; /* Use grid layout */
-    grid-template-columns: repeat(3, 1fr); /* Three items per row */
-    gap: 20px; /* Add space between items */
-    overflow-y: none; /* Enable scrolling for long lists */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    overflow-y: none;
 }
 
 
 .repo-list li {
     margin: 10px;
     flex: 1 1 45%;
-    max-width: 100%; /* Ensure it fits within the grid */
+    max-width: 100%;
     border-radius: 15px;
-    box-shadow: none; /* Remove box-shadow */
+    box-shadow: none;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .repo-list li:hover {
     transform: translateY(-5px) scale(1.03);
-    box-shadow: none; /* No shadow on hover */
+    box-shadow: none;
 }
 
 .repo-list a {
