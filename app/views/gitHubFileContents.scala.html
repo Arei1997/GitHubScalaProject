@@ -1,7 +1,8 @@
 @(username: String, repoName: String, path: String, fileContent: String, sha: String)
 
 @main(s"Contents of $path in $repoName by $username") {
-<div class="content-container">
+<div class="content">
+    <div class="repo-description">
     <h1>@repoName</h1>
 
     <p><strong>File:</strong> @path</p>
@@ -25,9 +26,10 @@
 
     <!-- Buttons for editing and saving the file -->
     <div class="button-container">
-        <button type="button" id="edit-btn" class="btn btn-primary">Edit File</button>
-        <button type="button" id="save-btn" class="btn btn-primary" style="display: none;">Save Changes</button>
-        <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary">Back to Repository Contents</a>
+        <button type="button" id="edit-btn" class="btn custom-button">Edit File</button>
+        <button type="button" id="save-btn" class="btn custom-button" style="display: none;">Save Changes</button>
+        <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn custom-button">Back to Repository Contents</a>
+    </div>
     </div>
 </div>
 

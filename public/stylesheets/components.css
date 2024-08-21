@@ -58,14 +58,7 @@
 
 
 /* Repository/List item formatting */
-.repo-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 30px auto;
-    max-width: 800px;
-    display: grid; /* Use grid layout for better alignment */
-    gap: 20px; /* Space between items */
-}
+
 
 /* Styling for each repository item */
 .repo-item {
@@ -94,10 +87,11 @@
 
 /* Description styling */
 .repo-description {
+    text-align: center;
     font-family: 'Exo', sans-serif;
     font-size: 1rem;
     color: #f0f0f0; /* Light gray text color */
-    margin: 0;
+    margin-bottom: 10px;
 }
 
 /* Repository List Styling */
@@ -109,13 +103,14 @@
     display: grid; /* Use grid layout */
     grid-template-columns: repeat(3, 1fr); /* Three items per row */
     gap: 20px; /* Add space between items */
-    overflow-y: auto; /* Enable scrolling for long lists */
+    overflow-y: none; /* Enable scrolling for long lists */
 }
+
+
 .repo-list li {
     margin: 10px;
     flex: 1 1 45%;
     max-width: 100%; /* Ensure it fits within the grid */
-    background-color: transparent; /* Remove white background */
     border-radius: 15px;
     box-shadow: none; /* Remove box-shadow */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -130,7 +125,6 @@
     text-decoration: none;
     font-family: 'Orbitron', sans-serif;
     font-size: 1.2rem;
-    color: #f0f0f0; /* Light gray */
     padding: 15px;
     display: block;
     text-align: center;
@@ -142,6 +136,27 @@
     background-color: #0077b6;
 }
 
+#repository-files {
+    background-color: white;
+    padding: 20px;
+}
+
+#repository-files:hover {
+    color: #fff;
+    background-color: #0077b6;
+    padding: 20px;
+}
+
+#repositories{
+    background-color: white;
+    padding: 20px;
+}
+
+#repositories:hover {
+    color: #fff;
+    background-color: #0077b6;
+    padding: 20px;
+}
 
 /*Is this for the js interactions?!*/
 /* Container for the animated background */

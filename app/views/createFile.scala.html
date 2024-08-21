@@ -1,6 +1,7 @@
 @(fileForm: Form[model.FileFormData], username: String, repoName: String, path: String, initialContent: String, sha: Option[String])(implicit request: Request[AnyContent], messages: Messages)
 
 @main("Create New File in " + repoName) {
+<div class="repo-description">
 <h1 class="text-center">Create New File in @repoName</h1>
 
 <div class="form-container">
@@ -27,11 +28,12 @@
     <input type="hidden" name="sha" value="@sha.getOrElse("")">
 
     <!-- Submit Button -->
-    <button type="submit" class="btn btn-primary">Create File</button>
+    <button type="submit" class="btn custom-button">Create File</button>
     }
 
     <!-- Back to Repo button -->
-    <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary mt-3">Back to Repo</a>
+    <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn custom-button">Back to Repo</a>
+</div>
 </div>
 }
 

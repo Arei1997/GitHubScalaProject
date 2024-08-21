@@ -4,6 +4,7 @@
 @(fileForm: Form[model.FileFormData], username: String, repoName: String, path: String, initialContent: String, sha: Option[String])(implicit request: Request[AnyContent], messages: Messages)
 
 @main("Create or Update File") {
+<div class="repo-description">
 <h1 class="text-center">Create or Update File in @repoName</h1>
 
 <div class="form-container">
@@ -29,11 +30,12 @@
     <!-- Button container to hold both buttons next to each other -->
     <div class="button-container">
         <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn custom-button">Submit</button>
 
         <!-- Back to Repo Button -->
-        <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary">Back to Repo</a>
+        <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn custom-button">Back to Repo</a>
     </div>
     }
+</div>
 </div>
 }

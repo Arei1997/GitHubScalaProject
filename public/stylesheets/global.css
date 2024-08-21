@@ -23,7 +23,6 @@ h1, h2, h3, p, a, button {
 .header {
     position: fixed;
     z-index: 10;
-    background-color: rgba(0, 0, 0, 0.8);
     padding: 20px;
     color: #fff;
     display: flex;
@@ -34,35 +33,8 @@ h1, h2, h3, p, a, button {
     width: 100%;
 }
 
-.header-left {
-    flex: 1;
-}
-
-.header-right {
-    flex: 2;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-heading {
-    font-size: 1.8rem;
-    color: #f0f0f0;
-}
-
 /* Buttons */
-button {
-    background-color: #00aaff;
-    color: #ffffff;
-    padding: 6px 12px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 500;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    font-family: 'Saira', sans-serif;
-    font-weight: 600;
-}
+
 
 button:hover {
     background-color: #0077b6; /* Slightly darker blue */
@@ -78,25 +50,11 @@ button:hover {
 
 .button-container .btn {
     padding: 10px 20px;
+    margin: 10px;
     font-size: 1rem;
     border-radius: 5px;
     text-align: center;
     min-width: 150px;
-}
-
-.button-container .btn-primary {
-    background-color: #0077b6;
-    border-color: #0077b6;
-}
-
-.button-container .btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-}
-
-.button-container .btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
 }
 
 .button-container .btn:hover {
@@ -349,7 +307,7 @@ strong {
 }
 
 /* Profile Button Styling */
-.profileBtn {
+.custom-button {
     background: linear-gradient(135deg, #00aaff, #0077b6);
     color: #fff;
     padding: 12px 25px;
@@ -367,7 +325,7 @@ strong {
     font-family: 'Saira', sans-serif;
 }
 
-.profileBtn:hover {
+.custom-button:hover {
     background: linear-gradient(135deg, #0077b6, #00aaff);
     transform: translateY(-5px) scale(1.05);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
@@ -472,6 +430,7 @@ a:hover, a:focus {
 
 .home-link {
     width: 10vw;
+    font-size: 2rem;
 }
 
 /* Ensure .nav-list is centered */
@@ -483,6 +442,7 @@ a:hover, a:focus {
   gap: 2vw; /* Space between list items */
   width: 70vw;
   justify-content: center; /* Center the list items */
+  font-size: 2rem;
 }
 
 /* Remove margin-left as it’s no longer needed */
@@ -501,6 +461,7 @@ a:hover, a:focus {
 .form-container {
     display: flex;
     width: 20vw;
+    font-size: 2rem;
 }
 
 .header-search-form {
@@ -671,10 +632,6 @@ body.dark-mode .shooting_star {
   background-color: white;
   transition: 0.4s;
   border-radius: 50%;
-}
-
-input:checked + .slider {
-  background-color: #001f3f;
 }
 
 input:checked + .slider:before {
