@@ -1,32 +1,67 @@
 @import model.User
 
-@(user: User)
+@(user: User, contributionGraphImageUrl: String)
 
-    @main("GitHub User Profile") {
-    <div class="user-profile-container">
-        <div class="user-profile">
-            <div class="profile-info">
-                <img src="@user.avatar_url" alt="@user.login's avatar" class="profile-avatar">
-                <h1>@user.login</h1>
-                <p><strong>Name:</strong> @user.name.getOrElse("No Name Provided")</p>
-                <p><strong>Location:</strong> @user.location.getOrElse("Unknown")</p>
-                <p><strong>Bio:</strong> @user.bio.getOrElse("No Bio Available")</p>
+@main("GitHub User Profile") {
+<div class="user-profile-container">
+    <div class="user-profile">
+        <div class="profile-info">
+            <img src="@user.avatar_url" alt="@user.login's avatar" class="profile-avatar">
+            <h1>@user.login</h1>
+            <p><strong>Name:</strong> @user.name.getOrElse("No Name Provided")</p>
+            <p><strong>Location:</strong> @user.location.getOrElse("Unknown")</p>
+            <p><strong>Bio:</strong> @user.bio.getOrElse("No Bio Available")</p>
+        </div>
+
+        <div class="profile-stats">
+            <div class="stat">
+                <strong>Followers: </strong>
+                <p>@user.followers</p>
             </div>
-
-            <div class="profile-stats">
-                <div class="stat">
-                    <strong>Followers: </strong>
-                    <p>@user.followers</p>
-                </div>
-                <div class="stat">
-                    <strong>Following: </strong>
-                    <p>@user.following</p>
-                </div>
-
+            <div class="stat">
+                <strong>Following: </strong>
+                <p>@user.following</p>
             </div>
         </div>
+
+        <!-- Add buttons for viewing repos or other actions -->
         <a href="@routes.ApplicationController.getGitHubRepo(user.login)" class="btn custom-button">
             View Repositories
         </a>
+
+        <!-- Contribution Map added below the buttons -->
+        <div class="contribution-map-container">
+            <img src="@contributionGraphImageUrl" alt="Contribution graph for @user.login" class="contribution-map">
+        </div>
     </div>
+</div>
+
+<style>
+
+    .stat {
+        display: inline-block;
+        margin: 0 10px;
     }
+
+    .contribution-map-container {
+        margin-top: 30px; /* Add some space above the contribution map */
+        text-align: center;
+        color: white;
+    }
+
+    .contribution-map {
+        max-width: 100px;
+        max-height: 300px; /* Set a max height to ensure the image is visible without being too large */
+        width: auto;
+        height: auto;
+        margin-bottom: 20px;
+        object-fit: contain;
+    }
+
+    .contribution-map-note {
+        font-size: 1rem;
+        color: white;
+        margin-top: 10px;
+    }
+</style>
+}

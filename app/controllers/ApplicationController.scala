@@ -25,6 +25,16 @@ class ApplicationController @Inject()(
     }
   }
 
+  private def getGithubUserContributionGraphImage(username: String): String = {
+    s"https://ghchart.rshah.org/$username"
+  }
+
+  def getGitHubUserContributionMap(username: String): Action[AnyContent] = Action { implicit request =>
+    val contributionGraphImageUrl = getGithubUserContributionGraphImage(username)
+    Ok(views.html.gitHubUserContributionMap(username, contributionGraphImageUrl))
+  }
+
+
   // Create a new user
   def create(): Action[JsValue] = Action.async(parse.json) { implicit request =>
     request.body.validate[User] match {
@@ -38,9 +48,11 @@ class ApplicationController @Inject()(
   }
 
   def getGitHubUser(username: String): Action[AnyContent] = Action.async { implicit request =>
+    val contributionGraphImageUrl = s"https://ghchart.rshah.org/$username"
+
     githubService.getGithubUser(username).value.map {
       case Right(user) =>
-        Ok(views.html.gitHubUser(user))  // Renders the githubuser.scala.html template
+        Ok(views.html.gitHubUser(user, contributionGraphImageUrl))  // Pass both user and contributionGraphImageUrl
       case Left(error) =>
         Redirect(routes.ApplicationController.index()).flashing("error" -> "User not found")
     }
