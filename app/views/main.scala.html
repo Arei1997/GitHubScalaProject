@@ -23,10 +23,16 @@
 <!-- Full Header Content -->
 <nav class="mask">
     <a href="@routes.ApplicationController.index()">Home</a>
+
+    <!-- Switch Toggle Button -->
+    <label class="switch">
+        <input type="checkbox" id="toggle-dark-mode">
+        <span class="slider round"></span>
+    </label>
+
     <ul class="list">
         <li><a href="#">About</a></li>
         <li><a href="#">Projects</a></li>
-        <li><a href="@routes.NewsController.index(None)">News</a></li>
         <li><a href="#">Contact</a></li>
     </ul>
     <form action="@routes.ApplicationController.searchGitHubUser" method="GET" role="search" class="header-search-form">
@@ -40,6 +46,7 @@
     @content
 </div>
 
+<script src='@routes.Assets.versioned("javascripts/darkMode.js")'></script>
+
 </body>
 </html>
-
