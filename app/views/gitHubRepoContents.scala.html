@@ -1,21 +1,20 @@
 @(username: String, repoName: String, contents: List[model.Contents])
 
 @main(s"Contents of $repoName by $username") {
-<div class="content-container">
-    <h1>@repoName</h1>
-    <h3>Owner: @username</h3>
-
-    <!-- Create/Edit Button at the top of the page -->
-    <div class="top-buttons">
-        <form action="@routes.GitHubReposController.createNewFileForm(username, repoName, "root")" method="GET">
-        <button type="submit" class="btn btn-primary">Create File</button>
-        </form>
+    <div class="repo-description">
+        <h1>@repoName</h1>
+        <h3>Owner: @username</h3>
+        <div class="top-buttons">
+            <form action="@routes.GitHubReposController.createNewFileForm(username, repoName, "root")" method="GET">
+            <button type="submit" class="btn">Create File</button>
+            </form>
+        </div>
     </div>
 
     <h2>Repository Contents</h2>
     <ul class="repo-list">
         @for(content <- contents) {
-        <li>
+        <li class="repo-list" id="repository-files">
             @if(content.`type` == "dir") {
             <img src="@routes.Assets.versioned("images/folder.png")" alt="Folder icon" class="icon" />
             <a href="@routes.ApplicationController.getGitHubFolder(username, repoName, content.path)">@content.name</a>
@@ -26,5 +25,4 @@
         </li>
         }
     </ul>
-</div>
 }
