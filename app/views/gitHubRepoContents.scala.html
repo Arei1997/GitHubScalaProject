@@ -1,13 +1,13 @@
 @(username: String, repoName: String, contents: List[model.Contents])
 
 @main(s"Contents of $repoName by $username") {
-<div class="content">
-<h1>@repoName</h1>
+<div class="content-container">
+    <h1>@repoName</h1>
     <h3>Owner: @username</h3>
 
     <!-- Create/Edit Button at the top of the page -->
     <div class="top-buttons">
-        <form action="@routes.GitHubReposController.createFileForm(username, repoName, "root")" method="GET">
+        <form action="@routes.GitHubReposController.createNewFileForm(username, repoName, "root")" method="GET">
         <button type="submit" class="btn btn-primary">Create File</button>
         </form>
     </div>
@@ -27,5 +27,4 @@
         }
     </ul>
 </div>
-    }
-
+}

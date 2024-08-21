@@ -4,8 +4,7 @@
 @(fileForm: Form[model.FileFormData], username: String, repoName: String, path: String, initialContent: String, sha: Option[String])(implicit request: Request[AnyContent], messages: Messages)
 
 @main("Create or Update File") {
-<div class="content">
-    <h1 class="text-center">Create or Update File in @repoName</h1>
+<h1 class="text-center">Create or Update File in @repoName</h1>
 
 <div class="form-container">
     @helper.form(action = routes.GitHubReposController.submitFileForm(username, repoName, path)) {
@@ -27,17 +26,14 @@
         @helper.inputText(fileForm("sha"), '_label -> "SHA (optional)", 'value -> sha.getOrElse(""))
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
-    }
+    <!-- Button container to hold both buttons next to each other -->
+    <div class="button-container">
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Submit</button>
 
-    <!-- Back to Repo button -->
-    <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary mt-3">Back to Repo</a>
+        <!-- Back to Repo Button -->
+        <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary">Back to Repo</a>
+    </div>
+    }
 </div>
 }
-
-<!-- Add the necessary buttons and hidden input for the editor -->
-<div class="button-container">
-    <button id="save-btn" class="btn btn-success" style="display:none;">Save Changes</button>
-</div>
-    <div class="contents">
-

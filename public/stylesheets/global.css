@@ -626,3 +626,64 @@ label {
   width: 1px;
   overflow: hidden;
 }
+
+/* The switch - the container */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;  /* Reduced width */
+    height: 20px; /* Reduced height */
+    margin-left: 20px; /* Add margin to separate it from the "Home" link */
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 20px;  /* Adjusted border-radius for smaller size */
+}
+
+/* The round slider */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;  /* Reduced height */
+    width: 14px;   /* Reduced width */
+    left: 3px;     /* Adjusted position */
+    bottom: 3px;   /* Adjusted position */
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+/* When checked, add a dark navy background color */
+input:checked + .slider {
+    background-color: #001f3f; /* Dark Navy */
+}
+
+/* Move the slider to the right when checked */
+input:checked + .slider:before {
+    transform: translateX(20px); /* Adjusted for smaller width */
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 20px; /* Adjusted border-radius for smaller size */
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}

@@ -62,20 +62,19 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
         repositoryService.getFileContent(username, repoName, fileName).value.flatMap {
           case Right(existingFile) =>
             repositoryService.createOrUpdateFile(username, repoName, fileName, data.message, data.content, Some(existingFile.sha)).value.map {
-              case Right(_) => Redirect(routes.ApplicationController.getGitHubRepoContents(username, repoName)).flashing("success" -> "File updated successfully")
+              case Right(_) =>
+                Redirect(routes.ApplicationController.getGitHubFile(username, repoName, fileName)).flashing("success" -> "File updated successfully")
+
               case Left(error) =>
                 val filledForm = FileFormData.form.fill(data.copy(content = data.content))
                 BadRequest(views.html.fileForm(filledForm.withError("error", error.reason), username, repoName, path, data.content, data.sha))
             }
 
           case Left(_) =>
-            repositoryService.createOrUpdateFile(username, repoName, fileName, data.message, data.content, None).value.map {
-              case Right(_) => Redirect(routes.ApplicationController.getGitHubRepoContents(username, repoName)).flashing("success" -> "File created successfully")
-              case Left(error) =>
-                val filledForm = FileFormData.form.fill(data.copy(content = data.content))
-                BadRequest(views.html.fileForm(filledForm.withError("error", error.reason), username, repoName, path, data.content, data.sha))
-            }
+            // File does not exist, return an error message or handle it appropriately
+            Future.successful(Redirect(routes.ApplicationController.getGitHubRepoContents(username, repoName)).flashing("error" -> "File does not exist, cannot update"))
         }
+
       }
     )
   }
@@ -83,18 +82,32 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
 
 
 
+  def createNewFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    val initialContent = "" // Start with an empty content since this is a new file
+    val sha: Option[String] = None // No SHA for a new file
+    Ok(views.html.createFile(FileFormData.form, username, repoName, path, initialContent, sha))
+  }
 
 
+  def submitCreateFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
+    FileFormData.form.bindFromRequest().fold(
+      formWithErrors => {
+        val initialContent = formWithErrors("content").value.getOrElse("")
+        val sha = formWithErrors("sha").value
+        Future.successful(BadRequest(views.html.createFile(formWithErrors, username, repoName, path, initialContent, sha)))
+      },
+      data => {
+        val fileName = if (path.isEmpty || path == "root") data.fileName else path
 
-
-
-
-
-
-
-
-
-
+        repositoryService.createOrUpdateFile(username, repoName, fileName, data.message, data.content, None).value.map {
+          case Right(_) => Redirect(routes.ApplicationController.getGitHubRepoContents(username, repoName)).flashing("success" -> "File created successfully")
+          case Left(error) =>
+            val filledForm = FileFormData.form.fill(data.copy(content = data.content))
+            BadRequest(views.html.createFile(filledForm.withError("error", error.reason), username, repoName, path, data.content, None))
+        }
+      }
+    )
+  }
 
 
 
