@@ -1,5 +1,5 @@
 /* Component Styling */
-
+@import url('https://fonts.googleapis.com/css2?family=Saira:wght@400;700&display=swap');
 /* Profile styling */
 .user-profile {
     text-align: center;
@@ -68,10 +68,18 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.repo-name {
+    font-family: 'Saira', sans-serif; /* Apply Saira font */
+    font-size: 30px; /* Adjust the size as needed */
+    color: #00aaff; /* Keep the text color consistent with the overall design */
+    display: block; /* Ensure it behaves as a block-level element within the link */
+    margin-bottom: 10px; /* Space below the repo name */
+}
+
 /* Link styling */
 .repo-link {
     text-decoration: none;
-    font-family: 'Roboto', sans-serif; /* Space-like font */
+    font-family: 'Saira', sans-serif; /* Space-like font */
     font-size: 1.5rem; /* Increase font size for emphasis */
     color: #00aaff; /* Bright blue color */
     display: block;
@@ -98,8 +106,9 @@
 .repo-list {
     list-style-type: none;
     padding: 0;
-    margin: 30px auto;
-    max-width: 800px;
+    margin: 15px auto;
+    max-width: 8000px;
+    font-family: 'Saira', sans-serif;
     display: grid; /* Use grid layout */
     grid-template-columns: repeat(3, 1fr); /* Three items per row */
     gap: 20px; /* Add space between items */
@@ -116,14 +125,14 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.repo-list li:hover {
-    transform: translateY(-5px) scale(1.03);
-    box-shadow: none; /* No shadow on hover */
+.repo-item:hover {
+    transform: translateY(-5px);
+    border-radius: 20px; /* Rounder edges on hover */
 }
 
 .repo-list a {
     text-decoration: none;
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Saira', sans-serif;
     font-size: 1.2rem;
     padding: 15px;
     display: block;
@@ -132,9 +141,14 @@
 }
 
 .repo-list a:hover {
-    color: #fff;
-    background-color: #0077b6;
+    color: #fff; /* Keep the text color white */
+    background-color: #6a5acd; /* Change the background color */
+    transform: scale(1.1); /* Slightly scale up the link */
+    border-radius: 19px; /* Add rounded edges */
+    transition: transform 0.6s ease-out, background-color 0.6s ease-out, border-radius 0.6s ease-out; /* Smooth transition with ease-out */
 }
+
+
 
 #repository-files {
     background-color: white;
