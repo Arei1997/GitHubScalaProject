@@ -70,3 +70,4 @@ GET    /api/github/users/:username/repos/:repoName/contents/*path   controllers.
 GET    /github/:username/:repoName/contents/*path/form/delete   controllers.GitHubReposController.deleteFileForm(username: String, repoName: String, path: String)
 POST   /github/:username/:repoName/contents/*path/form/delete   controllers.GitHubReposController.submitDeleteFileForm(username: String, repoName: String, path: String)
 GET    /api/github/users/:username/contributions  controllers.ApplicationController.getGitHubUserContributionMap(username: String)
+GET    /api/github/users/:username/repos/:repoName/languages   controllers.GitHubReposController.getRepoLanguages(username: String, repoName: String)

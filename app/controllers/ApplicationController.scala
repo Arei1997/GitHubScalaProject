@@ -70,7 +70,7 @@ class ApplicationController @Inject()(
     githubService.getGithubUser(username).value.flatMap {
       case Right(user) =>
         dataRepository.create(user).map {
-          case Right(_) => Redirect(routes.ApplicationController.index) // Redirect to the index page after successful creation
+          case Right(_) => Redirect(routes.ApplicationController.index)
           case Left(error) => InternalServerError(Json.toJson(error.reason))
         }
       case Left(error) => Future.successful(BadRequest(Json.obj("error" -> s"GitHub user not found: $username")))
@@ -78,20 +78,30 @@ class ApplicationController @Inject()(
   }
 
   def getGitHubRepoContents(username: String, repoName: String): Action[AnyContent] = Action.async { implicit request =>
-    repositoryService.getRepoContents(username, repoName).value.map {
-      case Right(contents) =>
-        if (request.headers.get("Accept").contains("application/json")) {
-          Ok(Json.toJson(contents)) // Return JSON if the request is expecting JSON
-        } else {
-          Ok(views.html.gitHubRepoContents(username, repoName, contents)) // Render HTML otherwise
-        }
-      case Left(APIError.BadAPIResponse(status, message)) =>
-        Status(status)(Json.obj("error" -> message))
+    val contentsFuture = repositoryService.getRepoContents(username, repoName).value
+    val languagesFuture = repositoryService.getRepoLanguagesWithPercentage(username, repoName).value
+
+    for {
+      contentsResult <- contentsFuture
+      languagesResult <- languagesFuture
+    } yield {
+      (contentsResult, languagesResult) match {
+        case (Right(contents), Right(languages)) =>
+          if (request.headers.get("Accept").contains("application/json")) {
+            Ok(Json.toJson(contents))
+          } else {
+            Ok(views.html.gitHubRepoContents(username, repoName, contents, languages)) // Pass languages to the view
+          }
+        case (Left(APIError.BadAPIResponse(status, message)), _) =>
+          Status(status)(Json.obj("error" -> message))
+        case (_, Left(APIError.BadAPIResponse(status, message))) =>
+          Status(status)(Json.obj("error" -> message))
+      }
     }
   }
 
 
-  // Fetch a user by their login
+
   def read(login: String): Action[AnyContent] = Action.async { implicit request =>
     dataRepository.read(login).map {
       case Right(user) => Ok(Json.toJson(user))
@@ -99,7 +109,7 @@ class ApplicationController @Inject()(
     }
   }
 
-  // Update an existing user
+
   def update(login: String): Action[JsValue] = Action.async(parse.json) { implicit request =>
     request.body.validate[User] match {
       case JsSuccess(user, _) =>
@@ -113,7 +123,7 @@ class ApplicationController @Inject()(
     }
   }
 
-  // Delete a user by their login
+
   def delete(login: String): Action[AnyContent] = Action.async { implicit request =>
     dataRepository.delete(login).map {
       case Right(deleteResult) =>
@@ -155,13 +165,22 @@ class ApplicationController @Inject()(
     }
   }
 
-
   def getGitHubFolder(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
-    repositoryService.getRepoFiles(username, repoName, path).value.map {
-      case Right(contents) => Ok(views.html.gitHubRepoContents(username, repoName, contents))
-      case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
-    }.recover {
-      case ex: Exception => InternalServerError(Json.obj("error" -> ex.getMessage))
+    val filesFuture = repositoryService.getRepoFiles(username, repoName, path).value
+    val languagesFuture = repositoryService.getRepoLanguagesWithPercentage(username, repoName).value
+
+    for {
+      filesResult <- filesFuture
+      languagesResult <- languagesFuture
+    } yield {
+      (filesResult, languagesResult) match {
+        case (Right(contents), Right(languages)) =>
+          Ok(views.html.gitHubRepoContents(username, repoName, contents, languages))
+        case (Left(APIError.BadAPIResponse(status, message)), _) =>
+          Status(status)(Json.obj("error" -> message))
+        case (_, Left(APIError.BadAPIResponse(status, message))) =>
+          Status(status)(Json.obj("error" -> message))
+      }
     }
   }
 
