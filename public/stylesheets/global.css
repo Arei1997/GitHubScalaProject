@@ -430,6 +430,7 @@ a:hover, a:focus {
 
 .home-link {
     width: 10vw;
+    font-size: 2rem;
 }
 
 /* Ensure .nav-list is centered */
@@ -441,6 +442,7 @@ a:hover, a:focus {
   gap: 2vw; /* Space between list items */
   width: 70vw;
   justify-content: center; /* Center the list items */
+  font-size: 2rem;
 }
 
 /* Remove margin-left as it’s no longer needed */
@@ -459,6 +461,7 @@ a:hover, a:focus {
 .form-container {
     display: flex;
     width: 20vw;
+    font-size: 2rem;
 }
 
 .header-search-form {
