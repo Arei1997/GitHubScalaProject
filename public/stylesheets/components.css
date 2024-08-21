@@ -147,6 +147,16 @@
     padding: 20px;
 }
 
+#repositories{
+    background-color: white;
+    padding: 20px;
+}
+
+#repositories:hover {
+    color: #fff;
+    background-color: #0077b6;
+    padding: 20px;
+}
 
 /*Is this for the js interactions?!*/
 /* Container for the animated background */
