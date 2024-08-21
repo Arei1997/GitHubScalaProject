@@ -112,15 +112,19 @@ body {
     position: relative;
     z-index: 5; /* Above the animation but below the header */
     background-color: transparent; /* No background */
-    padding: 20px;
+    padding: 10px; /* Reduce padding */
     border-radius: 10px;
     box-shadow: none; /* Remove box-shadow */
-    margin-top: 80px; /* Add space below the header */
+    margin-top: 50px; /* Reduce space below the header */
     margin-bottom: 0;
     padding-bottom: 0;
     max-height: 80vh; /* Set max height for content */
     overflow-y: auto; /* Enable vertical scrolling */
+    width: 95%; /* Increase width to 95% */
+    max-width: 1600px; /* Increase max width to 1600px for larger screens */
+    margin: 0 auto; /* Center the container horizontally */
 }
+
 
 .content {
     max-height: 80vh;
@@ -262,7 +266,8 @@ strong {
     height: calc(100vh - 80px); /* Full viewport height minus header height */
     box-sizing: border-box; /* Ensure padding and border are included in width and height */
     font-family: 'Saira', sans-serif;
-    font-weight: 600
+    font-weight: 600;
+    width: 100%; /* Make sure it takes up full width */
 }
 
 /* Profile Styling */
@@ -834,4 +839,181 @@ img {
 
 .news-article h2 a:hover {
     color: #00aaff; /* Neon blue on hover */
+}
+
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+}
+
+/* Header in Dark Mode */
+body.dark-mode .header {
+    background-color: rgba(0, 0, 0, 0.9); /* Slightly darker header */
+    color: #ffffff;
+}
+
+/* Navigation in Dark Mode */
+body.dark-mode nav {
+    background-color: rgba(30, 30, 30, 0.9);
+    backdrop-filter: blur(8px) brightness(1);
+    -webkit-backdrop-filter: blur(8px) brightness(1);
+}
+
+/* Text and Links in Dark Mode */
+body.dark-mode a {
+    color: #00aaff;
+}
+
+body.dark-mode a:hover, body.dark-mode a:focus {
+    color: #ffffff;
+}
+
+/* Search Container in Dark Mode */
+body.dark-mode .search-container input[type="text"] {
+    background-color: #333;
+    color: #ffffff;
+    border: 1px solid #555;
+}
+
+body.dark-mode .search-container button {
+    background-color: #555;
+    color: #ffffff;
+}
+
+/* Container Styling in Dark Mode */
+body.dark-mode .content-container {
+    background-color: rgba(50, 50, 50, 0.8);
+    border: 2px solid #00aaff;
+    box-shadow: 0 0 15px rgba(0, 170, 255, 0.5);
+}
+
+/* Repository List in Dark Mode */
+body.dark-mode .repo-list li {
+    background-color: #2c2c2c;
+    color: #f0f0f0;
+}
+
+body.dark-mode .repo-list a {
+    color: #00aaff;
+}
+
+body.dark-mode .repo-list a:hover {
+    color: #ffffff;
+}
+
+/* Buttons in Dark Mode */
+body.dark-mode button {
+    background-color: #444;
+    color: #ffffff;
+}
+
+/* CodeMirror Editor in Dark Mode */
+body.dark-mode .CodeMirror {
+    background-color: rgba(20, 20, 20, 0.9);
+    color: #f0f0f0;
+    border: 1px solid #00aaff;
+}
+
+body.dark-mode .CodeMirror-gutters {
+    background-color: rgba(30, 30, 30, 0.9);
+    color: #00aaff;
+}
+
+body.dark-mode .CodeMirror-cursor {
+    border-left: 1px solid #00aaff !important;
+}
+
+body.dark-mode .CodeMirror-selected {
+    background: rgba(0, 170, 255, 0.3) !important;
+}
+
+/* Miscellaneous Adjustments */
+body.dark-mode .profile-avatar {
+    border: 5px solid #333;
+}
+
+body.dark-mode .news-article {
+    background-color: #2e2e2e;
+    border: 1px solid #444;
+}
+/* Default (Light Mode) Background */
+body {
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+}
+
+/* Dark Mode with Rich Teal Background */
+body.dark-mode {
+  background: radial-gradient(ellipse at bottom, #3a6073 0%, #16222a 100%);
+}
+
+/* Override night and shooting stars for dark mode */
+body.dark-mode .night {
+  background: radial-gradient(ellipse at bottom, #3a6073 0%, #16222a 100%);
+}
+
+body.dark-mode .shooting_star {
+  background: linear-gradient(-45deg, #ffdd00, rgba(255, 221, 0, 0));
+  filter: drop-shadow(0 0 6px #ffdd00);
+}
+/* The switch - the container */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;  /* Reduced width */
+    height: 20px; /* Reduced height */
+    margin-left: 20px; /* Add margin to separate it from the "Home" link */
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 20px;  /* Adjusted border-radius for smaller size */
+}
+
+/* The round slider */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;  /* Reduced height */
+    width: 14px;   /* Reduced width */
+    left: 3px;     /* Adjusted position */
+    bottom: 3px;   /* Adjusted position */
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+/* When checked, add a dark navy background color */
+input:checked + .slider {
+    background-color: #001f3f; /* Dark Navy */
+}
+
+/* Move the slider to the right when checked */
+input:checked + .slider:before {
+    transform: translateX(20px); /* Adjusted for smaller width */
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 20px; /* Adjusted border-radius for smaller size */
+}
+
+.slider.round:before {
+    border-radius: 50%;
 }
