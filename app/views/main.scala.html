@@ -5,10 +5,8 @@
 <head>
     <title>@title</title>
 
-    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
+    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/global.css")'>
     <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/components.css")'>
-    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/search.css")'>
-    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/fonts.css")'>
     <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/shooting-stars.css")'>
 </head>
 <body>
@@ -22,17 +20,19 @@
 
 <!-- Full Header Content -->
 <nav class="mask">
-    <a href="@routes.ApplicationController.index()">Home</a>
-    <ul class="list">
-        <li><a href="#">About</a></li>
-        <li><a href="#">Projects</a></li>
-        <li><a href="@routes.NewsController.index(None)">News</a></li>
-        <li><a href="#">Contact</a></li>
+    <a href="@routes.ApplicationController.index()" class="home-link">Home</a>
+    <ul class="nav-list">
+        <li><a href="https://github.com/AprilGar/ExtendedProject2Instructions/blob/main/Project2-Making-GitHub-with-Scala-Play/Tasks.md">About Project</a></li>
+        <li><a href="http://localhost:9000/api/github/users/arei1997/repos">Arei</a></li>
+        <li><a href="http://localhost:9000/api/github/users/bamiridev/repos">Bilal</a></li>
+        <li><a href="http://localhost:9000/api/github/users/nonebula/repos">Joe</a></li>
     </ul>
+    <div class="form-container">
     <form action="@routes.ApplicationController.searchGitHubUser" method="GET" role="search" class="header-search-form">
-        <input id="search" name="username" type="search" placeholder="Search..." required />
+        <input id="search" name="username" type="search" placeholder="Search by username..." required />
+        <button class="search">Search</button>
     </form>
-    <button class="menu">Menu</button>
+    </div>
 </nav>
 
 <!-- Main Content Container -->

@@ -3,6 +3,7 @@
 @main("Repository List") {
 
 <!-- Button to view user profile -->
+<div class="container">
 <form action="@routes.ApplicationController.getGitHubUser(username)" method="GET">
     <button class="profileBtn" type="submit">View User Profile</button>
 </form>
@@ -15,5 +16,5 @@
     </li>
     }
 </ul>
-
+</div>
 }

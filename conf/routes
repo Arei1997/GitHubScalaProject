@@ -32,6 +32,9 @@ GET     /github/users/:username/profile        controllers.ApplicationController
 
 
 
+#StartingPage Land
+GET     /api/startingpage           controllers.StartingPageController.startingPage
+
 #CRUD
 GET     /api                        controllers.ApplicationController.index
 POST    /api/create                 controllers.ApplicationController.create()
@@ -62,9 +65,4 @@ GET    /api/github/users/:username/repos/:repoName/contents/*path   controllers.
 
 GET    /github/:username/:repoName/contents/*path/form/delete   controllers.GitHubReposController.deleteFileForm(username: String, repoName: String, path: String)
 POST   /github/:username/:repoName/contents/*path/form/delete   controllers.GitHubReposController.submitDeleteFileForm(username: String, repoName: String, path: String)
-
-
-
-
-GET     /news                        controllers.NewsController.index(category: Option[String])
 

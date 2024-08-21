@@ -1,0 +1,33 @@
+/* Searchbar */
+.search-container {
+    display: flex;
+    align-items: center;
+    max-width: 100%; /* Ensure it doesn’t exceed the screen width */
+    overflow: hidden;
+    padding: 0 15px; /* Optional padding inside the container */
+}
+
+.search-container input[type="text"] {
+    padding: 6px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    background-color: #282c34; /* Darker input background */
+    color: #ffffff; /* White text */
+}
+
+.search-container button {
+    padding: 6px 12px;
+    font-size: 1rem;
+    background-color: #00aaff; /* Bright blue for call-to-action */
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-container button:hover {
+    background-color: #008ecc; /* Darker blue on hover */
+}
