@@ -9,8 +9,9 @@ html, body {
     overflow-x: hidden;
 }
 
+
 body {
-    position: relative; /* Ensure relative positioning */
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
 }
 
 h1, h2, h3, p, a, button {
@@ -397,20 +398,17 @@ h2::after {
 }
 
 nav {
-  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   padding: 16px 20px;
   display: flex;
-  align-items: center;
   justify-content: space-between; /* Ensure space between elements */
   transition: 3.3s ease-out;
   backdrop-filter: blur(2px) brightness(1.2);
   -webkit-backdrop-filter: blur(8px) brightness(2.2);
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   color: white;
-  font-size: 2rem;
   z-index: 1000;
 }
 
@@ -438,6 +436,7 @@ nav.mask {
   padding: 0 20px;
   height: 15vh;
   width: 100%;
+
 }
 
 nav.mask-pattern {
@@ -627,63 +626,65 @@ label {
   overflow: hidden;
 }
 
-/* The switch - the container */
+
+
+body.dark-mode, body.dark-mode .night {
+  background: radial-gradient(ellipse at bottom, #3a6073 0%, #16222a 100%);
+}
+
+body.dark-mode .shooting_star {
+  background: linear-gradient(-45deg, #ffdd00, rgba(255, 221, 0, 0));
+  filter: drop-shadow(0 0 6px #ffdd00);
+}
+
+/* Toggle Switch */
 .switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;  /* Reduced width */
-    height: 20px; /* Reduced height */
-    margin-left: 20px; /* Add margin to separate it from the "Home" link */
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  margin-left: 20px;
 }
 
-/* Hide default HTML checkbox */
 .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
-/* The slider */
 .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 20px;  /* Adjusted border-radius for smaller size */
+  position: absolute;
+  cursor: pointer;
+  inset: 0; /* Shorter way to set top, left, right, and bottom to 0 */
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 20px;
 }
 
-/* The round slider */
 .slider:before {
-    position: absolute;
-    content: "";
-    height: 14px;  /* Reduced height */
-    width: 14px;   /* Reduced width */
-    left: 3px;     /* Adjusted position */
-    bottom: 3px;   /* Adjusted position */
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
+  content: "";
+  position: absolute;
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
 }
 
-/* When checked, add a dark navy background color */
 input:checked + .slider {
-    background-color: #001f3f; /* Dark Navy */
+  background-color: #001f3f;
 }
 
-/* Move the slider to the right when checked */
 input:checked + .slider:before {
-    transform: translateX(20px); /* Adjusted for smaller width */
+  transform: translateX(20px);
 }
 
-/* Rounded sliders */
 .slider.round {
-    border-radius: 20px; /* Adjusted border-radius for smaller size */
+  border-radius: 20px;
 }
 
 .slider.round:before {
-    border-radius: 50%;
+  border-radius: 50%;
 }
