@@ -1,8 +1,8 @@
 @(username: String, repoName: String, path: String, fileContent: String, sha: String)
 
 @main(s"Contents of $path in $repoName by $username") {
-<div class="content-container">
-    <h1>@repoName</h1>
+<div class="content">
+<h1>@repoName</h1>
 
     <p><strong>File:</strong> @path</p>
     <p><strong>Owner:</strong> @username</p>
@@ -29,8 +29,7 @@
         <button type="button" id="save-btn" class="btn btn-primary" style="display: none;">Save Changes</button>
         <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary">Back to Repository Contents</a>
     </div>
-</div>
-
+    <div class="contents">
 <!-- Include CodeMirror library -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.js"></script>

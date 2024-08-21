@@ -1,15 +1,15 @@
 @()
 
 @main("GitHub Example") {
-<div class="container">
-    <div>
-        <h1>Welcome to our version of GitHub</h1>
-        <h2>For this project we used the GitHub API</h2>
-        <p>Have a look at the documentation for the API <a href="https://docs.github.com/en/rest" target="_blank">here</a></p>
+    <div class="container">
+        <div>
+            <h1>Welcome to our version of GitHub</h1>
+            <h2>For this project we used the GitHub API</h2>
+            <p>Have a look at the documentation for the API <a href="https://docs.github.com/en/rest" target="_blank">here</a></p>
+        </div>
+        <div>
+            <h3>Ready to explore the project? Click below to get started!</h3>
+            <a href="@routes.StartingPageController.startingPage" class="btn btn-primary">Get Started</a>
+        </div>
     </div>
-    <div>
-        <h3>Ready to explore the project? Click below to get started!</h3>
-        <a href="@routes.StartingPageController.startingPage" class="btn btn-primary">Get Started</a>
-    </div>
-</div>
 }

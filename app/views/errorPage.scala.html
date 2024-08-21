@@ -1,9 +1,11 @@
 @(errorMessage: String)
 
 @main("Error") {
+<div class="content">
 <h1>Oops! Something went wrong.</h1>
 <p>We're sorry, but something went wrong while processing your request.</p>
 <p><strong>Error Details:</strong> @errorMessage</p>
 
 <a href="@routes.HomeController.index" class="btn btn-primary">Return to Home</a> <!-- No parentheses here -->
+    <div class="contents">
 }

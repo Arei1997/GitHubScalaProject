@@ -1,6 +1,7 @@
 @(repositories: Seq[model.Repository])
 
 @main("Top Scala Repositories") {
+<div class="container">
 <h2>Top Scala Repositories on GitHub</h2>
 <ul class="repo-list">
     @for(repo <- repositories) {
@@ -9,5 +10,6 @@
         <p class="repo-description">@repo.description.getOrElse("No description available")</p>
     </li>
 </ul>
+</div>
     }
 }

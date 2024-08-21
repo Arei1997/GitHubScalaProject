@@ -2,10 +2,8 @@
 
 @(user: User)
 
-<div class="user-profile-page">
     @main("GitHub User Profile") {
-    <div class="user-profile-container">
-        <div class="user-profile">
+    <div class="content">
             <div class="profile-info">
                 <img src="@user.avatar_url" alt="@user.login's avatar" class="profile-avatar">
                 <h1>@user.login</h1>
@@ -29,7 +27,5 @@
                     </form>
                 </div>
             </div>
-        </div>
     </div>
-    }
-</div>
+}

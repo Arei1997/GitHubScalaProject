@@ -31,3 +31,203 @@
 .search-container button:hover {
     background-color: #008ecc; /* Darker blue on hover */
 }
+
+/* Profile Styling */
+.user-profile-container .user-profile {
+    text-align: center;
+    align-items: center;
+    padding: 30px;
+    max-width: 450px;
+    margin: 0px auto;
+    border-radius: 45px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    background: linear-gradient(135deg, #162447, #0f3460); /* Dark gradient background */
+    justify-content: center; /* Center horizontally */
+    font-family: 'Saira', sans-serif;
+    font-weight: 600
+}
+
+/* Header styles */
+.header {
+    position: relative;
+    z-index: 10; /* High z-index so it's above the animation */
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background for visibility */
+    padding: 20px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+
+
+
+HTML CSSResult Skip Results Iframe
+EDIT ON
+:root {
+  --rad: .7rem;
+  --dur: .3s;
+  --color-dark: #2f2f2f;
+  --color-light: #fff;
+  --color-brand: #57bd84;
+  --font-fam: "Lato", sans-serif;
+  --height: 5rem;
+  --btn-width: 6rem;
+  --bez: cubic-bezier(0, 0, 0.43, 1.49);
+}
+
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+form {
+  position: relative;
+  width: 30rem;
+  background: var(--color-brand);
+  border-radius: var(--rad);
+}
+
+input, button {
+  height: var(--height);
+  font-family: var(--font-fam);
+  border: 0;
+  color: var(--color-dark);
+  font-size: 1.8rem;
+}
+
+input[type=search] {
+  outline: 0;
+  width: 100%;
+  background: var(--color-light);
+  padding: 0 1.6rem;
+  border-radius: var(--rad);
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  transition: all var(--dur) var(--bez);
+  transition-property: width, border-radius;
+  z-index: 1;
+  position: relative;
+}
+
+
+input:not(:-moz-placeholder-shown) {
+  border-radius: var(--rad) 0 0 var(--rad);
+  width: calc(100% - var(--btn-width));
+}
+
+input:not(:-ms-input-placeholder) {
+  border-radius: var(--rad) 0 0 var(--rad);
+  width: calc(100% - var(--btn-width));
+}
+
+input:not(:placeholder-shown) {
+  border-radius: var(--rad) 0 0 var(--rad);
+  width: calc(100% - var(--btn-width));
+}
+input:not(:-moz-placeholder-shown) + button {
+  display: block;
+}
+input:not(:-ms-input-placeholder) + button {
+  display: block;
+}
+input:not(:placeholder-shown) + button {
+  display: block;
+}
+
+
+
+ /* Search redundant? */
+.search-form {
+  display: none; /* Initially hidden */
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 5px;
+  border-radius: 5px;
+  z-index: 1001; /* Ensure it appears above other elements */
+}
+
+.search-form input[type="text"] {
+  padding: 5px;
+  border: none;
+  border-radius: 3px;
+  outline: none;
+}
+
+.menu {
+  display: inline-block;
+  padding: 0;
+  font-size: 0;
+  background: none;
+  border: none;
+  margin-left: 20px;
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+  cursor: pointer;
+}
+
+.menu::before {
+  content: url("data:image/svg+xml, %3Csvg%20xmlns=%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox=%270%200%2024.8%2018.92%27%20width=%2724.8%27%20height=%2718.92%27%3E%3Cpath%20d=%27M23.8,9.46H1m22.8,8.46H1M23.8,1H1%27%20fill=%27none%27%20stroke=%27%23fff%27%20stroke-linecap=%27round%27%20stroke-width=%272%27%2F%3E%3C%2Fsvg%3E");
+}
+
+
+
+
+
+
+/* Container for the repository contents */
+.content {
+    background-color: rgba(255, 255, 255, 0.4); /* White background with opacity 0.4 */
+    border: 2px solid #00aaff; /* Neon blue border */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px; /* Padding inside the container */
+    max-width: 800px; /* Maximum width for the container */
+    margin: 30px auto; /* Center the container horizontally with some margin */
+    box-shadow: 0 0 15px rgba(0, 170, 255, 0.5); /* Neon blue shadow for glowing effect */
+    backdrop-filter: blur(5px); /* Optional: Apply a subtle blur effect for a more dynamic look */
+}
+
+/* Adjusting the text and elements inside the container */
+.content h1, .content h3, .content h2 {
+    color: #00aaff; /* Neon blue text color */
+    text-align: center; /* Center the text */
+    margin-bottom: 20px; /* Space below headings */
+}
+
+.content .top-buttons {
+    text-align: right; /* Align the buttons to the right */
+    margin-bottom: 15px;
+}
+
+.content .repo-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.content .repo-list li {
+    margin: 10px 0;
+    font-size: 1.2rem;
+}
+
+.content .repo-list a {
+    color: #00aaff; /* Neon blue text color for links */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.content .repo-list a:hover {
+    color: #ffffff; /* Change color on hover */
+}
+
+/* Adjusting the text and elements inside the container */
+.content h1, .content-container h2, .content-container p {
+    color: #00aaff; /* Neon blue text color */
+    text-align: center; /* Center the text */
+    margin-bottom: 20px; /* Space below headings */
+}

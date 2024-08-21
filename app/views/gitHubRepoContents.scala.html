@@ -1,8 +1,8 @@
 @(username: String, repoName: String, contents: List[model.Contents])
 
 @main(s"Contents of $repoName by $username") {
-<div class="container">
-    <h1>@repoName</h1>
+<div class="content">
+<h1>@repoName</h1>
     <h3>Owner: @username</h3>
 
     <!-- Create/Edit Button at the top of the page -->
@@ -27,4 +27,5 @@
         }
     </ul>
 </div>
-}
+    }
+

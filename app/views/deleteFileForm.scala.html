@@ -4,7 +4,8 @@
 @(deleteForm: Form[Delete], username: String, repoName: String, path: String)(implicit request: Request[AnyContent], messages: Messages)
 
 @main("Delete File") {
-<h1 class="center-text">Delete File from @repoName</h1>
+<div class="content">
+    <h1 class="center-text">Delete File from @repoName</h1>
 
 <div class="center-container">
     <p class="center-text">You are about to delete the file within the <strong>@path</strong> repository <strong>@repoName</strong>. Please provide the following details to confirm the deletion:</p>
@@ -30,4 +31,5 @@
     <!-- Back to Repo button -->
     <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn btn-secondary mt-3">Back to Repo</a>
 </div>
+    <div class="contents">
 }

@@ -4,7 +4,8 @@
 @(fileForm: Form[model.FileFormData], username: String, repoName: String, path: String, initialContent: String, sha: Option[String])(implicit request: Request[AnyContent], messages: Messages)
 
 @main("Create or Update File") {
-<h1 class="text-center">Create or Update File in @repoName</h1>
+<div class="content">
+    <h1 class="text-center">Create or Update File in @repoName</h1>
 
 <div class="form-container">
     @helper.form(action = routes.GitHubReposController.submitFileForm(username, repoName, path)) {
@@ -38,4 +39,5 @@
 <div class="button-container">
     <button id="save-btn" class="btn btn-success" style="display:none;">Save Changes</button>
 </div>
+    <div class="contents">
 
