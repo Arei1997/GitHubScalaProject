@@ -22,12 +22,11 @@
                     <strong>Following: </strong>
                     <p>@user.following</p>
                 </div>
-                <div class="stat">
-                    <form action="@routes.ApplicationController.getGitHubRepo(user.login)" method="GET">
-                        <button class="repo-button" type="submit">View Repositories</button>
-                    </form>
-                </div>
+
             </div>
         </div>
+        <a href="@routes.ApplicationController.getGitHubRepo(user.login)" class="btn custom-button">
+            View Repositories
+        </a>
     </div>
     }

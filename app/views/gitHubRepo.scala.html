@@ -3,9 +3,8 @@
 @main("Repository List") {
 
 <!-- Button to view user profile -->
-<form action="@routes.ApplicationController.getGitHubUser(username)" method="GET">
-    <button class="profileBtn" type="submit">View User Profile</button>
-</form>
+<a href="@routes.ApplicationController.getGitHubUser(username)" class="btn custom-button" id = "profileBtn">View User Profile
+</a>
 
 <h2>Repositories for @username:</h2>
 <ul class="repo-list">
