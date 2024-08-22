@@ -1,7 +1,6 @@
 @(username: String, repoName: String, path: String, fileContent: String, sha: String)
 
 @main(s"Contents of $path in $repoName by $username") {
-<div class="content">
     <div class="repo-description">
     <h1>@repoName</h1>
 
@@ -29,7 +28,6 @@
         <button type="button" id="edit-btn" class="btn custom-button">Edit File</button>
         <button type="button" id="save-btn" class="btn custom-button" style="display: none;">Save Changes</button>
         <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn custom-button">Back to Repository Contents</a>
-    </div>
     </div>
 </div>
 

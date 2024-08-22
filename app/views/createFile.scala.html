@@ -4,7 +4,7 @@
 <div class="repo-description">
 <h1 class="text-center">Create New File in @repoName</h1>
 
-<div class="form-container">
+    <div class="form-container">
     @helper.form(action = routes.GitHubReposController.submitCreateFileForm(username, repoName, path)) {
     @helper.CSRF.formField
 
@@ -17,9 +17,9 @@
     <div class="form-group centered-label-input">
         @helper.inputText(fileForm("message"), '_label -> "Commit Message", 'placeholder -> "Enter a commit message")
     </div>
-
+    </div>
     <!-- Content -->
-    <div class="form-group">
+    <div>
         <label for="file-content">File Content</label>
         <textarea id="file-content" name="content" class="form-control" rows="15">@initialContent</textarea>
     </div>
@@ -34,26 +34,13 @@
     <!-- Back to Repo button -->
     <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn custom-button">Back to Repo</a>
 </div>
-</div>
+
 }
 
 <!-- CodeMirror CSS and JS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
-
-<style>
-    /* Custom styles for CodeMirror to match your white background editor */
-    .CodeMirror {
-        height: auto;
-        min-height: 400px;
-        min-width: 600px;
-        background-color: white; /* Set the background color to white */
-        color: black; /* Ensure text is visible on white background */
-        border: 1px solid #ccc; /* Optional: Add a light border to match standard text areas */
-        font-family: monospace; /* Use a monospace font for code editing */
-    }
-</style>
 
 <!-- Include the combined JS file -->
 <script src="@routes.Assets.versioned("javascripts/fileEditor.js")"></script>

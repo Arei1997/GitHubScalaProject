@@ -85,7 +85,7 @@ button:hover {
 }
 
 .form-group {
-    width: 100%;
+    width: 60vw;
     max-width: 500px;
     margin-bottom: 15px;
 }
@@ -346,6 +346,11 @@ h2::after {
     display: block;
     margin: 10px auto 0;
     border-radius: 2px;
+    transition: width 0.2s ease-in-out;
+}
+
+h2:hover::after {
+    width: 20%;
 }
 
 * {
@@ -419,15 +424,31 @@ nav.is-hidden {
 a {
   color: inherit;
   text-decoration: none;
+  position: relative; /* Ensure the link is the reference point for the underline */
 }
 
-a:hover, a:focus {
-  text-decoration: underline;
+
+a::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px; /* Height of the underline */
+  background-color: #ff6347; /* Color of the underline */
+  left: 0;
+  bottom: -2px; /* Position the underline just below the text */
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: right;
+}
+
+a:hover::after, a:focus::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 .home-link {
-    width: 10vw;
-    font-size: 2rem;
+  width: 10vw;
+  font-size: 2rem;
 }
 
 /* Ensure .nav-list is centered */
@@ -457,7 +478,8 @@ a:hover, a:focus {
 
 .form-container {
     display: flex;
-    width: 20vw;
+8.
+
     font-size: 2rem;
 }
 

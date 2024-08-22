@@ -33,9 +33,9 @@
     color: #ffffff;
     font-family: 'Courier New', monospace;
     box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
-    height: 50vh;
-    width: 75vw;
-    margin-left: 10%;/* THIS COULD BE CHANGED/MIGHT NOT WORK PROPERLY */
+    height: 100%;
+    width: 100%;
+    text-align: left;
 }
 
 /* Editor gutters (line numbers) styling */

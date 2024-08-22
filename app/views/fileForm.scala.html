@@ -5,7 +5,7 @@
 
 @main("Create or Update File") {
 <div class="repo-description">
-<h1 class="text-center">Create or Update File in @repoName</h1>
+<h1 class="text-center">Update File in @repoName</h1>
 
 <div class="form-container">
     @helper.form(action = routes.GitHubReposController.submitFileForm(username, repoName, path)) {
@@ -20,7 +20,7 @@
     <input type="hidden" name="content" id="hidden-content" value="@initialContent">
 
     <div class="form-group centered-label-input">
-        @helper.inputText(fileForm("message"), '_label -> "Commit Message", 'value -> fileForm("message").value.getOrElse(""))
+        @helper.inputText(fileForm("message"), '_label -> "Commit Message", 'value -> fileForm("message").value.getOrElse(""),'placeholder -> "Enter the commit message")
     </div>
 
 
