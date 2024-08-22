@@ -36,9 +36,9 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
     val shaFuture: Future[Option[String]] = sha match {
       case Some(providedSha) => Future.successful(Some(providedSha))
       case None =>
-        // Fetch the SHA key if not provided
+
         getFileContent(username, repoName, path).value.map {
-          case Right(file) => file.sha: Option[String] // Explicitly cast to Option[String]
+          case Right(file) => file.sha: Option[String]
           case Left(_) => None
         }
     }
@@ -48,15 +48,12 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
         val createOrUpdateData = CreateOrUpdate(
           message = message,
           content = Base64.getEncoder.encodeToString(content.getBytes("UTF-8")),
-          sha = fetchedSha // fetchedSha is now correctly typed as Option[String]
+          sha = fetchedSha
         )
         connector.createOrUpdate[Contents](url, createOrUpdateData).value
       }
     }
   }
-
-
-
 
   def deleteFile(username: String, repoName: String, path: String, message: String, sha: String): EitherT[Future, APIError, Contents] = {
     val url = s"https://api.github.com/repos/$username/$repoName/contents/$path"
@@ -72,7 +69,6 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
     connector.get[Map[String, Int]](url)
   }
 
-
   def getRepoLanguagesWithPercentage(username: String, repoName: String): EitherT[Future, APIError, Map[String, Double]] = {
     getRepoLanguages(username, repoName).map { languages =>
       val totalSize = languages.values.sum.toDouble
@@ -81,12 +77,4 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
       }
     }
   }
-
-
-
-
-
-
-
-
 }

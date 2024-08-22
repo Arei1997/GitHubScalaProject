@@ -7,7 +7,6 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request}
 import service.RepositoryService
 import views.html.helper.CSRF
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -48,8 +47,6 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
     Ok(views.html.fileForm(FileFormData.form, username, repoName, path, initialContent, sha))
   }
 
-
-
   def submitFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
     FileFormData.form.bindFromRequest().fold(
       formWithErrors => {
@@ -70,15 +67,11 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
     )
   }
 
-
-
-
   def createNewFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val initialContent = "" // empty content since this is a new file
-    val sha: Option[String] = None // No SHA for a new file
+    val initialContent = ""
+    val sha: Option[String] = None
     Ok(views.html.createFile(FileFormData.form, username, repoName, path, initialContent, sha))
   }
-
 
   def submitCreateFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action.async { implicit request =>
     FileFormData.form.bindFromRequest().fold(
@@ -99,8 +92,6 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
       }
     )
   }
-
-
 
   def deleteFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.deleteFileForm(Delete.form, username, repoName, path))
@@ -126,6 +117,5 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
       case Left(error) => Status(error.httpResponseStatus)(Json.obj("error" -> error.reason))
     }
   }
-
 
 }

@@ -11,18 +11,19 @@ import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{AnyContent, Result}
+import play.api.mvc.{AnyContent, AnyContentAsEmpty, Result}
 import service.RepositoryService
 
 import scala.concurrent.Future
 
 class ApplicationControllerSpec extends BaseSpecWithApplication {
 
+  val mockRepositoryService: RepositoryService = mock[RepositoryService]
   val TestApplicationController = new ApplicationController(
     component,
     repository,
     githubService = null,
-    repositoryService = null
+    repositoryService = mockRepositoryService
   )(executionContext)
 
   private val user: User = User(
@@ -36,15 +37,17 @@ class ApplicationControllerSpec extends BaseSpecWithApplication {
     created_at = "2022-01-01T00:00:00Z"
   )
 
-  val mockRepositoryService: RepositoryService = mock[RepositoryService]
-
-
   val username = "testUser"
   val repoName = "testRepo"
   val path = "testPath"
   val fileContent = "Hello, world!"
   val encodedContent = java.util.Base64.getEncoder.encodeToString(fileContent.getBytes("UTF-8"))
   val sha = "testSha"
+  val contents = List(
+    Contents("file1", "file", "html_url1", "url1", "path1", Some("sha1"), Some("content1")),
+    Contents("file2", "file", "html_url2", "url2", "path2", Some("sha2"), Some("content2"))
+  )
+  val languages = Map("Scala" -> 60.0, "Java" -> 40.0)
 
   val validContents = Contents(
     name = "testFile",
@@ -52,9 +55,11 @@ class ApplicationControllerSpec extends BaseSpecWithApplication {
     html_url = s"https://github.com/$username/$repoName/$path",
     url = s"https://api.github.com/repos/$username/$repoName/contents/$path",
     path = path,
-    sha = sha,
+    sha = Some("testSha"), // Ensure SHA is correctly set
     content = Some(encodedContent)
   )
+
+
 
   "ApplicationController .create" should {
 
@@ -207,7 +212,6 @@ class ApplicationControllerSpec extends BaseSpecWithApplication {
 
   "getGitHubFile" should {
     "return 200 OK with the decoded file content when the file exists" in {
-
       when(mockRepositoryService.getFileContent(username, repoName, path))
         .thenReturn(EitherT.rightT[Future, APIError](validContents))
 
@@ -260,13 +264,117 @@ class ApplicationControllerSpec extends BaseSpecWithApplication {
     }
   }
 
+  "getGitHubFolder" should {
+    "return 200 OK with the contents and languages when both are successfully retrieved" in {
+      when(mockRepositoryService.getRepoFiles(username, repoName, path))
+        .thenReturn(EitherT.rightT[Future, APIError](contents))
+      when(mockRepositoryService.getRepoLanguagesWithPercentage(username, repoName))
+        .thenReturn(EitherT.rightT[Future, APIError](languages))
 
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, s"/api/github/$username/$repoName/$path")
+      val result = TestApplicationController.getGitHubFolder(username, repoName, path)(request)
 
+      status(result) shouldBe OK
+      contentAsString(result) should include("file1")
+      contentAsString(result) should include("Scala")
+    }
 
+    "return the appropriate error status when retrieving files fails" in {
+      when(mockRepositoryService.getRepoFiles(username, repoName, path))
+        .thenReturn(EitherT.leftT[Future, List[Contents]](APIError.BadAPIResponse(404, "Files not found")))
+      when(mockRepositoryService.getRepoLanguagesWithPercentage(username, repoName))
+        .thenReturn(EitherT.rightT[Future, APIError](languages))
 
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, s"/api/github/$username/$repoName/$path")
+      val result = TestApplicationController.getGitHubFolder(username, repoName, path)(request)
 
+      status(result) shouldBe NOT_FOUND
+      contentAsJson(result) shouldBe Json.obj("error" -> "Files not found")
+    }
+    "return the appropriate error status when retrieving languages fails" in {
+      when(mockRepositoryService.getRepoFiles(username, repoName, path))
+        .thenReturn(EitherT.rightT[Future, APIError](contents))
+      when(mockRepositoryService.getRepoLanguagesWithPercentage(username, repoName))
+        .thenReturn(EitherT.leftT[Future, Map[String, Double]](APIError.BadAPIResponse(500, "Internal Server Error")))
 
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, s"/api/github/$username/$repoName/$path")
+      val result = TestApplicationController.getGitHubFolder(username, repoName, path)(request)
 
+      status(result) shouldBe INTERNAL_SERVER_ERROR
+      contentAsJson(result) shouldBe Json.obj("error" -> "Internal Server Error")
+    }
+
+    "return the appropriate error status when both retrieving files and languages fail" in {
+      when(mockRepositoryService.getRepoFiles(username, repoName, path))
+        .thenReturn(EitherT.leftT[Future, List[Contents]](APIError.BadAPIResponse(404, "Files not found")))
+      when(mockRepositoryService.getRepoLanguagesWithPercentage(username, repoName))
+        .thenReturn(EitherT.leftT[Future, Map[String, Double]](APIError.BadAPIResponse(500, "Internal Server Error")))
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, s"/api/github/$username/$repoName/$path")
+      val result = TestApplicationController.getGitHubFolder(username, repoName, path)(request)
+
+      status(result) shouldBe NOT_FOUND
+      contentAsJson(result) shouldBe Json.obj("error" -> "Files not found")
+    }
+}
+
+  "getGitHubRepoContents" should {
+
+    "return 200 OK with JSON when 'Accept: application/json' header is present" in {
+      when(mockRepositoryService.getRepoContents(username, repoName))
+        .thenReturn(EitherT.rightT[Future, APIError](contents): EitherT[Future, APIError, List[Contents]])
+      when(mockRepositoryService.getRepoLanguagesWithPercentage(username, repoName))
+        .thenReturn(EitherT.rightT[Future, APIError](languages): EitherT[Future, APIError, Map[String, Double]])
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, s"/api/github/$username/$repoName")
+        .withHeaders("Accept" -> "application/json")
+      val result = TestApplicationController.getGitHubRepoContents(username, repoName)(request)
+
+      status(result) shouldBe OK
+      contentAsJson(result) shouldBe Json.toJson(contents)
+    }
+
+    "return 200 OK with HTML content when no 'Accept: application/json' header is present" in {
+      when(mockRepositoryService.getRepoContents(username, repoName))
+        .thenReturn(EitherT.rightT[Future, APIError](contents): EitherT[Future, APIError, List[Contents]])
+      when(mockRepositoryService.getRepoLanguagesWithPercentage(username, repoName))
+        .thenReturn(EitherT.rightT[Future, APIError](languages): EitherT[Future, APIError, Map[String, Double]])
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, s"/api/github/$username/$repoName")
+      val result = TestApplicationController.getGitHubRepoContents(username, repoName)(request)
+
+      status(result) shouldBe OK
+      contentAsString(result) should include("file1")
+      contentAsString(result) should include("Scala")
+    }
+
+    "return the appropriate error status and JSON when retrieving repo contents fails" in {
+      when(mockRepositoryService.getRepoContents(username, repoName))
+        .thenReturn(EitherT.leftT[Future, List[Contents]](APIError.BadAPIResponse(404, "Repo contents not found")))
+      when(mockRepositoryService.getRepoLanguagesWithPercentage(username, repoName))
+        .thenReturn(EitherT.rightT[Future, APIError](languages): EitherT[Future, APIError, Map[String, Double]])
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, s"/api/github/$username/$repoName")
+        .withHeaders("Accept" -> "application/json")
+      val result = TestApplicationController.getGitHubRepoContents(username, repoName)(request)
+
+      status(result) shouldBe NOT_FOUND
+      contentAsJson(result) shouldBe Json.obj("error" -> "Repo contents not found")
+    }
+
+    "return the appropriate error status and render error page when retrieving repo languages fails" in {
+      when(mockRepositoryService.getRepoContents(username, repoName))
+        .thenReturn(EitherT.rightT[Future, APIError](contents): EitherT[Future, APIError, List[Contents]])
+      when(mockRepositoryService.getRepoLanguagesWithPercentage(username, repoName))
+        .thenReturn(EitherT.leftT[Future, Map[String, Double]](APIError.BadAPIResponse(500, "Internal Server Error")))
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, s"/api/github/$username/$repoName")
+      val result = TestApplicationController.getGitHubRepoContents(username, repoName)(request)
+
+      status(result) shouldBe INTERNAL_SERVER_ERROR
+      contentAsString(result) should include("Internal Server Error")
+    }
+  }
 
   override def beforeEach(): Unit = await(repository.deleteAll())
 

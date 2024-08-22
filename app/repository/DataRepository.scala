@@ -18,7 +18,7 @@ class DataRepository @Inject() (
                                )(implicit ec: ExecutionContext) extends PlayMongoRepository[User](
   collectionName = "Users",
   mongoComponent = mongoComponent,
-  domainFormat = User.format, // Ensure this is correctly referenced
+  domainFormat = User.format,
   indexes = Seq(IndexModel(
     Indexes.ascending("login")
   )),
@@ -56,7 +56,7 @@ class DataRepository @Inject() (
     collection.replaceOne(
       filter = byID(login),
       replacement = user,
-      options = new ReplaceOptions().upsert(false) // upsert set to false to avoid creation if not found
+      options = new ReplaceOptions().upsert(false)
     ).toFuture().map { updateResult =>
       if (updateResult.getModifiedCount > 0) Right(updateResult.getModifiedCount)
       else Left(APIError.BadAPIResponse(404, "User not found or not modified"))
@@ -71,8 +71,6 @@ class DataRepository @Inject() (
   }
 
   def deleteAll(): Future[Unit] =
-    collection.deleteMany(empty()).toFuture().map(_ => ()) // Needed for tests
-
-
+    collection.deleteMany(empty()).toFuture().map(_ => ())
 
 }

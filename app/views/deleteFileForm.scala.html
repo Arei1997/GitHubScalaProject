@@ -8,7 +8,7 @@
     <div class="repo-description">
     <h1 class="center-text">Delete File from @repoName</h1>
 
-<div class="center-container">
+        <div class="center-container">
     <p class="center-text">You are about to delete the file within the <strong>@path</strong> repository <strong>@repoName</strong>. Please provide the following details to confirm the deletion:</p>
 
     @helper.form(action = routes.GitHubReposController.submitDeleteFileForm(username, repoName, path)) {
@@ -29,9 +29,9 @@
     </div>
     }
 
-    <!-- Back to Repo button -->
     <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn custom-button">Back to Repo</a>
-</div>
+
+        </div>
     </div>
-    <div class="contents">
+</div>
 }

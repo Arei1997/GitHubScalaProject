@@ -10,20 +10,16 @@
 
     <h2>File Content:</h2>
 
-    <!-- Textarea for CodeMirror editor in read-only mode initially -->
     <textarea id="file-content" name="content">@fileContent</textarea>
 
-    <!-- Hidden input to hold the content that was edited in the IDE -->
     <input type="hidden" id="hidden-content" name="content" value="@fileContent">
 
-    <!-- Form to redirect to the file form page -->
     <form id="redirect-form" action="@routes.GitHubReposController.createFileForm(username, repoName, path)" method="get">
         <input type="hidden" name="content" id="hidden-content-form">
         <input type="hidden" name="fileName" value="@path">
         <input type="hidden" name="sha" value="@sha">
     </form>
 
-    <!-- Buttons for editing and saving the file -->
     <div class="button-container">
         <button type="button" id="edit-btn" class="btn custom-button">Edit File</button>
         <button type="button" id="save-btn" class="btn custom-button" style="display: none;">Save Changes</button>
@@ -31,11 +27,9 @@
     </div>
 </div>
 
-<!-- Include CodeMirror library -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/mode/javascript/javascript.min.js"></script>
 
-<!-- Include the JavaScript file for handling the editor and buttons -->
 <script src="/assets/javascripts/fileEditor.js"></script>
 }

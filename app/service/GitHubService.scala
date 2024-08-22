@@ -15,10 +15,10 @@ class GitHubService @Inject()(connector: GitHubConnector)(implicit ec: Execution
     val url = urlOverride.getOrElse(s"https://api.github.com/users/$username")
     connector.get[User](url).leftMap {
       case APIError.BadAPIResponse(status, message) =>
-        println(s"Failed to fetch user from GitHub: $message")  // Debug log
+        println(s"Failed to fetch user from GitHub: $message")
         APIError.BadAPIResponse(status, s"Failed to fetch user from GitHub: $message")
       case otherError =>
-        println(s"An unexpected error occurred: $otherError")  // Debug log
+        println(s"An unexpected error occurred: $otherError")
         APIError.BadAPIResponse(500, s"An unexpected error occurred: $otherError")
     }
   }
