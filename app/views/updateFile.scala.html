@@ -1,0 +1,38 @@
+@import model.FileFormData
+@import helper._
+
+@(fileForm: Form[model.FileFormData], username: String, repoName: String, path: String, initialContent: String, sha: Option[String])(implicit request: Request[AnyContent], messages: Messages)
+
+@main("Create or Update File") {
+<div class="repo-description">
+<h1 class="text-center">Update File in @repoName</h1>
+
+<div class="form-container">
+    @helper.form(action = routes.GitHubReposController.submitFileForm(username, repoName, path)) {
+    @helper.CSRF.formField
+
+    <p><strong>Editing File:</strong> @path</p>
+
+    <!-- Hidden field to store the file name -->
+    <input type="hidden" name="fileName" value="@path">
+
+    <!-- Hidden input to hold the content that was edited in the IDE -->
+    <input type="hidden" name="content" id="hidden-content" value="@initialContent">
+
+    <div class="form-group centered-label-input">
+        @helper.inputText(fileForm("message"), '_label -> "Commit Message", 'value -> fileForm("message").value.getOrElse(""),'placeholder -> "Enter the commit message")
+    </div>
+
+
+    <!-- Button container to hold both buttons next to each other -->
+    <div class="button-container">
+        <!-- Submit Button -->
+        <button type="submit" class="btn custom-button">Submit</button>
+
+        <!-- Back to Repo Button -->
+        <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn custom-button">Back to Repo</a>
+    </div>
+    }
+</div>
+</div>
+}

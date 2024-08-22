@@ -1,0 +1,11 @@
+@(errorMessage: String)
+
+@main("Error") {
+<div class="repo-description">
+<h1>Oops! Something went wrong.</h1>
+<p>We're sorry, but something went wrong while processing your request.</p>
+<p><strong>Error Details:</strong> @errorMessage</p>
+
+<a href="@routes.HomeController.index" class="btn custom-button">Return to Home</a> <!-- No parentheses here -->
+</div>>
+}

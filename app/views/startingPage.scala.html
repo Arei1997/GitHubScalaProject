@@ -1,0 +1,24 @@
+@(repositories: Seq[model.Repository])
+
+
+@main("Top Scala Repositories") {
+<div class="top-repos-container">
+    <h1>Trending Scala Repositories on GitHub</h1>
+        <ul class="repo-list">
+            @for(repo <- repositories) {
+            <li class="repo-item">
+                <a href="@repo.html_url" target="_blank" class="repo-link">
+                    <h2 class="repo-name">@repo.name</h2>
+                    <p class="repo-description">@repo.description.getOrElse("No description available")</p>
+                </a>
+            </li>
+            }
+        </ul>
+    <div class="main-search">
+        <form action="@routes.ApplicationController.searchGitHubUser" method="GET" role="search" class="main-searchbar">
+            <input id="landing-search" name="username" type="search" placeholder="Enter a GitHub username here to search for a GitHub user..." required />
+            <button class="search">Search</button>
+        </form>
+    </div>
+</div>
+}

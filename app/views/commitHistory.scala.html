@@ -1,0 +1,30 @@
+@(commits: Seq[model.Commit])(implicit messages: play.api.i18n.Messages)
+
+@main("Commit History") {
+<h1>Commit History</h1>
+<div id="commit-history-container">
+    <table id="commit-history-table">
+        <thead>
+        <tr>
+            <th>SHA</th>
+            <th>Author</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Message</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for(commit <- commits) {
+        <tr>
+            <td>@commit.sha.take(10)</td> <!-- Display only the first 10 characters of SHA -->
+            <td>@commit.commit.author.name</td>
+            <td>@commit.commit.author.date.split("T")(0)</td> <!-- Display only the date -->
+            <td>@commit.commit.author.date.split("T")(1).dropRight(1)</td> <!-- Display only the time -->
+            <td>@commit.commit.message</td>
+        </tr>
+        }
+        </tbody>
+    </table>
+</div>
+}
+

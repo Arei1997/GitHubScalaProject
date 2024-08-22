@@ -1,0 +1,12 @@
+@(username: String, contributionGraphImageUrl: String)
+
+@main(s"Contribution Map for $username") {
+<div class="contribution-map-container">
+    <h1>@username's Contribution Map</h1>
+    <img src="@contributionGraphImageUrl" alt="Contribution graph for @username" class="contribution-map">
+    <div class="button-container">
+        <a href="@routes.ApplicationController.getGitHubRepo(username)" class="btn custom-button">View Repositories</a>
+        <a href="@routes.ApplicationController.index()" class="btn custom-button">Back to Home</a>
+    </div>
+</div>
+}
