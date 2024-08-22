@@ -1,7 +1,7 @@
 @(username: String, repoName: String, path: String, fileContent: String, sha: String)
 
 @main(s"Contents of $path in $repoName by $username") {
-    <div class="repo-description">
+<div class="repo-description">
     <h1>@repoName</h1>
 
     <p><strong>File:</strong> @path</p>
@@ -23,11 +23,14 @@
         <input type="hidden" name="sha" value="@sha">
     </form>
 
-    <!-- Buttons for editing and saving the file -->
+    <!-- Buttons for editing, saving, and deleting the file -->
     <div class="button-container">
         <button type="button" id="edit-btn" class="btn custom-button">Edit File</button>
         <button type="button" id="save-btn" class="btn custom-button" style="display: none;">Save Changes</button>
         <a href="@routes.ApplicationController.getGitHubRepoContents(username, repoName)" class="btn custom-button">Back to Repository Contents</a>
+
+        <!-- Delete button that links to the delete confirmation form -->
+        <a href="@routes.GitHubReposController.deleteFileForm(username, repoName, path)" class="btn custom-button btn-danger">Delete File</a>
     </div>
 </div>
 

@@ -426,9 +426,14 @@ a {
   text-decoration: none;
   position: relative; /* Ensure the link is the reference point for the underline */
 }
+nav a {
+  color: inherit;
+  text-decoration: none;
+  position: relative; /* Ensure the link is the reference point for the underline */
+}
 
 
-a::after {
+nav a::after {
   content: '';
   position: absolute;
   width: 100%;
@@ -441,7 +446,7 @@ a::after {
   transform-origin: right;
 }
 
-a:hover::after, a:focus::after {
+nav a:hover::after, a:focus::after {
   transform: scaleX(1);
   transform-origin: left;
 }
@@ -741,4 +746,30 @@ footer {
   outline: none; /* Remove default outline */
   transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
   font-family: 'Saira', sans-serif;
+}
+
+#commit-history-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+}
+
+#commit-history-table th,
+#commit-history-table td {
+    padding: 10px;
+    text-align: center;
+    color: #333;
+}
+
+#commit-history-table th {
+    background-color: #f0f0f0;
+}
+
+#commit-history-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#commit-history-table tr:hover {
+    background-color: #e0e0e0;
+    cursor: pointer;
 }

@@ -71,3 +71,6 @@ GET    /github/:username/:repoName/contents/*path/form/delete   controllers.GitH
 POST   /github/:username/:repoName/contents/*path/form/delete   controllers.GitHubReposController.submitDeleteFileForm(username: String, repoName: String, path: String)
 GET    /api/github/users/:username/contributions  controllers.ApplicationController.getGitHubUserContributionMap(username: String)
 GET    /api/github/users/:username/repos/:repoName/languages   controllers.GitHubReposController.getRepoLanguages(username: String, repoName: String)
+
+
+GET     /repo/:username/:repoName/commits       controllers.GitHubReposController.viewCommitHistory(username: String, repoName: String)

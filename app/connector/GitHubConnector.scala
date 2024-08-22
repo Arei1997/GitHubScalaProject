@@ -3,7 +3,7 @@ package connector
 import cats.data.EitherT
 import com.google.inject.Inject
 import com.typesafe.config.ConfigFactory
-import model.{APIError, Contents, CreateOrUpdate, Delete}
+import model.{APIError, Commit, Contents, CreateOrUpdate, Delete}
 import play.api.Configuration
 import play.api.libs.json.{Json, Reads}
 import play.api.libs.ws.{WSClient, WSResponse}
@@ -75,6 +75,13 @@ class GitHubConnector @Inject()(ws: WSClient, config: Configuration)(implicit ec
       }
     }
   }
+
+
+  def getCommits(username: String, repoName: String): EitherT[Future, APIError, Seq[Commit]] = {
+    val url = s"https://api.github.com/repos/$username/$repoName/commits"
+    get[Seq[Commit]](url)
+  }
+
 }
 
 

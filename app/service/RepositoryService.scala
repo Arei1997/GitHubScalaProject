@@ -1,8 +1,9 @@
 package service
 
 import cats.data.EitherT
+import com.sun.jdi.connect.Connector
 import connector.GitHubConnector
-import model.{APIError, Contents, CreateOrUpdate, Delete, Repository, User}
+import model.{APIError, Commit, Contents, CreateOrUpdate, Delete, Repository, User}
 import play.api.libs.json.JsValue
 
 import java.util.Base64
@@ -84,7 +85,9 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
 
 
 
-
+  def getCommitHistory(username: String, repoName: String): EitherT[Future, APIError, Seq[Commit]] = {
+    connector.getCommits(username, repoName)
+  }
 
 
 

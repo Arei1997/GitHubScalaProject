@@ -127,5 +127,13 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
     }
   }
 
+  def viewCommitHistory(username: String, repoName: String): Action[AnyContent] = Action.async { implicit request =>
+    repositoryService.getCommitHistory(username, repoName).value.map {
+      case Right(commits) => Ok(views.html.commitHistory(commits))
+      case Left(error) => InternalServerError(s"Error fetching commit history: ${error.reason}")
+    }
+  }
+
+
 
 }

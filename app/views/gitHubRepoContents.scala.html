@@ -14,28 +14,33 @@
         <form action="@routes.GitHubReposController.createNewFileForm(username, repoName, "root")" method="GET">
         <button type="submit" class="btn custom-button">Create File</button>
         </form>
+
+        <!-- Added View Commit History Button -->
+        <form action="@routes.GitHubReposController.viewCommitHistory(username, repoName)" method="GET" style="margin-top: 10px;">
+            <button type="submit" class="btn custom-button btn-secondary">View Commit History</button>
+        </form>
     </div>
 </div>
 
-    <h2>Repository Contents</h2>
-    <ul class="repo-list">
-        @for(content <- contents) {
-        <li class="repo-list" id="repository-files">
-            @if(content.`type` == "dir") {
-            <img src="@routes.Assets.versioned("images/folder.png")" alt="Folder icon" class="icon" />
-            <a href="@routes.ApplicationController.getGitHubFolder(username, repoName, content.path)" class="repo-name">@content.name</a>
-            } else {
-            <img src="@routes.Assets.versioned("images/document.png")" alt="File icon" class="icon" />
-            <a href="@routes.ApplicationController.getGitHubFile(username, repoName, content.path)" class="repo-name">@content.name</a>
-            }
-        </li>
+<h2>Repository Contents</h2>
+<ul class="repo-list">
+    @for(content <- contents) {
+    <li class="repo-list" id="repository-files">
+        @if(content.`type` == "dir") {
+        <img src="@routes.Assets.versioned("images/folder.png")" alt="Folder icon" class="icon" />
+        <a href="@routes.ApplicationController.getGitHubFolder(username, repoName, content.path)" class="repo-name">@content.name</a>
+        } else {
+        <img src="@routes.Assets.versioned("images/document.png")" alt="File icon" class="icon" />
+        <a href="@routes.ApplicationController.getGitHubFile(username, repoName, content.path)" class="repo-name">@content.name</a>
         }
-    </ul>
+    </li>
+    }
+</ul>
 </div>
 
 <!-- Include Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<!-- NEED TO PUT IN CORRECT FILES-->
 <script>
     const ctx = document.getElementById('languageChart').getContext('2d');
     const languageData = {
