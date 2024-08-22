@@ -151,7 +151,7 @@ class ApplicationController @Inject()(
         try {
           val contentWithoutNewlines = file.content.get.replaceAll("\\s", "")
           val decodedContent = new String(java.util.Base64.getDecoder.decode(contentWithoutNewlines), "UTF-8")
-          Future.successful(Ok(views.html.gitHubFileContents(username, repoName, path, decodedContent, file.sha)))
+          Future.successful(Ok(views.html.gitHubFileContents(username, repoName, path, decodedContent, file.sha.getOrElse(""))))
         } catch {
           case _: IllegalArgumentException =>
             Future.successful(BadRequest("Invalid base64 content"))

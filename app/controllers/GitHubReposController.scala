@@ -60,21 +60,12 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
       data => {
         val fileName = if (path.isEmpty || path == "root") data.fileName else path
 
-        repositoryService.getFileContent(username, repoName, fileName).value.flatMap {
-          case Right(existingFile) =>
-            repositoryService.createOrUpdateFile(username, repoName, fileName, data.message, data.content, Some(existingFile.sha)).value.map {
-              case Right(_) =>
-                Redirect(routes.ApplicationController.getGitHubFile(username, repoName, fileName)).flashing("success" -> "File updated successfully")
-
-              case Left(error) =>
-                val filledForm = FileFormData.form.fill(data.copy(content = data.content))
-                BadRequest(views.html.fileForm(filledForm.withError("error", error.reason), username, repoName, path, data.content, data.sha))
-            }
-
-          case Left(_) =>
-            Future.successful(Redirect(routes.ApplicationController.getGitHubRepoContents(username, repoName)).flashing("error" -> "File does not exist, cannot update"))
+        repositoryService.createOrUpdateFile(username, repoName, fileName, data.message, data.content).value.map {
+          case Right(_) => Redirect(routes.ApplicationController.getGitHubFile(username, repoName, fileName)).flashing("success" -> "File updated successfully")
+          case Left(error) =>
+            val filledForm = FileFormData.form.fill(data.copy(content = data.content))
+            BadRequest(views.html.fileForm(filledForm.withError("error", error.reason), username, repoName, path, data.content, data.sha))
         }
-
       }
     )
   }
