@@ -19,6 +19,12 @@
     align-content: center;
 }
 
+.profile-info {
+    font-family: 'Saira', sans-serif;
+    margin: 20px;
+    padding: 30px;
+}
+
 /* IDE Styling */
 /* CodeMirror IDE styling to match the container theme */
 .CodeMirror {

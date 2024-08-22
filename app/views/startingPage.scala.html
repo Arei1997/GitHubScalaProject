@@ -14,5 +14,11 @@
             </li>
             }
         </ul>
+    <div class="main-search">
+        <form action="@routes.ApplicationController.searchGitHubUser" method="GET" role="search" class="main-searchbar">
+            <input id="landing-search" name="username" type="search" placeholder="Enter a GitHub username here to search for a GitHub user..." required />
+            <button class="search">Search</button>
+        </form>
+    </div>
 </div>
 }

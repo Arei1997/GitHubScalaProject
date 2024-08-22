@@ -5,14 +5,17 @@
 @main("GitHub User Profile") {
 <div class="user-profile-container">
     <div class="user-profile">
-        <div class="profile-info">
+        <div class="user-top">
             <img src="@user.avatar_url" alt="@user.login's avatar" class="profile-avatar">
             <h1>@user.login</h1>
             <p><strong>Name:</strong> @user.name.getOrElse("No Name Provided")</p>
             <p><strong>Location:</strong> @user.location.getOrElse("Unknown")</p>
             <p><strong>Bio:</strong> @user.bio.getOrElse("No Bio Available")</p>
         </div>
-
+        <h2>@user.login's contributions over the last 365 days: </h2>
+        <div class="contribution-map-container">
+            <img src="@contributionGraphImageUrl" alt="Contribution graph for @user.login" class="contribution-map">
+        </div>
         <div class="profile-stats">
             <div class="stat">
                 <strong>Followers: </strong>
@@ -23,16 +26,12 @@
                 <p>@user.following</p>
             </div>
         </div>
-
         <!-- Add buttons for viewing repos or other actions -->
         <a href="@routes.ApplicationController.getGitHubRepo(user.login)" class="btn custom-button">
             View Repositories
         </a>
-
         <!-- Contribution Map added below the buttons -->
-        <div class="contribution-map-container">
-            <img src="@contributionGraphImageUrl" alt="Contribution graph for @user.login" class="contribution-map">
-        </div>
+
     </div>
 </div>
 

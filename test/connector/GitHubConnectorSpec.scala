@@ -1,187 +1,99 @@
-import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, Materializer}
-import cats.data.EitherT
+package connector
+
+import baseSpec.BaseSpecWithApplication
 import com.github.tomakehurst.wiremock.client.WireMock._
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration
-import com.github.tomakehurst.wiremock.junit.WireMockRule
-import com.typesafe.config.ConfigFactory
-import model.{APIError, Contents, CreateOrUpdate, Delete}
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration._
+import com.github.tomakehurst.wiremock.WireMockServer
+import model.{User, APIError, CreateOrUpdate, Delete}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.play.PlaySpec
-import play.api.Configuration
-import play.api.libs.json.Json
-import play.api.libs.ws.ahc.AhcWSClient
-import connector.GitHubConnector
+import org.scalatest.BeforeAndAfterAll
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.{Json, OFormat}
+import play.api.test.Helpers._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+class GitHubConnectorSpec extends BaseSpecWithApplication with ScalaFutures with BeforeAndAfterAll {
 
-class GitHubConnectorSpec extends PlaySpec with ScalaFutures {
+  val wireMockServer = new WireMockServer(wireMockConfig().dynamicPort())
 
-  private val wireMockPort = 9000
-  private val wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig().port(wireMockPort))
-
-  def beforeAll(): Unit = {
-    wireMockRule.start()
+  override def beforeAll(): Unit = {
+    super.beforeAll()
+    wireMockServer.start()
   }
 
-  def afterAll(): Unit = {
-    wireMockRule.stop()
+  override def fakeApplication(): Application = {
+    new GuiceApplicationBuilder()
+      .configure(Map(
+        "mongodb.uri" -> "mongodb://localhost:27017/testGithubTutorial",
+        "github.token" -> "test-token"
+      ))
+      .build()
   }
-  implicit val system: ActorSystem = ActorSystem()
-  implicit val materializer: Materializer = ActorMaterializer()
 
-  private val wsClient = AhcWSClient()
+  override lazy val connector: GitHubConnector = app.injector.instanceOf[GitHubConnector]
 
-  private val config = Configuration(ConfigFactory.parseString(
-    """
-      |github.token = "test_token"
-      |""".stripMargin))
+  val testUser: User = User(
+    login = "big boy",
+    name = Some("jason"),
+    avatar_url = "http://msn.com/avatar.jpg",
+    location = Some("London"),
+    bio = Some("i love donuts."),
+    followers = 50,
+    following = 250,
+    created_at = "1955-01-01"
+  )
 
-  private val gitHubConnector = new GitHubConnector(wsClient, config)
+  implicit val userFormat: OFormat[User] = Json.format[User]
+  implicit val createOrUpdateFormat: OFormat[CreateOrUpdate] = Json.format[CreateOrUpdate]
+  implicit val deleteFormat: OFormat[Delete] = Json.format[Delete]
 
-  "GitHubConnector#get" should {
+  "GitHubConnector" should {
 
-    "return valid response when API call is successful" in {
-      val responseJson =
-        """
-          |{
-          | "name": "file.txt",
-          | "type": "file",
-          | "html_url": "https://github.com/user/repo/file.txt",
-          | "url": "https://api.github.com/repos/user/repo/contents/file.txt",
-          | "path": "file.txt",
-          | "sha": "abcdef1234567890",
-          | "content": "SGVsbG8gd29ybGQ="
-          |}
-          |""".stripMargin
+    "handle 200 response correctly for GET request" in {
+      val url = "/users/username"
+      val expectedUrl = s"http://localhost:${wireMockServer.port()}$url"
 
-      stubFor(get(urlEqualTo("/repos/user/repo/contents/file.txt"))
-        .willReturn(aResponse().withStatus(200).withBody(responseJson)))
+      wireMockServer.stubFor(get(urlEqualTo(url))
+        .willReturn(aResponse()
+          .withStatus(OK)
+          .withBody(Json.toJson(testUser).toString())))
 
-      val result: EitherT[Future, APIError, Contents] = gitHubConnector.get[Contents](s"http://localhost:$wireMockPort/repos/user/repo/contents/file.txt")
-
-      whenReady(result.value) { res =>
-        res mustBe Right(Json.parse(responseJson).as[Contents])
+      whenReady(connector.get[User](expectedUrl).value) { result =>
+        result shouldBe Right(testUser)
       }
     }
 
-    "return an error when API call fails" in {
-      stubFor(get(urlEqualTo("/repos/user/repo/contents/file.txt"))
-        .willReturn(aResponse().withStatus(404).withBody("Not Found")))
+    "handle non-200 response correctly for GET request" in {
+      val url = "/users/username"
+      val expectedUrl = s"http://localhost:${wireMockServer.port()}$url"
 
-      val result: EitherT[Future, APIError, Contents] = gitHubConnector.get[Contents](s"http://localhost:$wireMockPort/repos/user/repo/contents/file.txt")
+      wireMockServer.stubFor(get(urlEqualTo(url))
+        .willReturn(aResponse()
+          .withStatus(NOT_FOUND)
+          .withStatusMessage("Not Found")))
 
-      whenReady(result.value) { res =>
-        res mustBe Left(APIError.BadAPIResponse(404, "Not Found"))
-      }
-    }
-  }
-
-  "GitHubConnector#createOrUpdate" should {
-
-    "return valid response when API call is successful" in {
-      val requestJson =
-        """
-          |{
-          | "message": "Update file.txt",
-          | "content": "SGVsbG8gd29ybGQ=",
-          | "sha": "abcdef1234567890"
-          |}
-          |""".stripMargin
-
-      val responseJson =
-        """
-          |{
-          | "content": {
-          |   "name": "file.txt",
-          |   "path": "file.txt",
-          |   "sha": "abcdef1234567890"
-          | }
-          |}
-          |""".stripMargin
-
-      stubFor(put(urlEqualTo("/repos/user/repo/contents/file.txt"))
-        .withRequestBody(equalToJson(requestJson))
-        .willReturn(aResponse().withStatus(200).withBody(responseJson)))
-
-      val data = CreateOrUpdate("Update file.txt", "SGVsbG8gd29ybGQ=", Some("abcdef1234567890"))
-      val result: EitherT[Future, APIError, Contents] = gitHubConnector.createOrUpdate[Contents](
-        s"http://localhost:$wireMockPort/repos/user/repo/contents/file.txt",
-        data
-      )
-
-      whenReady(result.value) { res =>
-        res mustBe Right((Json.parse(responseJson) \ "content").as[Contents])
+      whenReady(connector.get[User](expectedUrl).value) { result =>
+        result shouldBe Left(APIError.BadAPIResponse(NOT_FOUND, "Not Found"))
       }
     }
 
-    "return an error when API call fails" in {
-      stubFor(put(urlEqualTo("/repos/user/repo/contents/file.txt"))
-        .willReturn(aResponse().withStatus(500).withBody("Internal Server Error")))
+    "handle network error correctly for GET request" in {
+      val url = "/users/username"
+      val expectedUrl = s"http://localhost:${wireMockServer.port()}$url"
 
-      val data = CreateOrUpdate("Update file.txt", "SGVsbG8gd29ybGQ=", Some("abcdef1234567890"))
-      val result: EitherT[Future, APIError, Contents] = gitHubConnector.createOrUpdate[Contents](
-        s"http://localhost:$wireMockPort/repos/user/repo/contents/file.txt",
-        data
-      )
+      wireMockServer.stop()
 
-      whenReady(result.value) { res =>
-        res mustBe Left(APIError.BadAPIResponse(500, "Internal Server Error"))
+      whenReady(connector.get[User](expectedUrl).value) {
+        case Left(error: APIError.BadAPIResponse) =>
+          error.upstreamStatus shouldBe 500
+          error.upstreamMessage should include("Could not connect to API")
+        case _ => fail("Expected a BadAPIResponse error but got something else.")
       }
     }
   }
 
-  "GitHubConnector#delete" should {
-
-    "return valid response when API call is successful" in {
-      val requestJson =
-        """
-          |{
-          | "message": "Delete file.txt",
-          | "sha": "abcdef1234567890"
-          |}
-          |""".stripMargin
-
-      val responseJson =
-        """
-          |{
-          | "content": {
-          |   "name": "file.txt",
-          |   "path": "file.txt",
-          |   "sha": "abcdef1234567890"
-          | }
-          |}
-          |""".stripMargin
-
-      stubFor(delete(urlEqualTo("/repos/user/repo/contents/file.txt"))
-        .withRequestBody(equalToJson(requestJson))
-        .willReturn(aResponse().withStatus(200).withBody(responseJson)))
-
-      val data = Delete("Delete file.txt", "abcdef1234567890")
-      val result: EitherT[Future, APIError, Contents] = gitHubConnector.delete[Contents](
-        s"http://localhost:$wireMockPort/repos/user/repo/contents/file.txt",
-        data
-      )
-
-      whenReady(result.value) { res =>
-        res mustBe Right((Json.parse(responseJson) \ "content").as[Contents])
-      }
-    }
-
-    "return an error when API call fails" in {
-      stubFor(delete(urlEqualTo("/repos/user/repo/contents/file.txt"))
-        .willReturn(aResponse().withStatus(500).withBody("Internal Server Error")))
-
-      val data = Delete("Delete file.txt", "abcdef1234567890")
-      val result: EitherT[Future, APIError, Contents] = gitHubConnector.delete[Contents](
-        s"http://localhost:$wireMockPort/repos/user/repo/contents/file.txt",
-        data
-      )
-
-      whenReady(result.value) { res =>
-        res mustBe Left(APIError.BadAPIResponse(500, "Internal Server Error"))
-      }
-    }
+  override def afterAll(): Unit = {
+    wireMockServer.stop()
+    super.afterAll()
   }
 }

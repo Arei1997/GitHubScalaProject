@@ -12,6 +12,7 @@ html, body {
 
 body {
   background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+    padding-bottom: 10vh;
 }
 
 h1, h2, h3, p, a, button {
@@ -180,6 +181,7 @@ button:hover {
 .content {
     min-height: 70vh;
     flex: 1;
+    margin: 20px 100px;
 }
 
 strong {
@@ -234,15 +236,13 @@ strong {
 }
 
 .user-profile-container h1 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2rem;
-    color: #fff; /* White text to contrast with the gradient background */
+    font-size: 3rem;
+    color: #fff;
     margin: 20px 0 10px;
 }
 
 .user-profile-container p {
-    font-family: 'Exo', sans-serif;
-    font-size: 1rem;
+    font-size: 1.3rem;
     color: #f3f3f3;
 }
 
@@ -251,18 +251,8 @@ strong {
     font-weight: 600;
 }
 
-.user-profile-container .repo-button {
-    background: linear-gradient(135deg, #00aaff, #0077b6); /* Bright blue gradient */
-    color: #fff;
-    padding: 12px 25px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.3s ease;
-    margin-top: 20px;
-    box-shadow: none; /* Remove the box-shadow */
-    border: none; /* Remove any border */
+.user-top {
+    padding: 20px;
 }
 
 .user-profile-container .repo-button:hover {
@@ -276,6 +266,7 @@ strong {
     justify-content: center; /* Center the stats within the profile */
     gap: 30px; /* Space between the boxes */
     margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 .user-profile-container .stat {
@@ -693,4 +684,36 @@ footer {
 .language-list {
     list-style-type: none;
     padding-left: 0;
+}
+
+.main-search {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: none;
+    width: 80vw;
+}
+
+.main-searchbar {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  width: 100%;
+}
+
+#landing-search {
+  width: 90%;
+  padding: 6px 15px; /* Increase padding for a larger box */
+  border: 2px solid #0077b6; /* Add a border with your desired color */
+  border-radius: 25px; /* Add rounded edges */
+  background-color: transparent; /* Remove white background */
+  color: #fff; /* Text color inside the search box */
+  font-size: 1.5rem; /* Increase font size */
+  outline: none; /* Remove default outline */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+  font-family: 'Saira', sans-serif;
 }
