@@ -50,6 +50,24 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
     connector.delete[Contents](url, deleteData)
   }
 
+  def getRepoLanguages(username: String, repoName: String): EitherT[Future, APIError, Map[String, Int]] = {
+    val url = s"https://api.github.com/repos/$username/$repoName/languages"
+    connector.get[Map[String, Int]](url)
+  }
+
+
+  def getRepoLanguagesWithPercentage(username: String, repoName: String): EitherT[Future, APIError, Map[String, Double]] = {
+    getRepoLanguages(username, repoName).map { languages =>
+      val totalSize = languages.values.sum.toDouble
+      languages.map { case (language, size) =>
+        language -> (size / totalSize) * 100
+      }
+    }
+  }
+
+
+
+
 
 
 

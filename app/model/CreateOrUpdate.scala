@@ -3,8 +3,8 @@ package model
 import play.api.libs.json.{Json, OFormat}
 
 case class CreateOrUpdate(
-                           message: String,  // The commit message
-                           content: String, // The new file content, using Base64 encoding
+                           message: String,
+                           content: String,
                            sha: Option[String]
                          )
 

@@ -210,7 +210,6 @@ strong {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-    background-color: rgba(255, 255, 255, 0.4);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -530,8 +529,9 @@ a:hover, a:focus {
 }
 
 img {
+  min-width:700px;
   width: 100%;
-  min-height: 200vh;
+  min-height: 200px;
   object-fit: cover;
 }
 
@@ -660,4 +660,9 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+ul.language-list {
+    list-style-type: none;
+    padding-left: 0;
 }

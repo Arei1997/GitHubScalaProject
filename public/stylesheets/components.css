@@ -142,7 +142,7 @@
 
 .repo-list a:hover {
     color: #fff; /* Keep the text color white */
-    background-color: #6a5acd; /* Change the background color */
+    background-color: #0077b6; /* Change the background color */
     transform: scale(1.1); /* Slightly scale up the link */
     border-radius: 19px; /* Add rounded edges */
     transition: transform 0.6s ease-out, background-color 0.6s ease-out, border-radius 0.6s ease-out; /* Smooth transition with ease-out */
@@ -194,4 +194,11 @@
 
 canvas {
     background: transparent;
+}
+
+languageChart {
+    display: block;          /* Make the canvas a block element */
+    margin: 30 auto;          /* Center the block element horizontally */
+    max-width: 300px;        /* Ensure the chart has a maximum width */
+    max-height: 300px;       /* Ensure the chart has a maximum height */
 }
