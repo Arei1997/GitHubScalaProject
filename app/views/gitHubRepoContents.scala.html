@@ -10,6 +10,13 @@
         <canvas id="languageChart" width="200" height="200"></canvas>
     </div>
 
+    <div class="top-buttons">
+        <form action="@routes.GitHubReposController.createNewFileForm(username, repoName, "root")" method="GET">
+        <button type="submit" class="btn custom-button">Create File</button>
+        </form>
+    </div>
+</div>
+
     <h2>Repository Contents</h2>
     <ul class="repo-list">
         @for(content <- contents) {
