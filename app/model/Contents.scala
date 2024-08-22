@@ -8,8 +8,8 @@ case class Contents(
                      html_url: String,
                      url: String,
                      path: String,
-                     sha: String,              // Add the sha field
-                     content: Option[String]   // `content` field is optional, only present for files
+                     sha: String,
+                     content: Option[String]
                    )
 
 object Contents {

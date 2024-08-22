@@ -1,5 +1,5 @@
 /* Component Styling */
-
+@import url('https://fonts.googleapis.com/css2?family=Saira:wght@400;700&display=swap');
 /* Profile styling */
 .user-profile {
     text-align: center;
@@ -70,12 +70,20 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.repo-name {
+    font-family: 'Saira', sans-serif; /* Apply Saira font */
+    font-size: 30px; /* Adjust the size as needed */
+    color: #00aaff; /* Keep the text color consistent with the overall design */
+    display: block; /* Ensure it behaves as a block-level element within the link */
+    margin-bottom: 10px; /* Space below the repo name */
+}
+
 /* Link styling */
 .repo-link {
     text-decoration: none;
-    font-family: 'Roboto', sans-serif;
-    font-size: 1.5rem;
-    color: #00aaff;
+    font-family: 'Saira', sans-serif; /* Space-like font */
+    font-size: 1.5rem; /* Increase font size for emphasis */
+    color: #00aaff; /* Bright blue color */
     display: block;
     margin-bottom: 10px;
     transition: color 0.3s ease, transform 0.3s ease;
@@ -100,12 +108,13 @@
 .repo-list {
     list-style-type: none;
     padding: 0;
-    margin: 30px auto;
-    max-width: 800px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    overflow-y: none;
+    margin: 15px auto;
+    max-width: 8000px;
+    font-family: 'Saira', sans-serif;
+    display: grid; /* Use grid layout */
+    grid-template-columns: repeat(3, 1fr); /* Three items per row */
+    gap: 20px; /* Add space between items */
+    overflow-y: none; /* Enable scrolling for long lists */
 }
 
 
@@ -121,11 +130,12 @@
 .repo-list li:hover {
     transform: translateY(-5px) scale(1.03);
     box-shadow: none;
+    border-radius: 20px;
 }
 
 .repo-list a {
     text-decoration: none;
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Saira', sans-serif;
     font-size: 1.2rem;
     padding: 15px;
     display: block;
@@ -134,9 +144,14 @@
 }
 
 .repo-list a:hover {
-    color: #fff;
-    background-color: #0077b6;
+    color: #fff; /* Keep the text color white */
+    background-color: #0077b6; /* Change the background color */
+    transform: scale(1.1); /* Slightly scale up the link */
+    border-radius: 19px; /* Add rounded edges */
+    transition: transform 0.6s ease-out, background-color 0.6s ease-out, border-radius 0.6s ease-out; /* Smooth transition with ease-out */
 }
+
+
 
 #repository-files {
     background-color: white;
@@ -182,4 +197,11 @@
 
 canvas {
     background: transparent;
+}
+
+languageChart {
+    display: block;          /* Make the canvas a block element */
+    margin: 30 auto;          /* Center the block element horizontally */
+    max-width: 300px;        /* Ensure the chart has a maximum width */
+    max-height: 300px;       /* Ensure the chart has a maximum height */
 }

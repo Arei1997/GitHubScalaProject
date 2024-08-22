@@ -1,5 +1,6 @@
 package controllers
 
+import cats.data.EitherT
 import model.{APIError, Contents, Delete, FileFormData}
 import play.api.i18n.Messages
 import play.api.libs.json.{JsValue, Json}
@@ -42,8 +43,8 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
   }
 
   def createFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val initialContent = request.getQueryString("content").getOrElse("")  // Retrieve content from query string
-    val sha: Option[String] = request.getQueryString("sha") // Default no SHA
+    val initialContent = request.getQueryString("content").getOrElse("")
+    val sha: Option[String] = request.getQueryString("sha")
     Ok(views.html.fileForm(FileFormData.form, username, repoName, path, initialContent, sha))
   }
 
@@ -71,7 +72,6 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
             }
 
           case Left(_) =>
-            // File does not exist, return an error message or handle it appropriately
             Future.successful(Redirect(routes.ApplicationController.getGitHubRepoContents(username, repoName)).flashing("error" -> "File does not exist, cannot update"))
         }
 
@@ -83,7 +83,7 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
 
 
   def createNewFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val initialContent = "" // Start with an empty content since this is a new file
+    val initialContent = "" // empty content since this is a new file
     val sha: Option[String] = None // No SHA for a new file
     Ok(views.html.createFile(FileFormData.form, username, repoName, path, initialContent, sha))
   }
@@ -128,4 +128,13 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
       }
     )
   }
+
+  def getRepoLanguages(username: String, repoName: String): Action[AnyContent] = Action.async { implicit request =>
+    repositoryService.getRepoLanguagesWithPercentage(username, repoName).value.map {
+      case Right(languagePercentages) => Ok(Json.toJson(languagePercentages))
+      case Left(error) => Status(error.httpResponseStatus)(Json.obj("error" -> error.reason))
+    }
+  }
+
+
 }
