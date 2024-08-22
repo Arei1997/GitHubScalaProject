@@ -3,12 +3,12 @@
 
 @main("Top Scala Repositories") {
 <div class="top-repos-container">
-    <h2>Trending Scala Repositories on GitHub</h2>
+    <h1>Trending Scala Repositories on GitHub</h1>
         <ul class="repo-list">
             @for(repo <- repositories) {
             <li class="repo-item">
                 <a href="@repo.html_url" target="_blank" class="repo-link">
-                    <span class="repo-name">@repo.name</span>
+                    <h2 class="repo-name">@repo.name</h2>
                     <p class="repo-description">@repo.description.getOrElse("No description available")</p>
                 </a>
             </li>
