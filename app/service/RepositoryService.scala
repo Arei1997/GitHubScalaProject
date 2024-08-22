@@ -30,16 +30,33 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
     connector.get[Contents](url)
   }
 
-  // New methods for creating, updating, and deleting files
   def createOrUpdateFile(username: String, repoName: String, path: String, message: String, content: String, sha: Option[String] = None): EitherT[Future, APIError, Contents] = {
     val url = s"https://api.github.com/repos/$username/$repoName/contents/$path"
-    val createOrUpdateData = CreateOrUpdate(
-      message = message,
-      content = Base64.getEncoder.encodeToString(content.getBytes("UTF-8")),
-      sha = sha
-    )
-    connector.createOrUpdate[Contents](url, createOrUpdateData)
+
+    val shaFuture: Future[Option[String]] = sha match {
+      case Some(providedSha) => Future.successful(Some(providedSha))
+      case None =>
+        // Fetch the SHA key if not provided
+        getFileContent(username, repoName, path).value.map {
+          case Right(file) => file.sha: Option[String] // Explicitly cast to Option[String]
+          case Left(_) => None
+        }
+    }
+
+    EitherT {
+      shaFuture.flatMap { fetchedSha =>
+        val createOrUpdateData = CreateOrUpdate(
+          message = message,
+          content = Base64.getEncoder.encodeToString(content.getBytes("UTF-8")),
+          sha = fetchedSha // fetchedSha is now correctly typed as Option[String]
+        )
+        connector.createOrUpdate[Contents](url, createOrUpdateData).value
+      }
+    }
   }
+
+
+
 
   def deleteFile(username: String, repoName: String, path: String, message: String, sha: String): EitherT[Future, APIError, Contents] = {
     val url = s"https://api.github.com/repos/$username/$repoName/contents/$path"

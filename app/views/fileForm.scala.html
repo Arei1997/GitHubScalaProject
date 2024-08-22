@@ -23,9 +23,6 @@
         @helper.inputText(fileForm("message"), '_label -> "Commit Message", 'value -> fileForm("message").value.getOrElse(""))
     </div>
 
-    <div class="form-group centered-label-input">
-        @helper.inputText(fileForm("sha"), '_label -> "SHA (optional)", 'value -> sha.getOrElse(""))
-    </div>
 
     <!-- Button container to hold both buttons next to each other -->
     <div class="button-container">
