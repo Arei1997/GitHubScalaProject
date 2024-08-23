@@ -52,7 +52,7 @@ class ApplicationControllerSpec extends BaseSpecWithApplication {
     html_url = s"https://github.com/$username/$repoName/$path",
     url = s"https://api.github.com/repos/$username/$repoName/contents/$path",
     path = path,
-    sha = sha,
+    sha = Some(""),
     content = Some(encodedContent)
   )
 

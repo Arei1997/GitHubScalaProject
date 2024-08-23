@@ -90,15 +90,26 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
       data => {
         val fileName = if (path.isEmpty || path == "root") data.fileName else path
 
-        repositoryService.createOrUpdateFile(username, repoName, fileName, data.message, data.content, None).value.map {
-          case Right(_) => Redirect(routes.ApplicationController.getGitHubRepoContents(username, repoName)).flashing("success" -> "File created successfully")
-          case Left(error) =>
+        // Check if the file already exists
+        repositoryService.getFileContent(username, repoName, fileName).value.flatMap {
+          case Right(_) =>
+            // If file exists, return an error indicating a duplicate
             val filledForm = FileFormData.form.fill(data.copy(content = data.content))
-            BadRequest(views.html.createFile(filledForm.withError("error", error.reason), username, repoName, path, data.content, None))
+            Future.successful(BadRequest(views.html.createFile(filledForm.withError("error", "File with this name already exists"), username, repoName, path, data.content, None)))
+
+          case Left(_) =>
+            // If file doesn't exist, proceed with file creation
+            repositoryService.createOrUpdateFile(username, repoName, fileName, data.message, data.content, None).value.map {
+              case Right(_) => Redirect(routes.ApplicationController.getGitHubRepoContents(username, repoName)).flashing("success" -> "File created successfully")
+              case Left(error) =>
+                val filledForm = FileFormData.form.fill(data.copy(content = data.content))
+                BadRequest(views.html.createFile(filledForm.withError("error", error.reason), username, repoName, path, data.content, None))
+            }
         }
       }
     )
   }
+
 
 
 
