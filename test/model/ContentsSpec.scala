@@ -13,7 +13,7 @@ class ContentsSpec extends PlaySpec {
         html_url = "https://github.com/user/repo/file.txt",
         url = "https://api.github.com/repos/user/repo/contents/file.txt",
         path = "file.txt",
-        sha = "abcdef1234567890",
+        sha = Some("abcdef1234567890"),
         content = Some("SGVsbG8gd29ybGQ=")
       )
 
@@ -54,7 +54,7 @@ class ContentsSpec extends PlaySpec {
         html_url = "https://github.com/user/repo/file.txt",
         url = "https://api.github.com/repos/user/repo/contents/file.txt",
         path = "file.txt",
-        sha = "abcdef1234567890",
+        sha = Some("abcdef1234567890"),
         content = Some("SGVsbG8gd29ybGQ=")
       )
 
@@ -82,7 +82,7 @@ class ContentsSpec extends PlaySpec {
         html_url = "https://github.com/user/repo/file.txt",
         url = "https://api.github.com/repos/user/repo/contents/file.txt",
         path = "file.txt",
-        sha = "abcdef1234567890",
+        sha = Some("abcdef1234567890"),
         content = None
       )
 
