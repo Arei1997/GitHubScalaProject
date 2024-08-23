@@ -11,14 +11,12 @@
 </head>
 <body>
 
-<!-- Background and Shooting Stars Animation -->
 <div class="night">
     @for(i <- 1 to 20) {
     <div class="shooting_star"></div>
     }
 </div>
 
-<!-- Full Header Content -->
 <nav class="mask">
     <a href="@routes.ApplicationController.index()" class="home-link">Home</a>
     <label class="switch">
@@ -40,7 +38,6 @@
     <div id="top"></div>
 </nav>
 
-<!-- Main Content Container -->
 <div class="content">
     @content
 </div>

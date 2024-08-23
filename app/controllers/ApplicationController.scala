@@ -17,7 +17,6 @@ class ApplicationController @Inject()(
                                        repositoryService: RepositoryService
                                      )(implicit ec: ExecutionContext) extends BaseController with play.api.i18n.I18nSupport {
 
-  // Fetch all users from the database
   def index(): Action[AnyContent] = Action.async { implicit request =>
     dataRepository.index().map {
       case Right(items) => Ok(Json.toJson(items))
@@ -35,7 +34,6 @@ class ApplicationController @Inject()(
   }
 
 
-  // Create a new user
   def create(): Action[JsValue] = Action.async(parse.json) { implicit request =>
     request.body.validate[User] match {
       case JsSuccess(user, _) =>
@@ -52,7 +50,7 @@ class ApplicationController @Inject()(
 
     githubService.getGithubUser(username).value.map {
       case Right(user) =>
-        Ok(views.html.gitHubUser(user, contributionGraphImageUrl))  // Pass both user and contributionGraphImageUrl
+        Ok(views.html.gitHubUser(user, contributionGraphImageUrl))
       case Left(error) =>
         Redirect(routes.ApplicationController.index()).flashing("error" -> "User not found")
     }
@@ -60,7 +58,7 @@ class ApplicationController @Inject()(
 
   def getGitHubRepo(username: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     repositoryService.getGithubRepo(username).value.map {
-      case Right(repositories) => Ok(views.html.gitHubRepo(repositories, username)) // Pass both repositories and username
+      case Right(repositories) => Ok(views.html.gitHubRepo(repositories, username))
       case Left(APIError.BadAPIResponse(status, message)) => Status(status)(Json.obj("error" -> message))
     }
   }
@@ -90,7 +88,7 @@ class ApplicationController @Inject()(
           if (request.headers.get("Accept").contains("application/json")) {
             Ok(Json.toJson(contents))
           } else {
-            Ok(views.html.gitHubRepoContents(username, repoName, contents, languages)) // Pass languages to the view
+            Ok(views.html.gitHubRepoContents(username, repoName, contents, languages))
           }
         case (Left(APIError.BadAPIResponse(status, message)), _) =>
           Status(status)(Json.obj("error" -> message))
@@ -115,8 +113,8 @@ class ApplicationController @Inject()(
       case JsSuccess(user, _) =>
         dataRepository.update(login, user).map {
           case Right(count) if count > 0 => Accepted
-          case Right(_) => NotFound(Json.obj("error" -> "User not found"))  // No user updated, return 404
-          case Left(error) if error.upstreamStatus == 404 => NotFound(Json.toJson(error.reason))  // Explicit 404 from repository
+          case Right(_) => NotFound(Json.obj("error" -> "User not found"))
+          case Left(error) if error.upstreamStatus == 404 => NotFound(Json.toJson(error.reason))
           case Left(error) => Status(error.httpResponseStatus)(Json.toJson(error.reason))
         }
       case JsError(errors) => Future.successful(BadRequest(Json.obj("errors" -> errors.toString)))

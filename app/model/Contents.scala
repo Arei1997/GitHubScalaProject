@@ -8,7 +8,7 @@ case class Contents(
                      html_url: String,
                      url: String,
                      path: String,
-                     sha: Option[String],  // Ensure this is an Option[String]
+                     sha: Option[String],
                      content: Option[String]
                    )
 

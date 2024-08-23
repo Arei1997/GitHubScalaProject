@@ -26,41 +26,11 @@
                 <p>@user.following</p>
             </div>
         </div>
-        <!-- Add buttons for viewing repos or other actions -->
         <a href="@routes.ApplicationController.getGitHubRepo(user.login)" class="btn custom-button">
             View Repositories
         </a>
-        <!-- Contribution Map added below the buttons -->
 
     </div>
 </div>
 
-<style>
-
-    .stat {
-        display: inline-block;
-        margin: 0 10px;
-    }
-
-    .contribution-map-container {
-        margin-top: 30px; /* Add some space above the contribution map */
-        text-align: center;
-        color: white;
-    }
-
-    .contribution-map {
-        max-width: 100px;
-        max-height: 300px; /* Set a max height to ensure the image is visible without being too large */
-        width: auto;
-        height: auto;
-        margin-bottom: 20px;
-        object-fit: contain;
-    }
-
-    .contribution-map-note {
-        font-size: 1rem;
-        color: white;
-        margin-top: 10px;
-    }
-</style>
 }

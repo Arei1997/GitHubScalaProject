@@ -11,14 +11,13 @@ import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-//hello
 @Singleton
 class DataRepository @Inject() (
                                  mongoComponent: MongoComponent
                                )(implicit ec: ExecutionContext) extends PlayMongoRepository[User](
   collectionName = "Users",
   mongoComponent = mongoComponent,
-  domainFormat = User.format, // Ensure this is correctly referenced
+  domainFormat = User.format,
   indexes = Seq(IndexModel(
     Indexes.ascending("login")
   )),
@@ -29,15 +28,11 @@ class DataRepository @Inject() (
     collection.find().toFuture().map { users =>
       if (users.nonEmpty) Right(users)
       else Left(APIError.BadAPIResponse(404, "Users cannot be found"))
-    }.recover {
-      case e: Throwable => Left(APIError.BadAPIResponse(500, e.getMessage))
     }
 
   def create(user: User): Future[Either[APIError.BadAPIResponse, User]] =
     collection.insertOne(user).toFuture().map { _ =>
       Right(user)
-    }.recover {
-      case e: Throwable => Left(APIError.BadAPIResponse(500, e.getMessage))
     }
 
   private def byID(login: String): Bson =
@@ -47,8 +42,6 @@ class DataRepository @Inject() (
     collection.find(byID(login)).headOption().map {
       case Some(user) => Right(user)
       case None => Left(APIError.BadAPIResponse(404, "User not found"))
-    }.recover {
-      case e: Throwable => Left(APIError.BadAPIResponse(500, e.getMessage))
     }
   }
 
@@ -56,12 +49,10 @@ class DataRepository @Inject() (
     collection.replaceOne(
       filter = byID(login),
       replacement = user,
-      options = new ReplaceOptions().upsert(false) // upsert set to false to avoid creation if not found
+      options = new ReplaceOptions().upsert(false)
     ).toFuture().map { updateResult =>
       if (updateResult.getModifiedCount > 0) Right(updateResult.getModifiedCount)
       else Left(APIError.BadAPIResponse(404, "User not found or not modified"))
-    }.recover {
-      case e: Throwable => Left(APIError.BadAPIResponse(500, e.getMessage))
     }
 
   def delete(login: String): Future[Either[APIError, result.DeleteResult]] = {
@@ -71,7 +62,7 @@ class DataRepository @Inject() (
   }
 
   def deleteAll(): Future[Unit] =
-    collection.deleteMany(empty()).toFuture().map(_ => ()) // Needed for tests
+    collection.deleteMany(empty()).toFuture().map(_ => ())
 
 
 

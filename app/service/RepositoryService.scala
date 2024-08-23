@@ -21,6 +21,7 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
     val url = s"https://api.github.com/repos/$username/$repoName/contents"
     connector.get[List[Contents]](url)
   }
+
   def getRepoFiles(username: String, repoName: String, path: String): EitherT[Future, APIError, List[Contents]] = {
     val url = s"https://api.github.com/repos/$username/$repoName/contents/$path"
     connector.get[List[Contents]](url)
@@ -37,9 +38,8 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
     val shaFuture: Future[Option[String]] = sha match {
       case Some(providedSha) => Future.successful(Some(providedSha))
       case None =>
-        // Fetch the SHA key if not provided
         getFileContent(username, repoName, path).value.map {
-          case Right(file) => file.sha: Option[String] // Explicitly cast to Option[String]
+          case Right(file) => file.sha: Option[String]
           case Left(_) => None
         }
     }
@@ -49,15 +49,12 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
         val createOrUpdateData = CreateOrUpdate(
           message = message,
           content = Base64.getEncoder.encodeToString(content.getBytes("UTF-8")),
-          sha = fetchedSha // fetchedSha is now correctly typed as Option[String]
+          sha = fetchedSha
         )
         connector.createOrUpdate[Contents](url, createOrUpdateData).value
       }
     }
   }
-
-
-
 
   def deleteFile(username: String, repoName: String, path: String, message: String, sha: String): EitherT[Future, APIError, Contents] = {
     val url = s"https://api.github.com/repos/$username/$repoName/contents/$path"
@@ -83,13 +80,7 @@ class RepositoryService @Inject()(connector: GitHubConnector)(implicit ec: Execu
     }
   }
 
-
-
   def getCommitHistory(username: String, repoName: String): EitherT[Future, APIError, Seq[Commit]] = {
     connector.getCommits(username, repoName)
   }
-
-
-
-
 }

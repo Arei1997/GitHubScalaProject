@@ -74,8 +74,8 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
 
 
   def createNewFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val initialContent = "" // empty content since this is a new file
-    val sha: Option[String] = None // No SHA for a new file
+    val initialContent = ""
+    val sha: Option[String] = None
     Ok(views.html.createFile(FileFormData.form, username, repoName, path, initialContent, sha))
   }
 
