@@ -184,6 +184,7 @@ button:hover {
   max-width: 90vw;
   box-sizing: border-box;
   max-height: 80vh;
+  display: block;
 }
 
 .content {
