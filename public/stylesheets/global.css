@@ -190,6 +190,8 @@ button:hover {
     min-height: 70vh;
     flex: 1;
     margin: 20px 100px;
+    display: flex-column;
+    max-width: screen;
 }
 
 strong {
@@ -213,13 +215,14 @@ strong {
 }
 
 .top-repos-container {
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: screen;
+    flex: 1;
+    margin: 20px 100px;
     padding: 20px;
+    display: flex-column;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 
 
 

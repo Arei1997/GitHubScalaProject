@@ -45,7 +45,7 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
   def createFileForm(username: String, repoName: String, path: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val initialContent = request.getQueryString("content").getOrElse("")
     val sha: Option[String] = request.getQueryString("sha")
-    Ok(views.html.fileForm(FileFormData.form, username, repoName, path, initialContent, sha))
+    Ok(views.html.updateFile(FileFormData.form, username, repoName, path, initialContent, sha))
   }
 
 
@@ -55,7 +55,7 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
       formWithErrors => {
         val initialContent = formWithErrors("content").value.getOrElse("")
         val sha = formWithErrors("sha").value
-        Future.successful(BadRequest(views.html.fileForm(formWithErrors, username, repoName, path, initialContent, sha)))
+        Future.successful(BadRequest(views.html.updateFile(formWithErrors, username, repoName, path, initialContent, sha)))
       },
       data => {
         val fileName = if (path.isEmpty || path == "root") data.fileName else path
@@ -64,7 +64,7 @@ class GitHubReposController @Inject()(repositoryService: RepositoryService, cc: 
           case Right(_) => Redirect(routes.ApplicationController.getGitHubFile(username, repoName, fileName)).flashing("success" -> "File updated successfully")
           case Left(error) =>
             val filledForm = FileFormData.form.fill(data.copy(content = data.content))
-            BadRequest(views.html.fileForm(filledForm.withError("error", error.reason), username, repoName, path, data.content, data.sha))
+            BadRequest(views.html.updateFile(filledForm.withError("error", error.reason), username, repoName, path, data.content, data.sha))
         }
       }
     )

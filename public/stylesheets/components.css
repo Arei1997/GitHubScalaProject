@@ -113,23 +113,36 @@
 .repo-list {
     list-style-type: none;
     padding: 0;
-    margin: 15px auto;
-    max-width: 8000px;
+    margin: 15px 15px;
+    max-width: 100%;
     font-family: 'Saira', sans-serif;
-    display: grid; /* Use grid layout */
-    grid-template-columns: repeat(3, 1fr); /* Three items per row */
-    gap: 20px; /* Add space between items */
-    overflow-y: none; /* Enable scrolling for long lists */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    overflow-y: none;
 }
 
 
 .repo-list li {
     margin: 10px;
-    flex: 1 1 45%;
     max-width: 100%;
     border-radius: 15px;
     box-shadow: none;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex: 1 1 calc(33.333% - 20px);
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .repo-list li {
+        flex: 1 1 calc(50% - 20px); /* Two items per row on medium screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .repo-list li {
+        flex: 1 1 calc(100% - 20px); /* One item per row on smaller screens */
+    }
 }
 
 .repo-list li:hover {
